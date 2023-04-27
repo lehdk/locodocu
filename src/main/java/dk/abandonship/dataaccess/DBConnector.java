@@ -2,23 +2,20 @@ package dk.abandonship.dataaccess;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dk.abandonship.Main;
+import dk.abandonship.utils.PropertyReader;
 
 import java.sql.Connection;
-import java.util.Properties;
 
+/**
+ * This class handles the connection to the database.
+ */
 public class DBConnector {
     private static DBConnector dbConnector;
     private final SQLServerDataSource dataSource;
 
-    private DBConnector() throws Exception {
-        Properties databaseProperties = new Properties();
-        var url = Main.class.getResource("config.properties");
-        if(url == null) throw new RuntimeException("Could not read config.properties");
+    private DBConnector() {
 
-        try(var input = url.openStream()) {
-            databaseProperties.load(input);
-        }
+        var databaseProperties = PropertyReader.getConfigFile("config.properties");
 
         String server = databaseProperties.getProperty("DB_IP");
         String database = databaseProperties.getProperty("DB_DATABASE");
@@ -35,13 +32,22 @@ public class DBConnector {
         dataSource.setTrustServerCertificate(true);
     }
 
-    // TODO: Make this not throw an exception!
-    public static DBConnector getInstance() throws Exception {
+    /**
+     * Gets the instance of the singleton.
+     * Will instantiate new object first time it is run.
+     * @return The DBConnector instance
+     */
+    public static DBConnector getInstance() {
         if (dbConnector == null) dbConnector = new DBConnector();
 
         return dbConnector;
     }
 
+    /**
+     * Gets a connection to the database.
+     * @return The connection made
+     * @throws SQLServerException If it was not able to create a connection
+     */
     public Connection getConnection() throws SQLServerException {
         return dataSource.getConnection();
     }
