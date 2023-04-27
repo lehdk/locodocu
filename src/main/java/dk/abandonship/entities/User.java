@@ -1,10 +1,7 @@
 package dk.abandonship.entities;
 
-import java.sql.Array;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class User {
@@ -74,6 +71,10 @@ public class User {
 
     public void setDisabledAt(Timestamp disabledAt) {
         this.disabledAt = disabledAt;
+    }
+
+    public void setAllRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public void addRole(Role role) {

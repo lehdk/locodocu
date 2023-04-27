@@ -1,6 +1,12 @@
+import dk.abandonship.dataaccess.RoleDatabaseDAO;
+import dk.abandonship.dataaccess.UserDatabaseDAO;
+import dk.abandonship.dataaccess.interfaces.IRoleDAO;
+import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
