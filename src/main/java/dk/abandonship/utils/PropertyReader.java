@@ -7,6 +7,11 @@ import java.util.Properties;
 
 public class PropertyReader {
 
+    /**
+     * Read a .properties file
+     * @param filename The filename to read
+     * @return The Properties object read
+     */
     public static Properties getConfigFile(String filename) {
         Properties databaseProperties = new Properties();
         var url = Main.class.getResource(filename);
