@@ -22,7 +22,7 @@ public class LogInController implements Initializable {
 
     }
 
-    public void handleLogIn(ActionEvent actionEvent) {
+    public void handleLogIn() {
         lblError.setText("Invalid username or password");
     }
 }
