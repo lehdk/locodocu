@@ -32,14 +32,13 @@ INSERT INTO [Roles] ([Name]) VALUES
     ('salesperson'); -- Id 4
 
 -- Insert fake data
-INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('admin', 'admin@wuav.dk', '12345678', '1234'); -- id 1
-INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('pm', 'pm@wuav.dk', '12345678', '1234'); -- id 2
-INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('tech', 'tech@wuav.dk', '12345678', '1234'); -- id 3
-INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('sale', 'sale@wuav.dk', '12345678', '1234'); -- id 4
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('admin', 'admin@wuav.dk', '12345678', '$2a$12$UcZasGP.JlW6Og/Nwd2CRe8.HuJ9vG/pVCDLErIPxrUpKY9/Ny1kC'); -- id 1
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('pm', 'pm@wuav.dk', '12345678', '$2a$12$UcZasGP.JlW6Og/Nwd2CRe8.HuJ9vG/pVCDLErIPxrUpKY9/Ny1kC'); -- id 2
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('tech', 'tech@wuav.dk', '12345678', '$2a$12$UcZasGP.JlW6Og/Nwd2CRe8.HuJ9vG/pVCDLErIPxrUpKY9/Ny1kC'); -- id 3
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('sale', 'sale@wuav.dk', '12345678', '$2a$12$UcZasGP.JlW6Og/Nwd2CRe8.HuJ9vG/pVCDLErIPxrUpKY9/Ny1kC'); -- id 4
 
 INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES 
     (1, 1),
-    (1, 3),
     (2, 2),
     (3, 3),
     (4, 4);
