@@ -9,6 +9,7 @@ CREATE TABLE [Users] (
     [Name] NVARCHAR(255) NOT NULL,
     [Email] NVARCHAR(255) NOT NULL UNIQUE,
     [Phone] VARCHAR(20),
+    [Password] VARCHAR(MAX),
     [DisabledAt] DATETIME2 DEFAULT NULL
 );
 
@@ -31,13 +32,14 @@ INSERT INTO [Roles] ([Name]) VALUES
     ('salesperson'); -- Id 4
 
 -- Insert fake data
-INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('admin', 'email@wuav.dk', '12345678'); -- id 1
-INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('pm', 'pm@wuav.dk', '12345678'); -- id 2
-INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('tech', 'tech@wuav.dk', '12345678'); -- id 3
-INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('sale', 'sale@wuav.dk', '12345678'); -- id 4
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('admin', 'admin@wuav.dk', '12345678', '1234'); -- id 1
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('pm', 'pm@wuav.dk', '12345678', '1234'); -- id 2
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('tech', 'tech@wuav.dk', '12345678', '1234'); -- id 3
+INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('sale', 'sale@wuav.dk', '12345678', '1234'); -- id 4
 
 INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES 
     (1, 1),
+    (1, 3),
     (2, 2),
     (3, 3),
     (4, 4);
