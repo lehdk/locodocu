@@ -9,6 +9,7 @@ CREATE TABLE [Users] (
     [Name] NVARCHAR(255) NOT NULL,
     [Email] NVARCHAR(255) NOT NULL UNIQUE,
     [Phone] VARCHAR(20),
+    [Password] VARCHAR(MAX),
     [DisabledAt] DATETIME2 DEFAULT NULL
 );
 
