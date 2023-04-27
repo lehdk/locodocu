@@ -9,14 +9,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.LogInController">
+<AnchorPane style="-fx-background-color: FFFFFF" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.LogInController">
    <children>
       <PasswordField fx:id="fieldPassword" layoutX="469.0" layoutY="198.0" onAction="#handleLogIn" prefHeight="34.0" prefWidth="218.0" />
       <TextField fx:id="fieldUserName" layoutX="469.0" layoutY="124.0" onAction="#handleLogIn" prefHeight="33.0" prefWidth="218.0" />
-      <Label layoutX="469.0" layoutY="106.0" text="User Name" />
-      <Label layoutX="469.0" layoutY="180.0" text="Password" />
+      <Label layoutX="469.0" layoutY="106.0" text="User Name"  style="-fx-text-fill: #030202"/>
+      <Label layoutX="469.0" layoutY="180.0" text="Password" style="-fx-text-fill: #030202"/>
       <Button fx:id="btnLogIn" layoutX="503.0" layoutY="277.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="50.0" prefWidth="150.0" text="Log - In" />
-      <Label fx:id="lblError" layoutX="94.0" layoutY="351.0" prefHeight="34.0" prefWidth="590.0" textFill="RED" />
+      <Label fx:id="lblError" layoutX="94.0" layoutY="351.0" prefHeight="34.0" prefWidth="590.0" style="-fx-text-fill: #ff0000"/>
       <ImageView fitHeight="188.0" fitWidth="310.0" layoutX="84.0" layoutY="104.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../img/Wuavlogo.png" />
