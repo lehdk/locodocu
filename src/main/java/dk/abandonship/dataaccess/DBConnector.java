@@ -6,6 +6,9 @@ import dk.abandonship.utils.PropertyReader;
 
 import java.sql.Connection;
 
+/**
+ * This class handles the connection to the database.
+ */
 public class DBConnector {
     private static DBConnector dbConnector;
     private final SQLServerDataSource dataSource;
@@ -29,12 +32,22 @@ public class DBConnector {
         dataSource.setTrustServerCertificate(true);
     }
 
+    /**
+     * Gets the instance of the singleton.
+     * Will instantiate new object first time it is run.
+     * @return The DBConnector instance
+     */
     public static DBConnector getInstance() {
         if (dbConnector == null) dbConnector = new DBConnector();
 
         return dbConnector;
     }
 
+    /**
+     * Gets a connection to the database.
+     * @return The connection made
+     * @throws SQLServerException If it was not able to create a connection
+     */
     public Connection getConnection() throws SQLServerException {
         return dataSource.getConnection();
     }
