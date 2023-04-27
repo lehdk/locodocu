@@ -24,10 +24,20 @@ CREATE TABLE [UserRoleRelation] (
 );
 
 -- Insert data
-INSERT INTO [Roles] ([Name]) VALUES ('admin'), ('project-manager'), ('technician'), ('salesperson');
+INSERT INTO [Roles] ([Name]) VALUES 
+    ('admin'), -- Id 1
+    ('project-manager'), -- Id 2
+    ('technician'), -- Id 3
+    ('salesperson'); -- Id 4
 
 -- Insert fake data
 INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('admin', 'email@wuav.dk', '12345678'); -- id 1
 INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('pm', 'pm@wuav.dk', '12345678'); -- id 2
 INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('tech', 'tech@wuav.dk', '12345678'); -- id 3
 INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('sale', 'sale@wuav.dk', '12345678'); -- id 4
+
+INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES 
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4);
