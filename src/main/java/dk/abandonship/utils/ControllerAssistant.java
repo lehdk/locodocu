@@ -26,12 +26,22 @@ public class ControllerAssistant {
         this.borderPane = borderPane;
     }
 
+    /**
+     * sets center FXML to the given fxml name
+     * @param file
+     * @throws Exception
+     */
     public void setCenterFX(String file) throws Exception {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/" + file + ".fxml"));
         Node newScene = loader.load();
         borderPane.setCenter(newScene);
     }
 
+    /**
+     * sets top FXML to the given fxml name
+     * @param file
+     * @throws Exception
+     */
     public void setTopFX(String file) throws Exception{
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/" + file + ".fxml"));
         Node newScene = loader.load();
