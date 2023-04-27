@@ -9,7 +9,7 @@ CREATE TABLE [Users] (
     [Name] NVARCHAR(255) NOT NULL,
     [Email] NVARCHAR(255) NOT NULL UNIQUE,
     [Phone] VARCHAR(20),
-    [Disabled] DATETIME2
+    [DisabledAt] DATETIME2 DEFAULT NULL
 );
 
 CREATE TABLE [Roles] (
@@ -22,3 +22,12 @@ CREATE TABLE [UserRoleRelation] (
     [UserId] INT FOREIGN KEY REFERENCES [Users](Id),
     [RoleId] INT FOREIGN KEY REFERENCES [Roles](Id)
 );
+
+-- Insert data
+INSERT INTO [Roles] ([Name]) VALUES ('admin'), ('project-manager'), ('technician'), ('salesperson');
+
+-- Insert fake data
+INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('admin', 'email@wuav.dk', '12345678'); -- id 1
+INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('pm', 'pm@wuav.dk', '12345678'); -- id 2
+INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('tech', 'tech@wuav.dk', '12345678'); -- id 3
+INSERT INTO [Users] ([Name], [Email], [Phone]) VALUES ('sale', 'sale@wuav.dk', '12345678'); -- id 4
