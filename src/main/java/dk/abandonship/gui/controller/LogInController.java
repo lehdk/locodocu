@@ -1,10 +1,6 @@
 package dk.abandonship.gui.controller;
 
 import dk.abandonship.businesslogic.LoginManager;
-import dk.abandonship.dataaccess.RoleDatabaseDAO;
-import dk.abandonship.dataaccess.UserDatabaseDAO;
-import dk.abandonship.dataaccess.interfaces.IRoleDAO;
-import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.gui.model.LoginModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +9,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LogInController implements Initializable {
@@ -26,7 +21,6 @@ public class LogInController implements Initializable {
     private LoginModel model;
 
     public LogInController() {
-
         loginManager = new LoginManager();
     }
 
@@ -37,7 +31,9 @@ public class LogInController implements Initializable {
 
     public void handleLogIn() {
         try {
-            lblError.setText(model.logIn(fieldEmail.getText(), fieldPassword.getText()));
+            boolean success = model.logIn(fieldEmail.getText(), fieldPassword.getText());
+
+            if(!success) lblError.setText("Wrong username or password");
 
             // TODO: Redirect to logged in page
         } catch (Exception e) {
