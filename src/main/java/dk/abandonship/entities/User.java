@@ -1,6 +1,11 @@
 package dk.abandonship.entities;
 
+import java.sql.Array;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class User {
 
@@ -10,6 +15,7 @@ public class User {
     private String phone;
     private String password;
     private Timestamp disabledAt;
+    private Set<Role> roles;
 
     public User(int id, String name, String email, String phone, String password, Timestamp disabledAt) {
         this.id = id;
@@ -18,6 +24,8 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.disabledAt = disabledAt;
+
+        roles = new HashSet<>();
     }
 
     public int getId() {
@@ -66,6 +74,18 @@ public class User {
 
     public void setDisabledAt(Timestamp disabledAt) {
         this.disabledAt = disabledAt;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void removeRole(Role role) {
+        roles.remove(role);
     }
 
     @Override
