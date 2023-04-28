@@ -11,9 +11,9 @@
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
    </padding>
    <TextField fx:id="fieldEmail" layoutX="469.0" layoutY="124.0" onAction="#handleLogIn" prefHeight="33.0"
-              prefWidth="218.0"/>
+              prefWidth="218.0" text="admin@wuav.dk"/>
    <PasswordField fx:id="fieldPassword" layoutX="469.0" layoutY="198.0" onAction="#handleLogIn" prefHeight="34.0"
-                  prefWidth="218.0"/>
+                  prefWidth="218.0" text="1234"/>
    <Label layoutX="469.0" layoutY="106.0" style="-fx-text-fill: #030202" text="Email"/>
    <Label layoutX="469.0" layoutY="180.0" style="-fx-text-fill: #030202" text="Password"/>
    <Button layoutX="503.0" layoutY="277.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="50.0"
