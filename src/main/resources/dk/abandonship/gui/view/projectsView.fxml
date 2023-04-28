@@ -3,8 +3,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="scrollPane" style="-fx-background-color: transparent" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
+<ScrollPane fx:id="scrollPane" style="-fx-background: transparent" fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
    <content>
-      <VBox fx:id="vbox" alignment="TOP_CENTER" />
+      <VBox fx:id="vbox" alignment="CENTER" style="-fx-background: transparent"/>
    </content>
 </ScrollPane>

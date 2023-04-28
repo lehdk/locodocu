@@ -44,5 +44,7 @@
 
 .ScrollPane {
     -fx-border-width: 0;
+    -fx-background: transparent;
     -fx-background-color: transparent;
 }
+

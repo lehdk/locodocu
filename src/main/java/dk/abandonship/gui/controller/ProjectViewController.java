@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -18,7 +19,7 @@ public class ProjectViewController implements Initializable {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         for (int i = 0; i < 100; i++) {
-        vbox.getChildren().add(new Button("Reeee"));
+            vbox.getChildren().add(new Button("Reeee"));
         }
     }
 }
