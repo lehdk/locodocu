@@ -5,7 +5,9 @@
     -fx-font-size: 22px;
     -fx-line-height: 22px;
     -fx-text-align: center;
-    fx-text-fill: #030202;
+    -fx-text-fill: #FFFF;
+
+    -fx-cursor: hand;
 
     -fx-color: #E84910;
     -fx-border-width: 1px;
