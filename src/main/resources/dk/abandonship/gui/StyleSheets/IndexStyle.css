@@ -41,3 +41,8 @@
 
     -fx-color: #030202;
 }
+
+.ScrollPane {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
