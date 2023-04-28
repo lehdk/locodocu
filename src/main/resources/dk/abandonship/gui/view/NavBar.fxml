@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../StyleSheets/NavStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.NavBarController">
-   <children>
-      <HBox fx:id="navBar" alignment="TOP_CENTER" prefWidth="1390.0">
-         <padding>
-            <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
-         </padding></HBox>
-   </children>
-</Pane>
+<HBox fx:id="navBar" alignment="TOP_CENTER" minWidth="0.0" stylesheets="@../StyleSheets/NavStyle.css" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.NavBarController">
+   <padding>
+      <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+</HBox>
