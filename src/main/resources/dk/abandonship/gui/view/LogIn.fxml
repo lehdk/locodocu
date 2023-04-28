@@ -17,7 +17,7 @@
    <Label layoutX="469.0" layoutY="106.0" style="-fx-text-fill: #030202" text="Email"/>
    <Label layoutX="469.0" layoutY="180.0" style="-fx-text-fill: #030202" text="Password"/>
    <Button layoutX="503.0" layoutY="277.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="50.0"
-           prefWidth="150.0" text="Log - In"/>
+           prefWidth="150.0" text="Log - In" style="-fx-text-fill: #030202"/>
    <Label fx:id="lblError" layoutX="94.0" layoutY="351.0" prefHeight="34.0" prefWidth="590.0"
           style="-fx-text-fill: #ff0000"/>
    <ImageView fitHeight="188.0" fitWidth="310.0" layoutX="84.0" layoutY="104.0" pickOnBounds="true"

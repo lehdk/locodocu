@@ -2,6 +2,7 @@ package dk.abandonship.gui.controller;
 
 import dk.abandonship.businesslogic.LoginManager;
 import dk.abandonship.gui.model.LoginModel;
+import dk.abandonship.utils.ControllerAssistant;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -19,8 +20,10 @@ public class LogInController implements Initializable {
     @FXML private PasswordField fieldPassword;
     @FXML private Label lblError;
     private LoginModel model;
+    private ControllerAssistant controllerAssistant;
 
     public LogInController() {
+        controllerAssistant = ControllerAssistant.getInstance();
         loginManager = new LoginManager();
     }
 
@@ -34,6 +37,11 @@ public class LogInController implements Initializable {
             boolean success = model.logIn(fieldEmail.getText(), fieldPassword.getText());
 
             if(!success) lblError.setText("Wrong username or password");
+
+            if(success){
+                controllerAssistant.setTopFX("NavBar");
+                controllerAssistant.setCenterFX("projectsView");
+            }
 
             // TODO: Redirect to logged in page
         } catch (Exception e) {
