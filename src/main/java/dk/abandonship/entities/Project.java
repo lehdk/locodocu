@@ -1,6 +1,8 @@
 package dk.abandonship.entities;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Project {
 
@@ -9,11 +11,14 @@ public class Project {
     private Timestamp createdAt;
     private Customer customer;
 
+    private Set<Documentation> documentations;
+
     public Project(int id, String name, Timestamp createdAt, Customer customer) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
         this.customer = customer;
+        documentations = new HashSet<>();
     }
 
     public int getId() {
@@ -46,6 +51,22 @@ public class Project {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Set<Documentation> getDocumentations() {
+        return documentations;
+    }
+
+    public void setDocumentations(Set<Documentation> documentations) {
+        this.documentations = documentations;
+    }
+
+    public void addDocumentation(Documentation documentation) {
+        documentations.add(documentation);
+    }
+
+    public void removeDocumentation(Documentation documentation) {
+        documentations.remove(documentation);
     }
 
     @Override
