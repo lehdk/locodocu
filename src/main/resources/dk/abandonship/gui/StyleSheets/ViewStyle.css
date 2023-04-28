@@ -1,0 +1,7 @@
+.label {
+    -fx-font-size: 16 st;
+    -fx-text-fill: WHITE;
+}
+.vbox {
+    -fx-background-color: #3D445C;
+}
