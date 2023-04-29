@@ -15,8 +15,8 @@ public class ProjectModel {
 
     private final ObservableList<Project> projectObservableList;
 
-    public ProjectModel(IProjectDAO projectDAO, IDocumentationDAO documentationDAO) throws SQLException {
-        projectManager = new ProjectManager(projectDAO, documentationDAO);
+    public ProjectModel() throws SQLException {
+        projectManager = new ProjectManager();
 
         projectObservableList = FXCollections.observableList(projectManager.getAllProjects());
     }

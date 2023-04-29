@@ -1,9 +1,5 @@
 package dk.abandonship.gui.controller;
 
-import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
-import dk.abandonship.dataaccess.ProjectDatabaseDAO;
-import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
-import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.gui.model.ProjectModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,9 +23,7 @@ public class ProjectViewController implements Initializable {
     private final ProjectModel projectModel;
 
     public ProjectViewController() throws SQLException {
-        IDocumentationDAO documentationDAO = new DocumentationDatabaseDAO();
-        IProjectDAO projectDAO = new ProjectDatabaseDAO(documentationDAO);
-        projectModel = new ProjectModel(projectDAO, documentationDAO);
+        projectModel = new ProjectModel();
     }
 
     @Override
