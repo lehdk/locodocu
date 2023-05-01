@@ -35,7 +35,7 @@ public class ProjectViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        if (state.getLoggedInUser().getRoles().contains(new Role(1,"admin"))) {
+        if (true || state.getLoggedInUser().getRoles().contains(new Role(1,"admin"))) { //TODO remove true
             setAdminBtn();
         }
 
@@ -45,17 +45,19 @@ public class ProjectViewController implements Initializable {
 
     private void setAdminBtn(){
         Button btn = new Button("+");
-        btn.setScaleX(vbox.getScaleX());
-        btn.setScaleY(vbox.getLayoutX());
+        btn.setPrefWidth(scrollPane.getPrefWidth());
+        btn.setScaleY(1);
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
         vbox.getChildren().add(btn);
+        System.out.println("ree");
     }
 
     private void setProjects(){
         vbox.setSpacing(5);
 
+        for (int i = 0; i < 2; i++) {
+
         for (var p : projectModel.getProjectObservableList()) {
-            Pane pane = new Pane();
             VBox vBox = new VBox();
             HBox hBox = new HBox();
 
@@ -75,15 +77,15 @@ public class ProjectViewController implements Initializable {
             hBox.getChildren().add(documentationCount);
 
             vBox.setAlignment(Pos.CENTER);
+            hBox.setAlignment(Pos.CENTER);
             vBox.getChildren().add(hBox);
-            Button btn =new Button("View details");
+            Button btn = new Button("View details");
             vBox.getChildren().add(btn);
+            vBox.setStyle("-fx-background-color: #030202");
+            vBox.getChildren().add(new Label(" \n"));
 
-            pane.setPrefSize(vBox.getPrefWidth()+60,vBox.getPrefHeight()+60);
-            pane.setStyle("-fx-background-color: #030202");
-            pane.getChildren().add(vBox);
-            pane.setPadding(new Insets(50,50,50,50));
-            vbox.getChildren().add(pane);
+            vbox.getChildren().add(vBox);
+        }
         }
     }
 
