@@ -44,10 +44,12 @@ public class ProjectViewController implements Initializable {
     }
 
     private void setAdminBtn(){
+
         Button btn = new Button("+");
-        btn.setPrefWidth(scrollPane.getPrefWidth());
-        btn.setScaleY(1);
+        btn.setPrefWidth(1430);
+        btn.setPrefHeight(125);
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
+        btn.setStyle("-fx-font-size: 60px");
         vbox.getChildren().add(btn);
         System.out.println("ree");
     }

@@ -48,3 +48,9 @@
     -fx-background-color: transparent;
 }
 
+.VBox {
+    -fx-border-width: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
