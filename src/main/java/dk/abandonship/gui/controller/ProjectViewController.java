@@ -55,8 +55,6 @@ public class ProjectViewController implements Initializable {
     private void setProjects(){
         vbox.setSpacing(5);
 
-        for (int i = 0; i < 2; i++) {
-
         for (var p : projectModel.getProjectObservableList()) {
             VBox vBox = new VBox();
             HBox hBox = new HBox();
@@ -85,7 +83,6 @@ public class ProjectViewController implements Initializable {
             vBox.getChildren().add(new Label(" \n"));
 
             vbox.getChildren().add(vBox);
-        }
         }
     }
 
