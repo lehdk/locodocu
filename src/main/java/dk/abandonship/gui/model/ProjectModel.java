@@ -15,7 +15,7 @@ public class ProjectModel {
 
     private final ObservableList<Project> projectObservableList;
 
-    public ProjectModel() throws SQLException {
+    public ProjectModel() throws Exception {
         projectManager = new ProjectManager();
 
         projectObservableList = FXCollections.observableList(projectManager.getAllProjects());
@@ -23,5 +23,9 @@ public class ProjectModel {
 
     public ObservableList<Project> getProjectObservableList() {
         return projectObservableList;
+    }
+
+    public void createProject(Project project) throws Exception{
+
     }
 }

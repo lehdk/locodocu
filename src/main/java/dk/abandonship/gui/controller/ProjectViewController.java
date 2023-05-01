@@ -1,19 +1,26 @@
 package dk.abandonship.gui.controller;
 
+import dk.abandonship.Main;
 import dk.abandonship.entities.Role;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
+import dk.abandonship.utils.ControllerAssistant;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -23,12 +30,19 @@ public class ProjectViewController implements Initializable {
     @FXML private ScrollPane scrollPane;
     @FXML private VBox vbox;
 
-    private final ProjectModel projectModel;
+    private ProjectModel projectModel;
     private LoggedInUserState state;
 
-    public ProjectViewController() throws SQLException {
-        projectModel = new ProjectModel();
+    private ControllerAssistant controllerAssistant;
+
+    public ProjectViewController() {
         state = LoggedInUserState.getInstance();
+        controllerAssistant = ControllerAssistant.getInstance();
+        try {
+            projectModel = new ProjectModel();
+        } catch (Exception e) {
+            controllerAssistant.displayError(e);
+        }
     }
 
     @Override
@@ -51,7 +65,6 @@ public class ProjectViewController implements Initializable {
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
         btn.setStyle("-fx-font-size: 60px");
         vbox.getChildren().add(btn);
-        System.out.println("ree");
     }
 
     private void setProjects(){
@@ -89,6 +102,33 @@ public class ProjectViewController implements Initializable {
     }
 
     private void addProject(){
-        System.out.println("reee");
+        //FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
+
+        /*
+        //Method 1
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
+            loader.load();
+            Parent root = loader.getRoot();
+
+
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.getDialogPane().setPrefSize(0,0);
+            alert.getDialogPane().setGraphic(root);
+            alert.getDialogPane().getStylesheets().add(String.valueOf(Main.class.getResource("gui/StyleSheets/IndexStyle.css")));
+            alert.showAndWait();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+         */
+
+        //method 2
+        try {
+            controllerAssistant.setCenterFX("PopUps/CreateProjectView");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
