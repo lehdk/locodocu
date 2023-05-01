@@ -1,6 +1,8 @@
 package dk.abandonship.gui.controller;
 
+import dk.abandonship.entities.Role;
 import dk.abandonship.gui.model.ProjectModel;
+import dk.abandonship.state.LoggedInUserState;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -8,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -21,15 +24,34 @@ public class ProjectViewController implements Initializable {
     @FXML private VBox vbox;
 
     private final ProjectModel projectModel;
+    private LoggedInUserState state;
 
     public ProjectViewController() throws SQLException {
         projectModel = new ProjectModel();
+        state = LoggedInUserState.getInstance();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
+        if (state.getLoggedInUser().getRoles().contains(new Role(1,"admin"))) {
+            setAdminBtn();
+        }
+
+        setProjects();
+
+    }
+
+    private void setAdminBtn(){
+        Button btn = new Button("+");
+        btn.setScaleX(vbox.getScaleX());
+        btn.setScaleY(vbox.getLayoutX());
+        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
+        vbox.getChildren().add(btn);
+    }
+
+    private void setProjects(){
         vbox.setSpacing(5);
 
         for (var p : projectModel.getProjectObservableList()) {
@@ -63,5 +85,9 @@ public class ProjectViewController implements Initializable {
             pane.setPadding(new Insets(50,50,50,50));
             vbox.getChildren().add(pane);
         }
+    }
+
+    private void addProject(){
+        System.out.println("reee");
     }
 }
