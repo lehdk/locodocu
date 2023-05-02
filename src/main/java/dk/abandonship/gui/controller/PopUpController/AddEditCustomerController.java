@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddCustomerController implements Initializable {
+public class AddEditCustomerController implements Initializable {
 
     private CustomerDTO result;
 
@@ -23,7 +23,7 @@ public class AddCustomerController implements Initializable {
     @FXML
     private Button btnAdd, btnCancel;
 
-    public AddCustomerController() {
+    public AddEditCustomerController() {
         result = null;
     }
 

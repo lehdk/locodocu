@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" style="-fx-background-color: #3D445C" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.AddCustomerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" style="-fx-background-color: #3D445C" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.AddEditCustomerController">
     <center>
         <GridPane prefHeight="358.0" prefWidth="302.0" BorderPane.alignment="CENTER">
             <columnConstraints>

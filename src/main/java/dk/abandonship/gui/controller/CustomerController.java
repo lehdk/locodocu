@@ -3,7 +3,7 @@ package dk.abandonship.gui.controller;
 import dk.abandonship.Main;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.CustomerDTO;
-import dk.abandonship.gui.controller.PopUpController.AddCustomerController;
+import dk.abandonship.gui.controller.PopUpController.AddEditCustomerController;
 import dk.abandonship.gui.model.CustomerModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.DefaultRoles;
@@ -122,10 +122,10 @@ public class CustomerController implements Initializable {
     public void handleAddEditCustomer(Customer customer) throws IOException {
         Stage popupStage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/AddCustomerView.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/AddEditCustomerView.fxml"));
 
         Parent root = loader.load();
-        AddCustomerController controller = loader.getController();
+        AddEditCustomerController controller = loader.getController();
 
         if(customer != null) {
             controller.editMode(customer);
