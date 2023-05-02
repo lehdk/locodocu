@@ -2,8 +2,11 @@ package dk.abandonship.dataaccess;
 
 import dk.abandonship.dataaccess.interfaces.ICustomerDAO;
 import dk.abandonship.entities.Customer;
+import dk.abandonship.entities.CustomerDTO;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +35,28 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
         }
 
         return customers;
+    }
+
+    @Override
+    public Customer addCustomer(CustomerDTO customerDTO) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [Customer] ([Name], [Phone], [Email], [Address]) VALUES (?,?,?,?);";
+
+            var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, customerDTO.getName());
+            statement.setString(2, customerDTO.getPhone());
+            statement.setString(3, customerDTO.getEmail());
+            statement.setString(4, customerDTO.getAddress());
+
+            statement.executeUpdate();
+
+            try(var resultSet = statement.getGeneratedKeys()) {
+                if(resultSet.next()) {
+                    return customerDTO.convertToCustomer(resultSet.getInt(1));
+                }
+            }
+        }
+
+        return null;
     }
 }
