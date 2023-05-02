@@ -37,4 +37,12 @@ public class CustomerModel {
 
         return customer;
     }
+
+    public void deleteCustomer(Customer customer) throws SQLException {
+        boolean wasDeleted = customerManager.deleteCustomer(customer);
+
+        if(wasDeleted) {
+            customerObservableList.remove(customer);
+        }
+    }
 }

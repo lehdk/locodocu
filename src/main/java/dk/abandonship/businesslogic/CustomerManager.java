@@ -23,4 +23,8 @@ public class CustomerManager {
     public Customer addCustomer(CustomerDTO customerDTO) throws SQLException {
         return customerDAO.addCustomer(customerDTO);
     }
+
+    public boolean deleteCustomer(Customer customer) throws SQLException {
+        return customerDAO.deleteCustomer(customer);
+    }
 }

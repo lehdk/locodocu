@@ -59,4 +59,19 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
 
         return null;
     }
+
+    @Override
+    public boolean deleteCustomer(Customer customer) throws SQLException {
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "DELETE FROM [Customer] WHERE [Id]=?";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, customer.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
+    }
 }

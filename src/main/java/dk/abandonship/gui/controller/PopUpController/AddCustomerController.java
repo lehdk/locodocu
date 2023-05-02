@@ -1,5 +1,6 @@
 package dk.abandonship.gui.controller.PopUpController;
 
+import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.CustomerDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,6 +34,15 @@ public class AddCustomerController implements Initializable {
         txtAddress.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
 
         validateInputs();
+    }
+
+    public void editMode(Customer customer) {
+        txtName.textProperty().setValue(customer.getName());
+        txtEmail.textProperty().setValue(customer.getEmail());
+        txtPhone.textProperty().setValue(customer.getPhone());
+        txtAddress.textProperty().setValue(customer.getAddress());
+
+        btnAdd.textProperty().setValue("Edit");
     }
 
     private void validateInputs() {

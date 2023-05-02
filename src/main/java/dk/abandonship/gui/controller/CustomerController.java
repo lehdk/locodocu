@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -47,12 +48,17 @@ public class CustomerController implements Initializable {
     @FXML
     private VBox vbox;
 
+    private Button deleteCustomerButton;
+
     public CustomerController() {
         customerModel = new CustomerModel();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        customerTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        customerTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateDeleteDisabled());
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
@@ -62,11 +68,11 @@ public class CustomerController implements Initializable {
 
         buttonsHBox.setSpacing(10);
 
-        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.PROJECTMANAGER) || LoggedInUserState.getInstance().hasRole(DefaultRoles.SALESPERSON)) {
+        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.PROJECTMANAGER, DefaultRoles.SALESPERSON)) {
             Button addCustomerButton = new Button("Add Customer");
             addCustomerButton.setOnAction(event -> {
                 try {
-                    handleAddCustomer();
+                    handleAddEditCustomer(null);
                 } catch (IOException e) {
                     System.err.println("Could not open window!");
                     e.printStackTrace();
@@ -77,12 +83,30 @@ public class CustomerController implements Initializable {
             Button editCustomerButton = new Button("Edit Customer");
             buttonsHBox.getChildren().add(editCustomerButton);
 
-            Button deleteCustomerButton = new Button("Delete Customer");
+            deleteCustomerButton = new Button("Delete Customer");
+            deleteCustomerButton.setOnAction(event -> handleDeleteCustomer());
             buttonsHBox.getChildren().add(deleteCustomerButton);
         }
+
+        updateDeleteDisabled();
     }
 
-    public void handleAddCustomer() throws IOException {
+    /**
+     * Updates the delete customer button.
+     * Disables the button if no customer is selected.
+     */
+    private void updateDeleteDisabled() {
+        if(deleteCustomerButton == null) return;
+
+        var selectedItem = customerTableView.getSelectionModel().getSelectedItem();
+        deleteCustomerButton.setDisable(selectedItem == null);
+    }
+
+    /**
+     * Adds or edits a customer
+     * @param customer The customer you want to edit. Null of add mode.
+     */
+    public void handleAddEditCustomer(Customer customer) throws IOException {
         Stage popupStage = new Stage();
 
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/AddCustomerView.fxml"));
@@ -104,6 +128,18 @@ public class CustomerController implements Initializable {
             customerModel.addCustomer(result);
         } catch (SQLException e) {
             System.err.println("Could not add customer!");
+            e.printStackTrace();
+        }
+    }
+
+    public void handleDeleteCustomer() {
+        var selectedItem = customerTableView.getSelectionModel().getSelectedItem();
+        if(selectedItem == null) return;
+
+        try {
+            customerModel.deleteCustomer(selectedItem);
+        } catch (SQLException e) {
+            System.err.println("Could not delete customer!");
             e.printStackTrace();
         }
     }
