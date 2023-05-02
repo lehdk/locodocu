@@ -1,8 +1,9 @@
 package dk.abandonship.gui.controller.PopUpController;
 
 import dk.abandonship.entities.Customer;
-import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
+import dk.abandonship.entities.User;
+import dk.abandonship.gui.model.CustomerModel;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.gui.model.UserModel;
 import dk.abandonship.utils.ControllerAssistant;
@@ -22,14 +23,15 @@ import java.util.ResourceBundle;
 public class CreateProjectView implements Initializable {
 
     @FXML private TextField fieldAddress;
-    @FXML private ComboBox comboBoxTechnicians, comboBoxCustomer;
+    @FXML private ComboBox<User> comboBoxTechnicians;
+    @FXML private ComboBox<Customer> comboBoxCustomer;
     @FXML private DatePicker datePicker;
     @FXML private Button btnCancel, btnConfirm1;
 
     private ControllerAssistant controllerAssistant;
 
     private UserModel userModel;
-
+    private CustomerModel customerModel;
     private ProjectModel model;
 
     @Override
@@ -38,9 +40,10 @@ public class CreateProjectView implements Initializable {
         try {
             model = new ProjectModel();
             userModel = new UserModel();
+            customerModel = new CustomerModel();
 
             comboBoxTechnicians.setItems(userModel.getAllTechnicians());
-            //comboBoxCustomer.setItems(userModel.getAllCustomers); //TODO get customer when its made
+            comboBoxCustomer.setItems(customerModel.getCustomerObservableList());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
@@ -52,8 +55,8 @@ public class CreateProjectView implements Initializable {
             return false;
         }
         if (comboBoxCustomer.getValue() == null) {
-            //controllerAssistant.displayAlert("Missing a customer");
-            //return false; //TODO USe This when its made
+            controllerAssistant.displayAlert("Missing a customer");
+            return false;
         }
         if (datePicker.getValue() == null || datePicker.getValue().isBefore(LocalDate.now())) {
             controllerAssistant.displayAlert("Missing a proper date");
@@ -70,30 +73,27 @@ public class CreateProjectView implements Initializable {
         if (!isDataValid()) return;
 
         String address  = fieldAddress.getText();
-        //String customer = comboBoxCustomer.getValue().toString(); //TODO USe customer when its made
+        Customer customer =  comboBoxCustomer.getValue();
         LocalDate time = datePicker.getValue();
-        String technician = comboBoxTechnicians.getValue().toString();
+        User technician = comboBoxTechnicians.getValue();
 
 
-        //TODO replace customer
-        ProjectDTO project = new ProjectDTO(address,new Customer(1,"Mærsk","noreply@maersk.dk","42424242","Mærsk vej, 42, 4242 Fantasiby"),time);
+        ProjectDTO project = new ProjectDTO(address,customer,time);
 
         try {
             model.createProject(project);
-            closse();
+            close();
         } catch (Exception e){
             controllerAssistant.displayError(e);
         }
-        //TODO Create Project with Correct DATA
 
-        System.out.println("created Project");
     }
 
     public void handleClose(ActionEvent actionEvent) {
-        closse();
+        close();
     }
 
-    private void closse(){
+    private void close(){
         Stage stage  = (Stage) btnCancel.getScene().getWindow();
         stage.close();
     }
