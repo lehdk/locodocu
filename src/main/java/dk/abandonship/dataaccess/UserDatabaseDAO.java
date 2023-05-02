@@ -52,8 +52,40 @@ public class UserDatabaseDAO implements IUserDAO {
 
     @Override
     public List<User> getAllUsers() throws Exception {
-        return null;
+        List<User> users = new ArrayList<>();
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "SELECT * FROM Users";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            var resultSet = stmt.executeQuery();
+
+            if(resultSet.next()) {
+                User resultUser = new User(
+                        resultSet.getInt("Id"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("Email"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Password"),
+                        resultSet.getTimestamp("DisabledAt")
+                );
+
+                if(resultUser != null) {
+
+                    var roles = roleDAO.getAllRolesForUser(resultUser);
+
+                    resultUser.setAllRoles(roles);
+
+                    users.add(resultUser);
+                }
+            }
+        }
+
+
+        return users;
     }
+
 
     @Override
     public List<User> getAllTechnicians() throws Exception {

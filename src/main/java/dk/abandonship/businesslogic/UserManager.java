@@ -17,7 +17,7 @@ public class UserManager {
     }
 
     public List<User> getAllUsers() throws Exception{
-        return null;
+        return userDAO.getAllUsers();
     }
 
     public List<User> getAllTechnicians() throws Exception{
