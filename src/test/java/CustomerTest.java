@@ -1,4 +1,5 @@
 import dk.abandonship.entities.Customer;
+import dk.abandonship.entities.CustomerDTO;
 import dk.abandonship.gui.model.CustomerModel;
 import org.junit.jupiter.api.Test;
 
@@ -31,4 +32,24 @@ public class CustomerTest {
 
         assertNotNull(customers);
     }
+
+    @Test
+    void canConvertCustomerDTOToCustomer() {
+        int id = 42;
+        String name = "Test Customer";
+        String email = "test@customer.dk";
+        String phone = "12345678";
+        String address = "Test Road Nr. 42, Nashville";
+
+        CustomerDTO customerDTO = new CustomerDTO(name, email, phone, address);
+
+        Customer customer = customerDTO.convertToCustomer(id);
+
+        assertEquals(id, customer.getId());
+        assertEquals(name, customer.getName());
+        assertEquals(email, customer.getEmail());
+        assertEquals(phone, customer.getPhone());
+        assertEquals(address, customer.getAddress());
+    }
+
 }
