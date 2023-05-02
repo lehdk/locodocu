@@ -1,7 +1,10 @@
+import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
+import dk.abandonship.dataaccess.ProjectDatabaseDAO;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.Project;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
@@ -22,5 +25,14 @@ public class ProjectTest {
         assertEquals(p.getName(), name);
         assertEquals(p.getCreatedAt(), createdAt);
         assertEquals(p.getCustomer(), customer);
+    }
+
+    @Test
+    void projectsAreNotNull() throws SQLException {
+        var projectDAO = new ProjectDatabaseDAO(new DocumentationDatabaseDAO());
+
+        var projects = projectDAO.getAllProjects();
+
+        assertNotNull(projects);
     }
 }
