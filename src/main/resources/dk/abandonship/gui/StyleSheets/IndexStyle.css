@@ -47,6 +47,11 @@
     -fx-background: transparent;
     -fx-background-color: transparent;
 }
+.Scroll-Pane {
+    -fx-border-width: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
 
 .VBox {
     -fx-border-width: 0;

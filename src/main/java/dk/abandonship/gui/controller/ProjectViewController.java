@@ -71,7 +71,7 @@ public class ProjectViewController implements Initializable {
     }
 
     private void setProjects(){
-        vbox.setSpacing(5);
+        vbox.setSpacing(10);
 
         for (var p : projectModel.getProjectObservableList()) {
             VBox vBox = new VBox();
@@ -130,7 +130,15 @@ public class ProjectViewController implements Initializable {
     }
 
     private void openProject(Project project){
-        System.out.println(project.getName());
-        //TODO open project window acording to user role
+        try {
+            System.out.println(project.getName());
+            var controller = (DocViewController) controllerAssistant.setCenterFX("DocView");
+            controller.setProject(project);
+
+            //TODO open project window acording to user role
+        } catch (Exception e) {
+            controllerAssistant.displayError(e);
+        }
+
     }
 }
