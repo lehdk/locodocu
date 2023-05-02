@@ -4,6 +4,7 @@ import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.ProjectDTO;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -63,5 +64,18 @@ public class ProjectDatabaseDAO implements IProjectDAO {
         }
 
         return projects;
+    }
+
+    public void createProject(ProjectDTO projectDTO) throws Exception {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [Project] ([Name], [CustomerId]) VALUES (?, ?);";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, projectDTO.getAddress());
+            stmt.setInt(2, projectDTO.getCustomer().getId());
+
+            stmt.execute();
+        }
     }
 }

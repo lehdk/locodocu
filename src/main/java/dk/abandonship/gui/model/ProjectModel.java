@@ -4,6 +4,7 @@ import dk.abandonship.businesslogic.ProjectManager;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.ProjectDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,7 +26,7 @@ public class ProjectModel {
         return projectObservableList;
     }
 
-    public void createProject(Project project) throws Exception{
-
+    public void createProject(ProjectDTO projectDTO) throws Exception{
+        projectManager.createProject(projectDTO);
     }
 }

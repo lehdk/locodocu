@@ -5,6 +5,7 @@ import dk.abandonship.dataaccess.ProjectDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.ProjectDTO;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,4 +40,7 @@ public class ProjectManager {
         return projects;
     }
 
+    public void createProject(ProjectDTO projectDTO) throws Exception{
+        projectDAO.createProject(projectDTO);
+    }
 }

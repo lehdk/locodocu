@@ -55,6 +55,7 @@ public class ProjectViewController implements Initializable {
 
         setProjects();
 
+
     }
 
     private void setAdminBtn(){
@@ -104,30 +105,22 @@ public class ProjectViewController implements Initializable {
     private void addProject(){
         //FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
 
-        /*
+
         //Method 1
         try {
+            Stage popupStage = new Stage();
+
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
-            loader.load();
-            Parent root = loader.getRoot();
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
 
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
 
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.getDialogPane().setPrefSize(0,0);
-            alert.getDialogPane().setGraphic(root);
-            alert.getDialogPane().getStylesheets().add(String.valueOf(Main.class.getResource("gui/StyleSheets/IndexStyle.css")));
-            alert.showAndWait();
         }
         catch (Exception e) {
-            e.printStackTrace();
-        }
-
-         */
-
-        //method 2
-        try {
-            controllerAssistant.setCenterFX("PopUps/CreateProjectView");
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
