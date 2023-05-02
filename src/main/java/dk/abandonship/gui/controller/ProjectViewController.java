@@ -1,10 +1,12 @@
 package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
+import dk.abandonship.entities.Project;
 import dk.abandonship.entities.Role;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
+import dk.abandonship.utils.DefaultRoles;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -49,7 +51,7 @@ public class ProjectViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        if (true || state.getLoggedInUser().getRoles().contains(new Role(1,"admin"))) { //TODO remove true
+        if (state.hasRole(DefaultRoles.ADMIN)) {
             setAdminBtn();
         }
 
@@ -61,7 +63,7 @@ public class ProjectViewController implements Initializable {
     private void setAdminBtn(){
 
         Button btn = new Button("+");
-        btn.setPrefWidth(1430);
+        btn.setPrefWidth(1450);
         btn.setPrefHeight(125);
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
         btn.setStyle("-fx-font-size: 60px");
@@ -98,6 +100,8 @@ public class ProjectViewController implements Initializable {
             vBox.setStyle("-fx-background-color: #030202");
             vBox.getChildren().add(new Label(" \n"));
 
+            btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
+
             vbox.getChildren().add(vBox);
         }
     }
@@ -123,5 +127,10 @@ public class ProjectViewController implements Initializable {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void openProject(Project project){
+        System.out.println(project.getName());
+        //TODO open project window acording to user role
     }
 }
