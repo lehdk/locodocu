@@ -52,7 +52,20 @@ public class NavBarController implements Initializable {
             navBar.setSpacing(20);
         }
 
+        Button customerButton = new Button("Customers");
+        customerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                controllerAssistant.setCenterFX("CustomerView");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        navBar.getChildren().add(customerButton);
+
+
     }
+
+
 
     private void projects() {
         try {
