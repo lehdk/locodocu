@@ -52,6 +52,15 @@ public class NavBarController implements Initializable {
             navBar.setSpacing(20);
         }
 
+        if (userState.getLoggedInUser() != null){
+            Button btn1 = new Button("Users");
+            btn1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> users());
+
+            navBar.getChildren().add(btn1);
+
+            navBar.setSpacing(20);
+        }
+
     }
 
     private void projects() {
@@ -65,6 +74,14 @@ public class NavBarController implements Initializable {
     private void test() {
         try {
             controllerAssistant.setCenterFX("LogIn");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void users() {
+        try {
+            controllerAssistant.setCenterFX("UsersView");
         } catch (Exception e) {
             e.printStackTrace();
         }
