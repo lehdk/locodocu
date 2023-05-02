@@ -99,3 +99,14 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (1, 3);
 INSERT INTO [Documentation] ([Name]) VALUES ('Broen'); -- Id 1
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (1, 1);
 INSERT INTO [DocumentationTextField] ([DocumentationId], [Text]) VALUES (1, 'We have made the best audio system to scare away pirates arrrrrr.');
+
+-- Fake documentation
+INSERT INTO [Customer] ([Name], [Phone], [Email], [Address]) VALUES ('Lego', '78491494', 'noreply@lego.dk', 'Lego vej, 420, 7190 Billund'); -- Id 2
+
+INSERT INTO [Project] ([Name], [CustomerId]) VALUES ('Lego House', 2); -- Id 2
+
+INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (2, 3);
+
+INSERT INTO [Documentation] ([Name]) VALUES ('Receptionen'); -- Id 2
+INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (2, 2);
+INSERT INTO [DocumentationTextField] ([DocumentationId], [Text]) VALUES (2, 'Many lights');
