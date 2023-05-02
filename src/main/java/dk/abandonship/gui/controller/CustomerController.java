@@ -18,7 +18,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -45,10 +44,7 @@ public class CustomerController implements Initializable {
     @FXML
     private HBox buttonsHBox;
 
-    @FXML
-    private VBox vbox;
-
-    private Button deleteCustomerButton;
+    private Button deleteCustomerButton, editCustomerButton;
 
     public CustomerController() {
         customerModel = new CustomerModel();
@@ -57,7 +53,7 @@ public class CustomerController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         customerTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        customerTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateDeleteDisabled());
+        customerTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateSelectedDisabledButtons());
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -80,7 +76,19 @@ public class CustomerController implements Initializable {
             });
             buttonsHBox.getChildren().add(addCustomerButton);
 
-            Button editCustomerButton = new Button("Edit Customer");
+            editCustomerButton = new Button("Edit Customer");
+            editCustomerButton.setOnAction(event -> {
+                var selectedItem = customerTableView.getSelectionModel().getSelectedItem();
+                if(selectedItem == null) return;
+
+                try {
+                    handleAddEditCustomer(selectedItem);
+                } catch (IOException e) {
+                    System.err.println("Could not open window!");
+                    throw new RuntimeException(e);
+                }
+
+            });
             buttonsHBox.getChildren().add(editCustomerButton);
 
             deleteCustomerButton = new Button("Delete Customer");
@@ -88,18 +96,23 @@ public class CustomerController implements Initializable {
             buttonsHBox.getChildren().add(deleteCustomerButton);
         }
 
-        updateDeleteDisabled();
+        updateSelectedDisabledButtons();
     }
 
     /**
      * Updates the delete customer button.
      * Disables the button if no customer is selected.
      */
-    private void updateDeleteDisabled() {
-        if(deleteCustomerButton == null) return;
-
+    private void updateSelectedDisabledButtons() {
         var selectedItem = customerTableView.getSelectionModel().getSelectedItem();
-        deleteCustomerButton.setDisable(selectedItem == null);
+
+        if(deleteCustomerButton != null) {
+            deleteCustomerButton.setDisable(selectedItem == null);
+        }
+
+        if(editCustomerButton != null) {
+            editCustomerButton.setDisable(selectedItem == null);
+        }
     }
 
     /**
@@ -113,6 +126,11 @@ public class CustomerController implements Initializable {
 
         Parent root = loader.load();
         AddCustomerController controller = loader.getController();
+
+        if(customer != null) {
+            controller.editMode(customer);
+        }
+
         Scene popupScene = new Scene(root);
 
         popupStage.setScene(popupScene);
@@ -125,7 +143,15 @@ public class CustomerController implements Initializable {
         if(result == null) return;
 
         try {
-            customerModel.addCustomer(result);
+            if(customer == null) {
+                // Add a new customer
+                customerModel.addCustomer(result);
+            } else {
+                // Edit a current customer
+                boolean wasEdited = customerModel.editCustomer(customer, result);
+                if(wasEdited) customerTableView.refresh();
+                customerTableView.getSelectionModel().clearSelection();
+            }
         } catch (SQLException e) {
             System.err.println("Could not add customer!");
             e.printStackTrace();

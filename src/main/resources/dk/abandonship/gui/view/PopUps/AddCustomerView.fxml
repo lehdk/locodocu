@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" style="-fx-background-color: #3D445C" stylesheets="@../../StyleSheets/IndexStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.AddCustomerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" style="-fx-background-color: #3D445C" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.AddCustomerController">
     <center>
         <GridPane prefHeight="358.0" prefWidth="302.0" BorderPane.alignment="CENTER">
             <columnConstraints>
@@ -39,19 +40,21 @@
     <bottom>
         <GridPane BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES"/>
             </rowConstraints>
-            <children>
-                <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAdd" text="Add" GridPane.columnIndex="1" />
-                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
-            </children>
             <BorderPane.margin>
-                <Insets bottom="25.0" top="25.0" />
+                <Insets bottom="25.0" top="25.0"/>
             </BorderPane.margin>
+            <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAdd" text="Save" GridPane.columnIndex="1"/>
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancel" text="Cancel"/>
         </GridPane>
     </bottom>
+   <stylesheets>
+      <URL value="@../../StyleSheets/IndexStyle.css" />
+      <URL value="@../../StyleSheets/AddEditCustomerView.css" />
+   </stylesheets>
 </BorderPane>

@@ -41,8 +41,6 @@ public class AddCustomerController implements Initializable {
         txtEmail.textProperty().setValue(customer.getEmail());
         txtPhone.textProperty().setValue(customer.getPhone());
         txtAddress.textProperty().setValue(customer.getAddress());
-
-        btnAdd.textProperty().setValue("Edit");
     }
 
     private void validateInputs() {

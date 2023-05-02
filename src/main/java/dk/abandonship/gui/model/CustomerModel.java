@@ -28,14 +28,13 @@ public class CustomerModel {
         return customerObservableList;
     }
 
-    public Customer addCustomer(CustomerDTO customerDTO) throws SQLException {
+    public void addCustomer(CustomerDTO customerDTO) throws SQLException {
         Customer customer = customerManager.addCustomer(customerDTO);
 
         if(customer != null) {
             customerObservableList.add(customer);
         }
 
-        return customer;
     }
 
     public void deleteCustomer(Customer customer) throws SQLException {
@@ -44,5 +43,18 @@ public class CustomerModel {
         if(wasDeleted) {
             customerObservableList.remove(customer);
         }
+    }
+
+    public boolean editCustomer(Customer customer, CustomerDTO newData) throws SQLException {
+        boolean wasEdited = customerManager.editCustomer(customer, newData);
+
+        if(wasEdited) {
+            customer.setName(newData.getName());
+            customer.setEmail(newData.getEmail());
+            customer.setAddress(newData.getAddress());
+            customer.setPhone(newData.getPhone());
+        }
+
+        return wasEdited;
     }
 }
