@@ -1,6 +1,9 @@
 import dk.abandonship.dataaccess.RoleDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.entities.Role;
+import dk.abandonship.entities.User;
+import dk.abandonship.state.LoggedInUserState;
+import dk.abandonship.utils.DefaultRoles;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -80,5 +83,29 @@ public class RoleTest {
 
         assertEquals(role.getId(), 4);
         assertEquals(role.getName(), "salesperson");
+    }
+
+    @Test
+    void userHasRoleAdmin() {
+        User user = new User(0, "name", null, null, null, null);
+
+        Role admin = new Role(1, "admin");
+        user.addRole(admin);
+
+        LoggedInUserState.getInstance().setLoggedInUser(user);
+
+        assertTrue(LoggedInUserState.getInstance().hasRole(DefaultRoles.ADMIN));
+    }
+
+    @Test
+    void userDoesNotHaveRoleAdmin() {
+        User user = new User(0, "name", null, null, null, null);
+
+        Role pm = new Role(2, "project-manager");
+        user.addRole(pm);
+
+        LoggedInUserState.getInstance().setLoggedInUser(user);
+
+        assertFalse(LoggedInUserState.getInstance().hasRole(DefaultRoles.ADMIN));
     }
 }
