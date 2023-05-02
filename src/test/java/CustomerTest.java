@@ -1,4 +1,5 @@
 import dk.abandonship.entities.Customer;
+import dk.abandonship.gui.model.CustomerModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,4 +23,12 @@ public class CustomerTest {
         assertEquals(c.getAddress(), address);
     }
 
+    @Test
+    void canLoadCustomersFromDatabase() {
+        CustomerModel customerModel = new CustomerModel();
+
+        var customers = customerModel.getCustomerObservableList().stream().toList();
+
+        assertNotNull(customers);
+    }
 }
