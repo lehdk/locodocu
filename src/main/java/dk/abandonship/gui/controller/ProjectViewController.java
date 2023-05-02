@@ -1,6 +1,7 @@
 package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
+import dk.abandonship.entities.Project;
 import dk.abandonship.entities.Role;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
@@ -99,6 +100,8 @@ public class ProjectViewController implements Initializable {
             vBox.setStyle("-fx-background-color: #030202");
             vBox.getChildren().add(new Label(" \n"));
 
+            btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
+
             vbox.getChildren().add(vBox);
         }
     }
@@ -124,5 +127,10 @@ public class ProjectViewController implements Initializable {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void openProject(Project project){
+        System.out.println(project.getName());
+        //TODO open project window acording to user role
     }
 }
