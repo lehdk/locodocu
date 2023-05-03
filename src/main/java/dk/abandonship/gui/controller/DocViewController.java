@@ -156,8 +156,10 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
         vboxPic.getChildren().add(addPicture);
-        vbox2.getChildren().add(vboxPic);
 
+        nodeArray.add(vboxPic);
+
+        vbox2.getChildren().add(vboxPic);
         vbox2.getChildren().add(new Label("\n\n"));
     }
 
