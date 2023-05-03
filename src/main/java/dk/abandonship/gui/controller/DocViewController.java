@@ -101,6 +101,7 @@ public class DocViewController implements Initializable {
 
     private void save() {
         System.out.println("SAVE"); //TODO make saving doc to DB
+        projectModel.saveToDB(nodeArray);
     }
 
     private void cancel() {
