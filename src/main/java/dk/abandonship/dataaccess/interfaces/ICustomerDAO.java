@@ -20,4 +20,19 @@ public interface ICustomerDAO {
      * @return The newly added customer.
      */
     Customer addCustomer(CustomerDTO customerDTO) throws SQLException;
+
+    /**
+     * Deletes a customer
+     * @param customer The customer to delete
+     * @return True if the customer was deleted. False otherwise.
+     */
+    boolean deleteCustomer(Customer customer) throws SQLException;
+
+    /**
+     * Edits a current customer
+     * @param customer The customer to edit
+     * @param newData The new data for the customer
+     * @return True if the customer was edited
+     */
+    boolean editCustomer(Customer customer, CustomerDTO newData) throws SQLException;
 }

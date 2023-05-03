@@ -4,7 +4,6 @@ import dk.abandonship.dataaccess.interfaces.ICustomerDAO;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.CustomerDTO;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -58,5 +57,39 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean deleteCustomer(Customer customer) throws SQLException {
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "DELETE FROM [Customer] WHERE [Id]=?";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, customer.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
+    }
+
+    @Override
+    public boolean editCustomer(Customer customer, CustomerDTO newData) throws SQLException {
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "UPDATE [Customer] SET [Name]=?,[Phone]=?,[Email]=?,[Address]=? WHERE [Id]=?";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, newData.getName());
+            statement.setString(2, newData.getPhone());
+            statement.setString(3, newData.getEmail());
+            statement.setString(4, newData.getAddress());
+            statement.setInt(5, customer.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
     }
 }

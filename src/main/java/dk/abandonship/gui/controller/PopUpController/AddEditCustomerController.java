@@ -1,5 +1,6 @@
 package dk.abandonship.gui.controller.PopUpController;
 
+import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.CustomerDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,7 +13,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddCustomerController implements Initializable {
+public class AddEditCustomerController implements Initializable {
 
     private CustomerDTO result;
 
@@ -22,7 +23,7 @@ public class AddCustomerController implements Initializable {
     @FXML
     private Button btnAdd, btnCancel;
 
-    public AddCustomerController() {
+    public AddEditCustomerController() {
         result = null;
     }
 
@@ -33,6 +34,13 @@ public class AddCustomerController implements Initializable {
         txtAddress.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
 
         validateInputs();
+    }
+
+    public void editMode(Customer customer) {
+        txtName.textProperty().setValue(customer.getName());
+        txtEmail.textProperty().setValue(customer.getEmail());
+        txtPhone.textProperty().setValue(customer.getPhone());
+        txtAddress.textProperty().setValue(customer.getAddress());
     }
 
     private void validateInputs() {
