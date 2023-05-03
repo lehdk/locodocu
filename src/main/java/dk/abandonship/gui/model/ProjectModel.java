@@ -37,7 +37,7 @@ public class ProjectModel {
         projectManager.createProject(projectDTO);
     }
 
-    public void saveToDB(ArrayList<Node> nodeArray) {
+    public void saveToDB(ArrayList<Node> nodeArray) throws Exception {
         System.out.println(nodeArray.size());
         projectManager.saveDoc(nodeArray);
     }

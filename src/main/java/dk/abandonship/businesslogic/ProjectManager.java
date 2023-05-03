@@ -14,6 +14,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +58,7 @@ public class ProjectManager {
         projectDAO.createProject(projectDTO);
     }
 
-    public void saveDoc(ArrayList<Node> nodeArray) {
+    public void saveDoc(ArrayList<Node> nodeArray) throws Exception{
         for (Node n : nodeArray) {
             if(n instanceof TextArea){
                 //TODO save textarea
@@ -79,7 +85,7 @@ public class ProjectManager {
                         if (v instanceof HBox) {
                             for (Node b : ((HBox) v).getChildren()) {
                                 ImageView img = (ImageView) b;
-                                System.out.println(img.getImage());
+                                System.out.println(convertImgToByte(img.getImage()));
                                 //TODO Save IMAGE
                             }
                         }
@@ -97,5 +103,15 @@ public class ProjectManager {
 
             }
         }
+    }
+
+    private byte[] convertImgToByte(Image img) throws Exception{
+        byte[]  data = img.getUrl().getBytes(StandardCharsets.UTF_8); //TODO NOTE this may only work locally need test
+        return data;
+    }
+
+    private Image convertBteToImg(byte[] arrByte) {
+        Image img = new Image(new ByteArrayInputStream(arrByte));
+        return img;
     }
 }
