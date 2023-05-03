@@ -6,8 +6,16 @@ import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
+import javafx.scene.Node;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectManager {
@@ -42,5 +50,52 @@ public class ProjectManager {
 
     public void createProject(ProjectDTO projectDTO) throws Exception{
         projectDAO.createProject(projectDTO);
+    }
+
+    public void saveDoc(ArrayList<Node> nodeArray) {
+        for (Node n : nodeArray) {
+            if(n instanceof TextArea){
+                //TODO save textarea
+                System.out.println(((TextArea) n).getText());
+            } else if (n instanceof VBox) {
+
+                int textField = 0;
+                int hBox = 0;
+
+                for (Node v : ((VBox) n).getChildren()) {
+                    if (v instanceof HBox) {
+                        hBox++;
+
+                    } else if (v instanceof TextField) {
+                        textField++;
+                    }
+                }
+
+                if (hBox >= 1) {
+                    for (Node v : ((VBox) n).getChildren()) {
+                        if (v instanceof TextField) {
+                            ((TextField) v).getText();
+                        }
+                        if (v instanceof HBox) {
+                            for (Node b : ((HBox) v).getChildren()) {
+                                ImageView img = (ImageView) b;
+                                System.out.println(img.getImage());
+                                //TODO Save IMAGE
+                            }
+                        }
+                    }
+                }
+
+                else if (textField >= 2){
+                    for (Node v : ((VBox) n).getChildren()) {
+                        if (v instanceof TextField){
+                            System.out.println(((TextField) v).getText());
+                            //TODO SAVE log-in
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }

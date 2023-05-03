@@ -39,27 +39,6 @@ public class ProjectModel {
 
     public void saveToDB(ArrayList<Node> nodeArray) {
         System.out.println(nodeArray.size());
-
-        for (Node n : nodeArray) {
-            if(n instanceof TextArea){
-                System.out.println("area");
-            } else if (n instanceof VBox) {
-
-                int textField = 0;
-
-                for (Node v : ((VBox) n).getChildren()) {
-                    if (v instanceof HBox) {
-                        System.out.println("images");
-                    } else if (v instanceof TextField) {
-                        textField++;
-                    }
-
-                    if (textField > 1) {
-                        System.out.println("LogIn");
-                    }
-                }
-
-            }
-        }
+        projectManager.saveDoc(nodeArray);
     }
 }
