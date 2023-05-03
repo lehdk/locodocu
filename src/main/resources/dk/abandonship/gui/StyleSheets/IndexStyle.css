@@ -129,3 +129,47 @@
     -fx-background-color:#E84910;
     -fx-cursor: hand;
 }
+
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.root{
+    -fx-background-color: #E84910;
+}
+
+.table-view:focused{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: #E84910 100;
+}
+
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell{
+    -fx-text-fill: #FFFF;
+}
+
+.table-row-cell{
+    -fx-background-color: -fx-table-cell-border-color, #E84910;
+    -fx-cursor: hand;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, #E849;
+    -fx-cursor: hand;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFFF;
+}
