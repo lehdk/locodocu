@@ -4,6 +4,7 @@ import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
 import dk.abandonship.dataaccess.ProjectDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
+import dk.abandonship.entities.DocumentationNode;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
 import javafx.scene.Node;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ProjectManager {
@@ -58,17 +60,17 @@ public class ProjectManager {
         projectDAO.createProject(projectDTO);
     }
 
-    public void saveDoc(ArrayList<Node> nodeArray) throws Exception{
-        for (Node n : nodeArray) {
-            if(n instanceof TextArea){
+    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap) throws Exception{
+        for (var set : nodeMap.entrySet()) {
+            if(set.getKey() instanceof TextArea){
                 //TODO save textarea
-                System.out.println(((TextArea) n).getText());
-            } else if (n instanceof VBox) {
+                System.out.println(((TextArea) set.getKey()).getText());
+            } else if (set.getKey() instanceof VBox) {
 
                 int textField = 0;
                 int hBox = 0;
 
-                for (Node v : ((VBox) n).getChildren()) {
+                for (Node v : ((VBox) set.getKey()).getChildren()) {
                     if (v instanceof HBox) {
                         hBox++;
 
@@ -78,7 +80,7 @@ public class ProjectManager {
                 }
 
                 if (hBox >= 1) {
-                    for (Node v : ((VBox) n).getChildren()) {
+                    for (Node v : ((VBox) set.getKey()).getChildren()) {
                         if (v instanceof TextField) {
                             ((TextField) v).getText();
                         }
@@ -93,7 +95,7 @@ public class ProjectManager {
                 }
 
                 else if (textField >= 2){
-                    for (Node v : ((VBox) n).getChildren()) {
+                    for (Node v : ((VBox) set.getKey()).getChildren()) {
                         if (v instanceof TextField){
                             System.out.println(((TextField) v).getText());
                             //TODO SAVE log-in

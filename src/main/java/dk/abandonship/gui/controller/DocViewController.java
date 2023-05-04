@@ -1,6 +1,7 @@
 package dk.abandonship.gui.controller;
 
 import dk.abandonship.entities.Documentation;
+import dk.abandonship.entities.DocumentationNode;
 import dk.abandonship.entities.Project;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.utils.ControllerAssistant;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
 public class DocViewController implements Initializable {
@@ -31,7 +33,7 @@ public class DocViewController implements Initializable {
     private ProjectModel projectModel;
     private ControllerAssistant controllerAssistant;
 
-    private ArrayList<Node> nodeArray;
+    private LinkedHashMap<Node, DocumentationNode> nodeMap;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,7 +61,7 @@ public class DocViewController implements Initializable {
         HBox savAndCancelBox = new HBox();
         vbox2 = new VBox();
 
-        nodeArray = new ArrayList<>();
+        nodeMap = new LinkedHashMap<>();
 
 
         Button button1 = new Button("addField");
@@ -93,8 +95,8 @@ public class DocViewController implements Initializable {
         savAndCancelBox.getChildren().add(cancel);
         savAndCancelBox.getChildren().add(print);
 
-        vbox.getChildren().add(hBox);
         vbox.getChildren().add(vbox2);
+        vbox.getChildren().add(hBox);
         vbox.getChildren().add(savAndCancelBox);
 
     }
@@ -102,7 +104,7 @@ public class DocViewController implements Initializable {
     private void save() {
         try {
             System.out.println("SAVE"); //TODO make saving doc to DB
-            projectModel.saveToDB(nodeArray);
+            projectModel.saveToDB(nodeMap);
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
@@ -122,7 +124,7 @@ public class DocViewController implements Initializable {
 
     private void addTextFieldForEdit(){
         TextArea field = new TextArea();
-        nodeArray.add(field);
+        nodeMap.put(field,null);
         vbox2.getChildren().add(field);
         vbox2.getChildren().add(new Label("\n\n")); //Mini spacing
     }
@@ -138,7 +140,7 @@ public class DocViewController implements Initializable {
         vboxLog.getChildren().add(new Label("PassWord"));
         vboxLog.getChildren().add(field2);
 
-        nodeArray.add(vboxLog);
+        nodeMap.put(vboxLog, null);
 
         vbox2.getChildren().add(vboxLog);
         vbox2.getChildren().add(new Label("\n\n"));
@@ -162,7 +164,7 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(new Label(""));
         vboxPic.getChildren().add(addPicture);
 
-        nodeArray.add(vboxPic);
+        nodeMap.put(vboxPic, null);
 
         vbox2.getChildren().add(vboxPic);
         vbox2.getChildren().add(new Label("\n\n"));
