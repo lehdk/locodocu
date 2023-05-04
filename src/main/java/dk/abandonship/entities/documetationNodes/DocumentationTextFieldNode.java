@@ -1,4 +1,4 @@
-package dk.abandonship.entities;
+package dk.abandonship.entities.documetationNodes;
 
 public class DocumentationTextFieldNode extends DocumentationNode {
 

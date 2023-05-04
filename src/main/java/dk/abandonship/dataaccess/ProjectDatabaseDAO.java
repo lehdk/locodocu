@@ -66,7 +66,7 @@ public class ProjectDatabaseDAO implements IProjectDAO {
         return projects;
     }
 
-    public void createProject(ProjectDTO projectDTO) throws Exception {
+    public void createProject(ProjectDTO projectDTO) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
             String sql = "INSERT INTO [Project] ([Name], [CustomerId]) VALUES (?, ?);";
 
