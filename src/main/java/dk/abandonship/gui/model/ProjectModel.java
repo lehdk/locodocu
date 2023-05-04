@@ -33,7 +33,6 @@ public class ProjectModel {
     }
 
     public void saveToDB(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception {
-        System.out.println(nodeMap.size());
         projectManager.saveDoc(nodeMap, doc);
     }
 

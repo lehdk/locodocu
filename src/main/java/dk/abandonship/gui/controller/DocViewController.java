@@ -9,7 +9,6 @@ import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
-import dk.abandonship.utils.DefaultRoles;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,12 +30,11 @@ import java.util.ResourceBundle;
 
 public class DocViewController implements Initializable {
     @FXML private ScrollPane scrollPane;
-    @FXML private VBox vbox, vbox2;
+    @FXML private VBox vboxModifyButtons, vboxIOButtons;
     @FXML private ComboBox<Documentation> docs;
     private Project project;
     private ProjectModel projectModel;
     private ControllerAssistant controllerAssistant;
-
     private LinkedHashMap<Node, DocumentationNode> nodeMap;
 
     @Override
@@ -47,12 +45,13 @@ public class DocViewController implements Initializable {
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
+
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        vbox.setSpacing(10);
+        vboxModifyButtons.setSpacing(10);
 
         docs = new ComboBox<>();
         docs.valueProperty().addListener(event -> openDoc());
-        vbox.getChildren().add(docs);
+        vboxModifyButtons.getChildren().add(docs);
     }
 
     public void setProject(Project project){
@@ -74,17 +73,17 @@ public class DocViewController implements Initializable {
         savAndCancelBox.setAlignment(Pos.CENTER);
         savAndCancelBox.setSpacing(15);
 
-        vbox2 = new VBox();
+        vboxIOButtons = new VBox();
 
         nodeMap = new LinkedHashMap<>();
 
-        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.TECHNICIAN)) {
+        if(project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser())) {
             Button btnAddTextField = new Button("Add Text Field");
             Button btnAddLogin = new Button("Add Login");
             Button btnAddImage = new Button("Add Image");
             btnAddTextField.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit(null));
-            btnAddLogin.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addLogin(null));
-            btnAddImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addPicture(null));
+            btnAddLogin.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleAddLogin(null));
+            btnAddImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleAddPicture(null));
             Button btnSave = new Button("Save");
             Button btnCancel = new Button("Cancel");
             btnSave.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
@@ -99,13 +98,12 @@ public class DocViewController implements Initializable {
         }
 
         Button btnPrint = new Button("Print PDF");
-        btnPrint.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> print());
 
         savAndCancelBox.getChildren().add(btnPrint);
 
-        vbox.getChildren().add(vbox2);
-        vbox.getChildren().add(hBox);
-        vbox.getChildren().add(savAndCancelBox);
+        vboxModifyButtons.getChildren().add(vboxIOButtons);
+        vboxModifyButtons.getChildren().add(hBox);
+        vboxModifyButtons.getChildren().add(savAndCancelBox);
 
         try {
             projectModel.loadDocumentationData(documentation);
@@ -117,9 +115,9 @@ public class DocViewController implements Initializable {
             if (dn instanceof DocumentationTextFieldNode){
                 addTextFieldForEdit((DocumentationTextFieldNode) dn);
             } else if (dn instanceof DocumentationLogInNode){
-                addLogin((DocumentationLogInNode) dn);
+                handleAddLogin((DocumentationLogInNode) dn);
             } else if (dn instanceof DocumentationPictureNode){
-                addPicture((DocumentationPictureNode) dn);
+                handleAddPicture((DocumentationPictureNode) dn);
             }
         }
     }
@@ -146,11 +144,6 @@ public class DocViewController implements Initializable {
         }
     }
 
-
-    private void print() {
-        //TODO: make print PDF
-    }
-
     /**
      * creates a text area
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
@@ -158,8 +151,8 @@ public class DocViewController implements Initializable {
     private void addTextFieldForEdit(DocumentationTextFieldNode docNode){
         TextArea field = new TextArea();
         nodeMap.put(field,docNode);
-        vbox2.getChildren().add(field);
-        vbox2.getChildren().add(new Label("\n\n")); //Mini spacing
+        vboxIOButtons.getChildren().add(field);
+        vboxIOButtons.getChildren().add(new Label("\n\n")); //Mini spacing
 
         if(docNode != null){
             field.setText(docNode.getText());
@@ -170,7 +163,7 @@ public class DocViewController implements Initializable {
      * Creates a login in a vbox
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
-    private void addLogin(DocumentationLogInNode docNode){
+    private void handleAddLogin(DocumentationLogInNode docNode){
         VBox vboxLog = new VBox();
         TextField username = new TextField();
         TextField password = new TextField();
@@ -183,8 +176,8 @@ public class DocViewController implements Initializable {
 
         nodeMap.put(vboxLog, docNode);
 
-        vbox2.getChildren().add(vboxLog);
-        vbox2.getChildren().add(new Label("\n\n"));
+        vboxIOButtons.getChildren().add(vboxLog);
+        vboxIOButtons.getChildren().add(new Label("\n\n"));
 
         if (docNode != null) {
             username.setText(docNode.getUsername());
@@ -196,7 +189,7 @@ public class DocViewController implements Initializable {
      *  creates a picture view with a field and imageview
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
-    private void addPicture(DocumentationPictureNode docNode){
+    private void handleAddPicture(DocumentationPictureNode docNode) {
         VBox vboxPic = new VBox();
         HBox hBox = new HBox();
         TextField field = new TextField();
@@ -207,7 +200,7 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(new Label(""));
 
         Button btnSetPicture = new Button("Set Picture");
-        btnSetPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPic(view, btnSetPicture));
+        btnSetPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPicture(view, btnSetPicture));
 
         hBox.setSpacing(30);
 
@@ -216,18 +209,17 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
 
-        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.TECHNICIAN))
+        if(project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser()))
             vboxPic.getChildren().add(btnSetPicture);
 
         nodeMap.put(vboxPic, docNode);
 
-        vbox2.getChildren().add(vboxPic);
-        vbox2.getChildren().add(new Label("\n\n"));
+        vboxIOButtons.getChildren().add(vboxPic);
+        vboxIOButtons.getChildren().add(new Label("\n\n"));
 
         if (docNode != null) {
             field.setText(docNode.getPictureTittle());
             ImageView loadView = new ImageView();
-
 
             loadView.setImage(docNode.getImages());
 
@@ -241,11 +233,11 @@ public class DocViewController implements Initializable {
 
 
     /**
-     * Oppens a FileChoser to sellect an image
+     * Opens a FileChoser to sellect an image
      * @param view IMageView the Picture should be displayed in
-     * @param btn the btn thats  pressed to open filechosser
+     * @param btn the btn pressed to open filechoser
      */
-    private void selectPic(ImageView view, Button btn) {
+    private void selectPicture(ImageView view, Button btn) {
         try {
 
             FileChooser fileChooser = new FileChooser();
@@ -265,7 +257,6 @@ public class DocViewController implements Initializable {
                 view.setFitHeight(300);
                 view.setFitWidth(300);
                 view.setPreserveRatio(true);
-
 
             } else {
                 controllerAssistant.displayAlert("could not initialize picture");
