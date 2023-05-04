@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
 public class ProjectModel {
@@ -34,5 +35,9 @@ public class ProjectModel {
     public void saveToDB(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception {
         System.out.println(nodeMap.size());
         projectManager.saveDoc(nodeMap, doc);
+    }
+
+    public void loadDocumentationData(Documentation documentation) throws SQLException {
+        projectManager.loadDocumentationData(documentation);
     }
 }

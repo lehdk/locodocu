@@ -81,7 +81,6 @@ public class DocViewController implements Initializable {
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> cancel());
         print.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> print());
 
-
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(15);
 
@@ -100,6 +99,22 @@ public class DocViewController implements Initializable {
         vbox.getChildren().add(hBox);
         vbox.getChildren().add(savAndCancelBox);
 
+        Documentation documentation = docs.getValue();
+        try {
+            projectModel.loadDocumentationData(documentation);
+        } catch (Exception e) {
+            controllerAssistant.displayError(e);
+        }
+
+        for (DocumentationNode dn: documentation.getDocumentationNodes()) {
+            if (dn instanceof DocumentationTextFieldNode){
+                addTextFieldForEdit((DocumentationTextFieldNode) dn);
+            } else if (dn instanceof DocumentationLogInNode){
+                addLogin((DocumentationLogInNode) dn);
+            } else if (dn instanceof DocumentationPictureNode){
+                addPicture((DocumentationPictureNode) dn);
+            }
+        }
     }
 
     private void save() {

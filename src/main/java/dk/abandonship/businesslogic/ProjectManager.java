@@ -8,6 +8,7 @@ import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
+import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -111,5 +112,17 @@ public class ProjectManager {
     private Image convertBteToImg(byte[] arrByte) {
         Image img = new Image(new ByteArrayInputStream(arrByte));
         return img;
+    }
+
+    /**
+     * // Sets data on the given object
+     * @param documentation
+     */
+    public void loadDocumentationData(Documentation documentation) throws SQLException{
+        List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);
+
+        for (DocumentationNode dn: docTextFields) {
+            documentation.addDocumentationNode(dn);
+        }
     }
 }
