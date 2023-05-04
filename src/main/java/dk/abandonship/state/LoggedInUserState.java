@@ -30,6 +30,15 @@ public class LoggedInUserState {
         this.loggedInUser = loggedInUser;
     }
 
+    public boolean hasRole(int... role) {
+        for(int i : role) {
+            var result = loggedInUser.getRoles().stream().filter(r -> r.getId() == i).findFirst().orElse(null);
+            if(result != null) return true;
+        }
+
+        return false;
+    }
+
     public static LoggedInUserState getInstance() {
         if(instance == null) instance = new LoggedInUserState();
 

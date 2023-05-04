@@ -43,4 +43,9 @@ public class Documentation {
     public void addDocumentationNode(DocumentationNode node) {
         documentationNodes.add(node);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

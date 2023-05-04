@@ -6,6 +6,8 @@ import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDatabaseDAO implements IUserDAO {
 
@@ -46,5 +48,78 @@ public class UserDatabaseDAO implements IUserDAO {
         resultUser.setAllRoles(roles);
 
         return resultUser;
+    }
+
+    @Override
+    public List<User> getAllUsers() throws Exception {
+        List<User> users = new ArrayList<>();
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "SELECT * FROM Users";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            var resultSet = stmt.executeQuery();
+
+            if(resultSet.next()) {
+                User resultUser = new User(
+                        resultSet.getInt("Id"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("Email"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Password"),
+                        resultSet.getTimestamp("DisabledAt")
+                );
+
+                if(resultUser != null) {
+
+                    var roles = roleDAO.getAllRolesForUser(resultUser);
+
+                    resultUser.setAllRoles(roles);
+
+                    users.add(resultUser);
+                }
+            }
+        }
+
+
+        return users;
+    }
+
+
+    @Override
+    public List<User> getAllTechnicians() throws Exception {
+        List<User> technicians = new ArrayList<>();
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "SELECT * FROM Users WHERE id IN (SELECT UserId FROM UserRoleRelation WHERE RoleId = 3)";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            var resultSet = statement.executeQuery();
+
+            if(resultSet.next()) {
+                User resultUser = new User(
+                        resultSet.getInt("Id"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("Email"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Password"),
+                        resultSet.getTimestamp("DisabledAt")
+                );
+
+                if(resultUser != null) {
+
+                    var roles = roleDAO.getAllRolesForUser(resultUser);
+
+                    resultUser.setAllRoles(roles);
+
+                    technicians.add(resultUser);
+                }
+            }
+        }
+
+
+        return technicians;
     }
 }

@@ -41,3 +41,91 @@
 
     -fx-color: #030202;
 }
+
+.ScrollPane {
+    -fx-border-width: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+.Scroll-Pane {
+    -fx-border-width: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.VBox {
+    -fx-border-width: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.ComboBox {
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
+    -fx-font-size: 22px;
+    -fx-line-height: 22px;
+    -fx-text-align: center;
+    -fx-text-fill: #FFFF;
+
+    -fx-cursor: hand;
+
+    -fx-color: #E84910;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color:  #000000;
+}
+
+.alertPane {
+    -fx-background-color: #3D445C;
+    -fx-background: #3D445C;
+}
+
+.alertPane > .content{
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
+}
+.alertPane > .content > .alertPane{
+    -fx-background-color: #3D445C;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
+}
+
+
+.calendar-grid {
+    -fx-background-color: #E84910;
+    -fx-text-fill: #000000;
+    -fx-cursor: hand;
+}
+
+.date-picker .spinner-label {
+    -fx-text-fill: #000000;
+    -fx-cursor: hand;
+}
+
+.date-picker > .cell {
+    -fx-cursor: hand;
+    -fx-background-color: #E84910;
+}
+
+.combo-box {
+    -fx-background-color: #E84910;
+    -fx-cursor: hand;
+}
+
+.combo-box .list-cell {
+    -fx-background: #E84910;
+    -fx-text-fill: #FFFFFF;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
+    -fx-cursor: hand;
+}
+
+.combo-box .arrow{
+    -fx-background-color:#FFFFFF;
+}
+
+.combo-box .arrow-button{
+    -fx-background-color:#E84910;
+    -fx-cursor: hand;
+}
