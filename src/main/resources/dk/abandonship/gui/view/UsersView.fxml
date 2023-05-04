@@ -21,16 +21,9 @@
                         <Insets left="5.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <VBox prefHeight="77.0" prefWidth="600.0" styleClass="vbox">
+                  <VBox fx:id="adminUsers" prefHeight="77.0" prefWidth="600.0" styleClass="vbox">
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0" />
-                        <TableView fx:id="userTable" prefHeight="75.0" styleClass="table-view">
-                           <columns>
-                              <TableColumn fx:id="nameColumn" styleClass="tableColumn" text="Name" />
-                              <TableColumn fx:id="emailColumn" styleClass="tableColumn" text="Email" />
-                              <TableColumn fx:id="phoneColumn" styleClass="tableColumn" text="Phone" />
-                           </columns>
-                        </TableView>
                      </children>
                   </VBox>
                   <Label styleClass="label" text="Project Managers">
@@ -63,7 +56,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0" />
                      </children>
                   </VBox>
-                  <Button fx:id="openAddUserWindowButton" mnemonicParsing="false" text="+" />
+                  <Button fx:id="openAddUserWindowButton" mnemonicParsing="false" onAction="#handleOpenNewUserWindow" text="+" />
                </children>
             </VBox>
          </children>
