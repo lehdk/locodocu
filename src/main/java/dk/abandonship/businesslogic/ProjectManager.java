@@ -5,9 +5,11 @@ import dk.abandonship.dataaccess.ProjectDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Documentation;
+import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
+import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
@@ -109,10 +111,6 @@ public class ProjectManager {
         return data;
     }
 
-    private Image convertBteToImg(byte[] arrByte) {
-        Image img = new Image(new ByteArrayInputStream(arrByte));
-        return img;
-    }
 
     /**
      * // Sets data on the given object
@@ -120,9 +118,19 @@ public class ProjectManager {
      */
     public void loadDocumentationData(Documentation documentation) throws SQLException{
         List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);
+        List<DocumentationLogInNode> docLog = documentationDAO.getDocumentationLogIn(documentation);
+        List<DocumentationPictureNode> picNode = documentationDAO.getPictureNode(documentation);
 
         for (DocumentationNode dn: docTextFields) {
             documentation.addDocumentationNode(dn);
+        }
+
+        for (var dl : docLog) {
+            documentation.addDocumentationNode(dl);
+        }
+
+        for (var pn : picNode) {
+            documentation.addDocumentationNode(pn);
         }
     }
 }

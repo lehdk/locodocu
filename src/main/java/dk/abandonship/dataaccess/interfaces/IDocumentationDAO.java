@@ -3,6 +3,8 @@ package dk.abandonship.dataaccess.interfaces;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
+import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 
 import java.sql.SQLException;
@@ -20,4 +22,8 @@ public interface IDocumentationDAO {
     Set<Documentation> getDocumentationForProject(Project project) throws SQLException;
 
     List<DocumentationTextFieldNode> getDocumentationTextField(Documentation documentation) throws SQLException;
+
+    List<DocumentationLogInNode> getDocumentationLogIn(Documentation documentation) throws SQLException;
+
+    List<DocumentationPictureNode> getPictureNode(Documentation documentation) throws SQLException;
 }
