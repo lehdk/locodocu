@@ -64,6 +64,8 @@ public class DocViewController implements Initializable {
      * Init all buttons and fields under existing document if there are any fields
      */
     private void openDoc() {
+        Documentation documentation = docs.getValue();
+
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(15);
@@ -76,7 +78,7 @@ public class DocViewController implements Initializable {
 
         nodeMap = new LinkedHashMap<>();
 
-        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.TECHNICIAN)) {
+        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.TECHNICIAN)) {
             Button btnAddTextField = new Button("Add Text Field");
             Button btnAddLogin = new Button("Add Login");
             Button btnAddImage = new Button("Add Image");
@@ -105,7 +107,6 @@ public class DocViewController implements Initializable {
         vbox.getChildren().add(hBox);
         vbox.getChildren().add(savAndCancelBox);
 
-        Documentation documentation = docs.getValue();
         try {
             projectModel.loadDocumentationData(documentation);
         } catch (Exception e) {
@@ -215,7 +216,7 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
 
-        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.TECHNICIAN))
+        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.TECHNICIAN))
             vboxPic.getChildren().add(btnSetPicture);
 
         nodeMap.put(vboxPic, docNode);

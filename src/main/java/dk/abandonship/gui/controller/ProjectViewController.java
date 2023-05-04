@@ -51,7 +51,7 @@ public class ProjectViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        if (state.hasRole(DefaultRoles.ADMIN)) {
+        if (state.getLoggedInUser().hasRole(DefaultRoles.ADMIN)) {
             setAdminBtn();
         }
 

@@ -2,6 +2,8 @@ package dk.abandonship.businesslogic;
 
 import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
 import dk.abandonship.dataaccess.ProjectDatabaseDAO;
+import dk.abandonship.dataaccess.RoleDatabaseDAO;
+import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Documentation;
@@ -32,7 +34,7 @@ public class ProjectManager {
 
     public ProjectManager() {
         this.documentationDAO =  new DocumentationDatabaseDAO();
-        this.projectDAO = new ProjectDatabaseDAO(documentationDAO);
+        this.projectDAO = new ProjectDatabaseDAO(documentationDAO, new UserDatabaseDAO(new RoleDatabaseDAO()));
     }
 
     /**
