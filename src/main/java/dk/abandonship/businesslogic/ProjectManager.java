@@ -62,7 +62,7 @@ public class ProjectManager {
     public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception{
         for (var set : nodeMap.entrySet()) {
             if(set.getKey() instanceof TextArea){
-                //TODO save textarea
+
                 if (set.getValue() == null){
                     var result = documentationDAO.createTextNode(((TextArea)set.getKey()).getText(), doc);
                     set.setValue(result);
