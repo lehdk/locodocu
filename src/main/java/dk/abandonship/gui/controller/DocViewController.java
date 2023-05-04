@@ -1,12 +1,15 @@
 package dk.abandonship.gui.controller;
 
-import dk.abandonship.entities.*;
+import dk.abandonship.entities.Documentation;
+import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import dk.abandonship.gui.model.ProjectModel;
+import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
+import dk.abandonship.utils.DefaultRoles;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,9 +47,9 @@ public class DocViewController implements Initializable {
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
-
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         vbox.setSpacing(10);
+
         docs = new ComboBox<>();
         docs.valueProperty().addListener(event -> openDoc());
         vbox.getChildren().add(docs);
@@ -60,43 +63,43 @@ public class DocViewController implements Initializable {
     /**
      * Init all buttons and fields under existing document if there are any fields
      */
-    private void openDoc(){
+    private void openDoc() {
         HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(15);
+
         HBox savAndCancelBox = new HBox();
+        savAndCancelBox.setAlignment(Pos.CENTER);
+        savAndCancelBox.setSpacing(15);
+
         vbox2 = new VBox();
 
         nodeMap = new LinkedHashMap<>();
 
+        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.TECHNICIAN)) {
+            Button btnAddTextField = new Button("Add Text Field");
+            Button btnAddLogin = new Button("Add Login");
+            Button btnAddImage = new Button("Add Image");
+            btnAddTextField.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit(null));
+            btnAddLogin.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addLogin(null));
+            btnAddImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addPicture(null));
+            Button btnSave = new Button("Save");
+            Button btnCancel = new Button("Cancel");
+            btnSave.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
+            btnCancel.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> cancel());
 
-        Button button1 = new Button("addField");
-        Button button2 = new Button("addLog-In");
-        Button button3 = new Button("addPicture");
+            hBox.getChildren().add(btnAddTextField);
+            hBox.getChildren().add(btnAddLogin);
+            hBox.getChildren().add(btnAddImage);
 
-        Button save = new Button("Save");
-        Button cancel = new Button("Cancel");
-        Button print = new Button("Print PDF");
+            savAndCancelBox.getChildren().add(btnSave);
+            savAndCancelBox.getChildren().add(btnCancel);
+        }
 
-        button1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit(null));
-        button2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addLogin(null));
-        button3.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addPicture(null));
+        Button btnPrint = new Button("Print PDF");
+        btnPrint.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> print());
 
-        save.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
-        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> cancel());
-        print.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> print());
-
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(15);
-
-        savAndCancelBox.setAlignment(Pos.CENTER);
-        savAndCancelBox.setSpacing(15);
-
-        hBox.getChildren().add(button1);
-        hBox.getChildren().add(button2);
-        hBox.getChildren().add(button3);
-
-        savAndCancelBox.getChildren().add(save);
-        savAndCancelBox.getChildren().add(cancel);
-        savAndCancelBox.getChildren().add(print);
+        savAndCancelBox.getChildren().add(btnPrint);
 
         vbox.getChildren().add(vbox2);
         vbox.getChildren().add(hBox);
@@ -125,7 +128,6 @@ public class DocViewController implements Initializable {
      */
     private void save() {
         try {
-            System.out.println("SAVE"); //TODO make saving doc to DB
             projectModel.saveToDB(nodeMap, docs.getValue());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
@@ -145,7 +147,7 @@ public class DocViewController implements Initializable {
 
 
     private void print() {
-        System.out.println("Print"); //TODO make print PDF
+        //TODO: make print PDF
     }
 
     /**
@@ -199,12 +201,12 @@ public class DocViewController implements Initializable {
         TextField field = new TextField();
         ImageView view = new ImageView();
 
-        vboxPic.getChildren().add(new Label("picture title"));
+        vboxPic.getChildren().add(new Label("Title"));
         vboxPic.getChildren().add(field);
         vboxPic.getChildren().add(new Label(""));
 
-        Button addPicture = new Button("set Picture");
-        addPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPic(view, addPicture));
+        Button btnSetPicture = new Button("Set Picture");
+        btnSetPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPic(view, btnSetPicture));
 
         hBox.setSpacing(30);
 
@@ -212,7 +214,9 @@ public class DocViewController implements Initializable {
 
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
-        vboxPic.getChildren().add(addPicture);
+
+        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.TECHNICIAN))
+            vboxPic.getChildren().add(btnSetPicture);
 
         nodeMap.put(vboxPic, docNode);
 
