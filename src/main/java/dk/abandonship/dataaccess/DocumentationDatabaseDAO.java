@@ -4,17 +4,19 @@ import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
+import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
+import javafx.scene.Node;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Statement;
+import java.util.*;
 
 public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
@@ -116,6 +118,42 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
         }
 
         return picNodes;
+    }
+
+    @Override
+    public DocumentationTextFieldNode createTextNode(String text, Documentation doc) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (?, ?);";
+
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, doc.getId());
+            statement.setString(2, text);
+
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return new DocumentationTextFieldNode(
+                        rs.getInt(1),
+                        text
+                );
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="UPDATE [DocumentationTextNode] SET [Text] = ? WHERE [Id] = ?;";
+
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, ((TextArea)set.getKey()).getText());
+            statement.setInt(2, set.getValue().getId());
+
+            statement.executeQuery();
+        }
+
     }
 
     private Image convertBteToImg(byte[] arrByte) {

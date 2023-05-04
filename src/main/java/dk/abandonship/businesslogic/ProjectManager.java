@@ -63,6 +63,12 @@ public class ProjectManager {
         for (var set : nodeMap.entrySet()) {
             if(set.getKey() instanceof TextArea){
                 //TODO save textarea
+                if (set.getValue() == null){
+                    var result = documentationDAO.createTextNode(((TextArea)set.getKey()).getText(), doc);
+                    set.setValue(result);
+                } else {
+                    documentationDAO.updateTextNode(set);
+                }
                 System.out.println(((TextArea) set.getKey()).getText());
             } else if (set.getKey() instanceof VBox) {
 
@@ -86,7 +92,7 @@ public class ProjectManager {
                         if (v instanceof HBox) {
                             for (Node b : ((HBox) v).getChildren()) {
                                 ImageView img = (ImageView) b;
-                                System.out.println(convertImgToByte(img.getImage()));
+                                //System.out.println(convertImgToByte(img.getImage()));
                                 //TODO Save IMAGE
                             }
                         }
