@@ -57,6 +57,9 @@ public class DocViewController implements Initializable {
         docs.setItems(FXCollections.observableArrayList(project.getDocumentations()));
     }
 
+    /**
+     * Init all buttons and fields under existing document if there are any fields
+     */
     private void openDoc(){
         HBox hBox = new HBox();
         HBox savAndCancelBox = new HBox();
@@ -117,6 +120,9 @@ public class DocViewController implements Initializable {
         }
     }
 
+    /**
+     * saves node data to DB where docs value are
+     */
     private void save() {
         try {
             System.out.println("SAVE"); //TODO make saving doc to DB
@@ -126,6 +132,9 @@ public class DocViewController implements Initializable {
         }
     }
 
+    /**
+     * Discard changes and edits center view to project view
+     */
     private void cancel() {
         try {
             controllerAssistant.setCenterFX("projectsView");
@@ -134,10 +143,15 @@ public class DocViewController implements Initializable {
         }
     }
 
+
     private void print() {
         System.out.println("Print"); //TODO make print PDF
     }
 
+    /**
+     * creates a text area
+     * @param docNode a docNode that can contain exiting data, should be null if it's a new field
+     */
     private void addTextFieldForEdit(DocumentationTextFieldNode docNode){
         TextArea field = new TextArea();
         nodeMap.put(field,docNode);
@@ -149,6 +163,10 @@ public class DocViewController implements Initializable {
         }
     }
 
+    /**
+     * Creates a login in a vbox
+     * @param docNode a docNode that can contain exiting data, should be null if it's a new field
+     */
     private void addLogin(DocumentationLogInNode docNode){
         VBox vboxLog = new VBox();
         TextField username = new TextField();
@@ -171,6 +189,10 @@ public class DocViewController implements Initializable {
         }
     }
 
+    /**
+     *  creates a picture view with a field and imageview
+     * @param docNode a docNode that can contain exiting data, should be null if it's a new field
+     */
     private void addPicture(DocumentationPictureNode docNode){
         VBox vboxPic = new VBox();
         HBox hBox = new HBox();
@@ -212,6 +234,12 @@ public class DocViewController implements Initializable {
         }
     }
 
+
+    /**
+     * Oppens a FileChoser to sellect an image
+     * @param view IMageView the Picture should be displayed in
+     * @param btn the btn thats  pressed to open filechosser
+     */
     private void selectPic(ImageView view, Button btn) {
         try {
 

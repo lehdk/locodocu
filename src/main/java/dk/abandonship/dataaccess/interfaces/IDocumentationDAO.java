@@ -23,13 +23,44 @@ public interface IDocumentationDAO {
      */
     Set<Documentation> getDocumentationForProject(Project project) throws SQLException;
 
+    /**
+     * returns textfriel½ds  for given document
+     * @param documentation the document you want the text fields from
+     * @return textfields from the database
+     * @throws SQLException
+     */
     List<DocumentationTextFieldNode> getDocumentationTextField(Documentation documentation) throws SQLException;
 
+
+    /**
+     * Returns login data from the database in a DocumentationNode to the specific document
+     * @param documentation the document you want the text fields from
+     * @return a node with log-In information with information sorted in username and password
+     * @throws SQLException
+     */
     List<DocumentationLogInNode> getDocumentationLogIn(Documentation documentation) throws SQLException;
 
+    /**
+     * returns picture and tittle, from the database where the data is saved to the specific document
+     * @param documentation the document you want the text fields from
+     * @return a node with a document tittle and a picture
+     * @throws SQLException
+     */
     List<DocumentationPictureNode> getPictureNode(Documentation documentation) throws SQLException;
 
-    DocumentationTextFieldNode createTextNode(String set, Documentation doc) throws SQLException;
+    /**
+     * creates a text-field in the DB under the document
+     * @param text the string that should be saved to DB
+     * @param doc the document the text should be connected to
+     * @return returns a node with a ID value it gets from the DB
+     * @throws SQLException
+     */
+    DocumentationTextFieldNode createTextNode(String text, Documentation doc) throws SQLException;
 
+    /**
+     * Updates the value in the dB with the string value where the maps Id is true
+     * @param set contain new string value and id that exist in DB
+     * @throws SQLException
+     */
     void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
 }
