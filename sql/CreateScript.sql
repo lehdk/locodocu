@@ -4,7 +4,9 @@ DROP TABLE IF EXISTS UserRoleRelation;
 DROP TABLE IF EXISTS ProjectUserRelation;
 DROP TABLE IF EXISTS Roles;
 
-DROP TABLE IF EXISTS DocumentationTextField;
+DROP TABLE IF EXISTS DocumentationLoginNode;
+DROP TABLE IF EXISTS DocumentationPictureNode;
+DROP TABLE IF EXISTS DocumentationTextNode;
 DROP TABLE IF EXISTS ProjectDocumentationRelation;
 DROP TABLE IF EXISTS Documentation;
 DROP TABLE IF EXISTS Project;
@@ -64,9 +66,23 @@ CREATE TABLE [ProjectDocumentationRelation] (
 );
 
 -- Documentation nodes
-CREATE TABLE [DocumentationTextField] (
+CREATE TABLE [DocumentationTextNode] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
     [Text] NVARCHAR(MAX),
+    [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
+);
+
+CREATE TABLE [DocumentationLoginNode] (
+    [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [Username] NVARCHAR(50),
+    [Password] NVARCHAR(50),
+    [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
+);
+
+CREATE TABLE [DocumentationPictureNode] (
+    [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [Title] NVARCHAR(50),
+    [Data] VARBINARY(MAX),
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
 );
 
@@ -85,6 +101,7 @@ INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('sale', 'sale
 
 INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES 
     (1, 1),
+    (1, 4),
     (2, 2),
     (3, 3),
     (4, 4);
@@ -98,7 +115,9 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (1, 3);
 
 INSERT INTO [Documentation] ([Name]) VALUES ('Broen'); -- Id 1
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (1, 1);
-INSERT INTO [DocumentationTextField] ([DocumentationId], [Text]) VALUES (1, 'We have made the best audio system to scare away pirates arrrrrr.');
+INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (1, 'We have made the best audio system to scare away pirates arrrrrr.');
+INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Username], [Password]) VALUES (1, 'admin', 'password');
+INSERT INTO [DocumentationPictureNode] ([DocumentationId], [Title], [Data]) VALUES (1, 'Very nice picture', 0x4242);
 
 -- Fake documentation
 INSERT INTO [Customer] ([Name], [Phone], [Email], [Address]) VALUES ('Lego', '78491494', 'noreply@lego.dk', 'Lego vej, 420, 7190 Billund'); -- Id 2
@@ -109,4 +128,4 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (2, 3);
 
 INSERT INTO [Documentation] ([Name]) VALUES ('Receptionen'); -- Id 2
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (2, 2);
-INSERT INTO [DocumentationTextField] ([DocumentationId], [Text]) VALUES (2, 'Many lights');
+INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (2, 'Many lights');

@@ -49,7 +49,7 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
         List<DocumentationTextFieldNode> textFieldNodeList = new ArrayList<>();
 
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "SELECT * FROM [DocumentationTextField] WHERE [DocumentationId]=?";
+            String sql = "SELECT * FROM [DocumentationTextNode] WHERE [DocumentationId]=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, documentation.getId());
