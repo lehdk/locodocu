@@ -2,7 +2,6 @@ package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
 import dk.abandonship.entities.Project;
-import dk.abandonship.entities.Role;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
@@ -12,20 +11,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
@@ -76,6 +72,7 @@ public class ProjectViewController implements Initializable {
         for (var p : projectModel.getProjectObservableList()) {
             VBox vBox = new VBox();
             HBox hBox = new HBox();
+            HBox hBoxButtons = new HBox();
 
             Label projectName = new Label();
             projectName.textProperty().setValue("Project: " + p.getName());
@@ -95,22 +92,28 @@ public class ProjectViewController implements Initializable {
             vBox.setAlignment(Pos.CENTER);
             hBox.setAlignment(Pos.CENTER);
             vBox.getChildren().add(hBox);
-            Button btn = new Button("View details");
-            vBox.getChildren().add(btn);
+            Button btn = new Button("   View details   ");
+            Button btn2 = new Button("Assign Technicians");
+
+            hBoxButtons.getChildren().add(btn);
+            hBoxButtons.getChildren().add(btn2);
+
+            vBox.getChildren().add(hBoxButtons);
             vBox.setStyle("-fx-background-color: #030202");
             vBox.getChildren().add(new Label(" \n"));
 
+            hBoxButtons.setSpacing(15);
+            hBoxButtons.setAlignment(Pos.CENTER);
+
+
             btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
+            btn2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(p));
 
             vbox.getChildren().add(vBox);
         }
     }
 
     private void addProject(){
-        //FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
-
-
-        //Method 1
         try {
             Stage popupStage = new Stage();
 
@@ -140,5 +143,24 @@ public class ProjectViewController implements Initializable {
             controllerAssistant.displayError(e);
         }
 
+    }
+
+    private void assignTechnicians(Project project){
+        try {
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/AssignTechView.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
