@@ -1,8 +1,10 @@
 package dk.abandonship.gui.controller;
 
-import dk.abandonship.entities.Documentation;
-import dk.abandonship.entities.DocumentationNode;
-import dk.abandonship.entities.Project;
+import dk.abandonship.entities.*;
+import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
+import dk.abandonship.entities.documetationNodes.DocumentationNode;
+import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
+import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.collections.FXCollections;
@@ -21,7 +23,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
@@ -72,9 +73,9 @@ public class DocViewController implements Initializable {
         Button cancel = new Button("Cancel");
         Button print = new Button("Print PDF");
 
-        button1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit());
-        button2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addLogin());
-        button3.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addPicture());
+        button1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit(null));
+        button2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addLogin(null));
+        button3.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addPicture(null));
 
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> cancel());
@@ -104,7 +105,7 @@ public class DocViewController implements Initializable {
     private void save() {
         try {
             System.out.println("SAVE"); //TODO make saving doc to DB
-            projectModel.saveToDB(nodeMap);
+            projectModel.saveToDB(nodeMap, docs.getValue());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
@@ -122,57 +123,82 @@ public class DocViewController implements Initializable {
         System.out.println("Print"); //TODO make print PDF
     }
 
-    private void addTextFieldForEdit(){
+    private void addTextFieldForEdit(DocumentationTextFieldNode docNode){
         TextArea field = new TextArea();
-        nodeMap.put(field,null);
+        nodeMap.put(field,docNode);
         vbox2.getChildren().add(field);
         vbox2.getChildren().add(new Label("\n\n")); //Mini spacing
+
+        if(docNode != null){
+            field.setText(docNode.getText());
+        }
     }
 
-    private void addLogin(){
+    private void addLogin(DocumentationLogInNode docNode){
         VBox vboxLog = new VBox();
-        TextField field1 = new TextField();
-        TextField field2 = new TextField();
+        TextField username = new TextField();
+        TextField password = new TextField();
 
         vboxLog.setAlignment(Pos.CENTER_LEFT);
         vboxLog.getChildren().add(new Label("UserName"));
-        vboxLog.getChildren().add(field1);
+        vboxLog.getChildren().add(username);
         vboxLog.getChildren().add(new Label("PassWord"));
-        vboxLog.getChildren().add(field2);
+        vboxLog.getChildren().add(password);
 
-        nodeMap.put(vboxLog, null);
+        nodeMap.put(vboxLog, docNode);
 
         vbox2.getChildren().add(vboxLog);
         vbox2.getChildren().add(new Label("\n\n"));
+
+        if (docNode != null) {
+            username.setText(docNode.getUsername());
+            password.setText(docNode.getPassword());
+        }
     }
 
-    private void addPicture(){
+    private void addPicture(DocumentationPictureNode docNode){
         VBox vboxPic = new VBox();
         HBox hBox = new HBox();
         TextField field = new TextField();
+        ImageView view = new ImageView();
 
-        vboxPic.getChildren().add(new Label("name pictures"));
+        vboxPic.getChildren().add(new Label("picture title"));
         vboxPic.getChildren().add(field);
         vboxPic.getChildren().add(new Label(""));
 
-        Button addPicture = new Button("add Picture");
-        addPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPic(hBox, addPicture));
+        Button addPicture = new Button("set Picture");
+        addPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPic(view, addPicture));
 
         hBox.setSpacing(30);
+
+        hBox.getChildren().add(view);
 
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
         vboxPic.getChildren().add(addPicture);
 
-        nodeMap.put(vboxPic, null);
+        nodeMap.put(vboxPic, docNode);
 
         vbox2.getChildren().add(vboxPic);
         vbox2.getChildren().add(new Label("\n\n"));
+
+        if (docNode != null) {
+            field.setText(docNode.getPictureTittle());
+            ImageView loadView = new ImageView();
+
+
+            loadView.setImage(docNode.getImages());
+
+            loadView.setFitHeight(300);
+            loadView.setFitWidth(300);
+            loadView.setPreserveRatio(true);
+
+            hBox.getChildren().add(loadView);
+        }
     }
 
-    private void selectPic(HBox box, Button btn) {
+    private void selectPic(ImageView view, Button btn) {
         try {
-            ImageView view;
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Image");
@@ -186,13 +212,12 @@ public class DocViewController implements Initializable {
 
                 Image image = new Image(selectedFile.toURI().toString());
 
-                view = new ImageView(image);
+                view.setImage(image);
 
-                view.setFitHeight(250);
-                view.setFitWidth(250);
+                view.setFitHeight(300);
+                view.setFitWidth(300);
                 view.setPreserveRatio(true);
 
-                box.getChildren().add(view);
 
             } else {
                 controllerAssistant.displayAlert("could not initialize picture");

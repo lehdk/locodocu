@@ -1,5 +1,7 @@
 package dk.abandonship.entities;
 
+import dk.abandonship.entities.documetationNodes.DocumentationNode;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 

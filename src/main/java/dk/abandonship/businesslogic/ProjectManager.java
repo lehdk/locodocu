@@ -4,7 +4,8 @@ import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
 import dk.abandonship.dataaccess.ProjectDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
-import dk.abandonship.entities.DocumentationNode;
+import dk.abandonship.entities.Documentation;
+import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
 import javafx.scene.Node;
@@ -16,13 +17,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -60,7 +56,7 @@ public class ProjectManager {
         projectDAO.createProject(projectDTO);
     }
 
-    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap) throws Exception{
+    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception{
         for (var set : nodeMap.entrySet()) {
             if(set.getKey() instanceof TextArea){
                 //TODO save textarea
