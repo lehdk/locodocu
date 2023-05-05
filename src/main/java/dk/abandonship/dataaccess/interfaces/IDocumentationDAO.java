@@ -1,6 +1,5 @@
 package dk.abandonship.dataaccess.interfaces;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
@@ -82,4 +81,14 @@ public interface IDocumentationDAO {
      * @throws SQLException If an error happened while updating.
      */
     boolean updateLoginNode(int nodeId, String username, String password) throws SQLException;
+
+    void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
+
+    /**
+     * Creates new Document to add nodes to
+     * @param docName the nam,e of the doc
+     * @param project the project the doc should be connected to
+     * @throws SQLException
+     */
+    Documentation createNewDoc(String docName, Project project) throws SQLException;
 }

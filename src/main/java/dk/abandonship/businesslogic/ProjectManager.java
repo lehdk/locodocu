@@ -17,6 +17,8 @@ import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
@@ -30,7 +32,7 @@ public class ProjectManager {
     private final IDocumentationDAO documentationDAO;
 
     public ProjectManager() {
-        this.documentationDAO =  new DocumentationDatabaseDAO();
+        this.documentationDAO = new DocumentationDatabaseDAO();
         this.projectDAO = new ProjectDatabaseDAO(documentationDAO, new UserDatabaseDAO(new RoleDatabaseDAO()));
     }
 
@@ -54,7 +56,7 @@ public class ProjectManager {
         return projects;
     }
 
-    public void createProject(ProjectDTO projectDTO) throws Exception{
+    public void createProject(ProjectDTO projectDTO) throws Exception {
         projectDAO.createProject(projectDTO);
     }
 
@@ -126,12 +128,12 @@ public class ProjectManager {
      * Sets data on the given object
      * @param documentation The documentation you want the data from.
      */
-    public void loadDocumentationData(Documentation documentation) throws SQLException{
+    public void loadDocumentationData(Documentation documentation) throws SQLException {
         List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);
         List<DocumentationLogInNode> docLog = documentationDAO.getDocumentationLogIn(documentation);
         List<DocumentationPictureNode> picNode = documentationDAO.getPictureNode(documentation);
 
-        for (DocumentationNode dn: docTextFields) {
+        for (DocumentationNode dn : docTextFields) {
             documentation.addDocumentationNode(dn);
         }
 
@@ -144,7 +146,12 @@ public class ProjectManager {
         }
     }
 
-    public void setTechnicians(List<User> selected, Project project) throws Exception{
+    public void setTechnicians(List<User> selected, Project project) throws Exception {
         projectDAO.setTechnicians(selected, project);
+    }
+
+    public void createDocument(String docName, Project project) throws Exception {
+        Documentation doc = documentationDAO.createNewDoc(docName, project);
+        project.getDocumentations().add(doc);
     }
 }

@@ -46,4 +46,8 @@ public class ProjectModel {
         project.setAssignedTechnicians(selected);
         projectManager.setTechnicians(selected, project);
     }
+
+    public void createNewDoc(String docName, Project project) throws Exception {
+        projectManager.createDocument(docName, project);
+    }
 }

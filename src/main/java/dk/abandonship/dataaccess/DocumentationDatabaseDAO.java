@@ -1,6 +1,5 @@
 package dk.abandonship.dataaccess;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
@@ -12,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 
-import javax.swing.plaf.nimbus.State;
 import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -156,6 +154,37 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
             statement.executeQuery();
         }
 
+    }
+
+    @Override
+    public Documentation createNewDoc(String docName, Project project) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="INSERT INTO [Documentation] ([Name]) VALUES (?);";
+
+            PreparedStatement stm1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stm1.setString(1, docName);
+
+            ResultSet rs = stm1.executeQuery();
+
+
+            if(rs.next()){
+                int docId = rs.getInt(1);
+                String sql2 = "INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (?, ?);";
+
+                PreparedStatement stmt2 = connection.prepareStatement(sql2);
+                stmt2.setInt(1, project.getId());
+                stmt2.setInt(2, docId);
+
+                stmt2.execute();
+
+                return new Documentation(docId,docName);
+            }
+
+
+
+        }
+
+        return null;
     }
 
     @Override
