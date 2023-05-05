@@ -156,6 +156,37 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
     }
 
+    @Override
+    public Documentation createNewDoc(String docName, Project project) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="INSERT INTO [Documentation] ([Name]) VALUES (?);";
+
+            PreparedStatement stm1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stm1.setString(1, docName);
+
+            ResultSet rs = stm1.executeQuery();
+
+
+            if(rs.next()){
+                int docId = rs.getInt(1);
+                String sql2 = "INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (?, ?);";
+
+                PreparedStatement stmt2 = connection.prepareStatement(sql2);
+                stmt2.setInt(1, project.getId());
+                stmt2.setInt(2, docId);
+
+                stmt2.execute();
+
+                return new Documentation(docId,docName);
+            }
+
+
+
+        }
+
+        return null;
+    }
+
     private Image convertBteToImg(byte[] arrByte) {
         Image img = new Image(new ByteArrayInputStream(arrByte));
         return img;

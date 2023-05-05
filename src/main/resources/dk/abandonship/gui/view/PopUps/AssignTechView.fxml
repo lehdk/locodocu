@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import org.controlsfx.control.CheckComboBox?>
+<?import java.net.URL?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" style="-fx-background-color: #3D445C;" stylesheets="@../../StyleSheets/IndexStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.AssignTechController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
@@ -48,4 +49,8 @@
          </BorderPane.margin>
       </GridPane>
    </bottom>
+    <stylesheets>
+        <URL value="@../../StyleSheets/IndexStyle.css" />
+        <URL value="@../../StyleSheets/AddEditCustomerView.css" />
+    </stylesheets>
 </BorderPane>

@@ -63,4 +63,12 @@ public interface IDocumentationDAO {
      * @throws SQLException
      */
     void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
+
+    /**
+     * Creates new Document to add nodes to
+     * @param docName the nam,e of the doc
+     * @param project the project the doc should be connected to
+     * @throws SQLException
+     */
+    Documentation createNewDoc(String docName, Project project) throws SQLException;
 }
