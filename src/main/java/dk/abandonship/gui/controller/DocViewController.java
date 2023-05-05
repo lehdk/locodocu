@@ -37,6 +37,8 @@ public class DocViewController implements Initializable {
     private ControllerAssistant controllerAssistant;
     private LinkedHashMap<Node, DocumentationNode> nodeMap;
 
+    private boolean userIsAssignedTechnician = false;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -65,6 +67,8 @@ public class DocViewController implements Initializable {
     private void openDoc() {
         Documentation documentation = docs.getValue();
 
+        userIsAssignedTechnician = project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser());
+
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(15);
@@ -77,7 +81,7 @@ public class DocViewController implements Initializable {
 
         nodeMap = new LinkedHashMap<>();
 
-        if(project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser())) {
+        if(userIsAssignedTechnician) {
             Button btnAddTextField = new Button("Add Text Field");
             Button btnAddLogin = new Button("Add Login");
             Button btnAddImage = new Button("Add Image");
@@ -148,8 +152,9 @@ public class DocViewController implements Initializable {
      * creates a text area
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
-    private void addTextFieldForEdit(DocumentationTextFieldNode docNode){
+    private void addTextFieldForEdit(DocumentationTextFieldNode docNode) {
         TextArea field = new TextArea();
+        field.setDisable(!userIsAssignedTechnician);
         nodeMap.put(field,docNode);
         vboxIOButtons.getChildren().add(field);
         vboxIOButtons.getChildren().add(new Label("\n\n")); //Mini spacing
@@ -167,6 +172,9 @@ public class DocViewController implements Initializable {
         VBox vboxLog = new VBox();
         TextField username = new TextField();
         TextField password = new TextField();
+
+        username.setDisable(!userIsAssignedTechnician);
+        password.setDisable(!userIsAssignedTechnician);
 
         vboxLog.setAlignment(Pos.CENTER_LEFT);
         vboxLog.getChildren().add(new Label("UserName"));
@@ -192,8 +200,10 @@ public class DocViewController implements Initializable {
     private void handleAddPicture(DocumentationPictureNode docNode) {
         VBox vboxPic = new VBox();
         HBox hBox = new HBox();
-        TextField field = new TextField();
         ImageView view = new ImageView();
+        TextField field = new TextField();
+
+        field.setDisable(!userIsAssignedTechnician);
 
         vboxPic.getChildren().add(new Label("Title"));
         vboxPic.getChildren().add(field);
@@ -209,7 +219,7 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
 
-        if(project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser()))
+        if(userIsAssignedTechnician)
             vboxPic.getChildren().add(btnSetPicture);
 
         nodeMap.put(vboxPic, docNode);
@@ -231,11 +241,10 @@ public class DocViewController implements Initializable {
         }
     }
 
-
     /**
-     * Opens a FileChoser to sellect an image
+     * Opens a FileChooser to select an image
      * @param view IMageView the Picture should be displayed in
-     * @param btn the btn pressed to open filechoser
+     * @param btn the btn pressed to open FileChooser
      */
     private void selectPicture(ImageView view, Button btn) {
         try {
