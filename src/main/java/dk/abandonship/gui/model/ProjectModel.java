@@ -42,6 +42,8 @@ public class ProjectModel {
         projectManager.loadDocumentationData(documentation);
     }
 
-    public void saveTechOnProject(List<User> selected, Project project) {
+    public void saveTechOnProject(List<User> selected, Project project) throws Exception{
+        project.setAssignedTechnicians(selected);
+        projectManager.setTechnicians(selected, project);
     }
 }

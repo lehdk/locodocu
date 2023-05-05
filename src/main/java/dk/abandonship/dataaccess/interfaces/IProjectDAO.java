@@ -2,13 +2,10 @@ package dk.abandonship.dataaccess.interfaces;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
-import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
-import dk.abandonship.entities.documetationNodes.DocumentationNode;
-import javafx.scene.Node;
+import dk.abandonship.entities.User;
 
 public interface IProjectDAO {
 
@@ -20,4 +17,5 @@ public interface IProjectDAO {
 
     void createProject(ProjectDTO projectDTO) throws SQLException;
 
+    void setTechnicians(List<User> selected, Project project) throws SQLException;
 }

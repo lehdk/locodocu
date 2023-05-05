@@ -37,7 +37,8 @@ public class AssignTechController implements Initializable {
 
         try {
             projectModel =  new ProjectModel();
-            comboBoxTech.getItems().addAll(userModel.getAllTechnicians());
+            var x = userModel.getAllTechnicians();
+            comboBoxTech.getItems().addAll(x);
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
@@ -45,9 +46,20 @@ public class AssignTechController implements Initializable {
 
     public void setProject(Project project) {
         this.project = project;
+
+        List<User> alreadyAssign = project.getAssignedTechnicians();
+        for (var v : comboBoxTech.getItems()) {
+            if (alreadyAssign.contains(v)) {
+                comboBoxTech.getCheckModel().check(v);
+            }
+        }
     }
 
     public void handleCancel(ActionEvent actionEvent) {
+        close();
+    }
+
+    private void close(){
         Stage stage  = (Stage) bntCancel.getScene().getWindow();
         stage.close();
     }
@@ -66,12 +78,13 @@ public class AssignTechController implements Initializable {
             return;
         }
 
-        System.out.println("Succes");
 
-        projectModel.saveTechOnProject(selected, project);
+        try {
+            projectModel.saveTechOnProject(selected, project);
+            close();
+        } catch (Exception e) {
+            controllerAssistant.displayError(e);
+        }
 
-
-
-        //TODO Save Technicians
     }
 }
