@@ -37,8 +37,7 @@ public class AssignTechController implements Initializable {
 
         try {
             projectModel =  new ProjectModel();
-            var x = userModel.getAllTechnicians();
-            comboBoxTech.getItems().addAll(x);
+            comboBoxTech.getItems().addAll(userModel.getAllTechnicians());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
