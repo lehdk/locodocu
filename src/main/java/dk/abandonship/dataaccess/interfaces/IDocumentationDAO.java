@@ -59,7 +59,7 @@ public interface IDocumentationDAO {
 
     /**
      * Updates the value in the dB with the string value where the maps Id is true
-     * @param set contain new string value and id that exist in DB
+     * @param text contain new string value and id that exist in DB
      * @throws SQLException
      */
     void updateTextNode(String text, int id) throws  SQLException;
@@ -81,8 +81,6 @@ public interface IDocumentationDAO {
      * @throws SQLException If an error happened while updating.
      */
     boolean updateLoginNode(int nodeId, String username, String password) throws SQLException;
-
-    void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
 
     /**
      * Creates new Document to add nodes to

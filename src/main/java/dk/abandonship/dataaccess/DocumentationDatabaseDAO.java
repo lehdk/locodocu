@@ -179,9 +179,6 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
                 return new Documentation(docId,docName);
             }
-
-
-
         }
 
         return null;
