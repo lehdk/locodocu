@@ -72,7 +72,7 @@ public class NavBarController implements Initializable {
             e.printStackTrace();
         }
     }
-            
+
 
     private void users() {
         try {

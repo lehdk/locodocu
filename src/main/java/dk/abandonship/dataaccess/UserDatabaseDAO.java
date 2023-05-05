@@ -1,11 +1,13 @@
 package dk.abandonship.dataaccess;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +88,6 @@ public class UserDatabaseDAO implements IUserDAO {
         return users;
     }
 
-
     @Override
     public List<User> getAllTechnicians() throws Exception {
         List<User> technicians = new ArrayList<>();
@@ -118,8 +119,37 @@ public class UserDatabaseDAO implements IUserDAO {
                 }
             }
         }
-
-
         return technicians;
     }
+
+    public void createUser(User user) throws SQLServerException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [User] ([Name], [Email], [Phone], [Password] VALUES ?,?,?,?)";
+
+            var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPhone());
+            statement.setString(4, user.getPassword());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean deleteUser(User user) throws SQLException {
+        try( var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "DELETE FROM [User] WHERE [Id]=?";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, user.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
+    }
+
 }

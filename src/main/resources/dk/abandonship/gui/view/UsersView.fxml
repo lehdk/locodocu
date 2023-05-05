@@ -1,65 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<ScrollPane styleClass="scroll-pane" stylesheets="@../StyleSheets/ViewStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.UsersViewController">
-   <content>
-      <AnchorPane prefHeight="798.0" prefWidth="1424.0">
-         <children>
-            <VBox layoutX="132.0" layoutY="87.0" prefHeight="400.0" prefWidth="600.0" styleClass="vbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Label styleClass="label" text="Admin">
-                     <VBox.margin>
-                        <Insets left="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <VBox fx:id="adminUsers" prefHeight="77.0" prefWidth="600.0" styleClass="vbox">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <Label styleClass="label" text="Project Managers">
-                     <VBox.margin>
-                        <Insets left="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <VBox prefHeight="77.0" prefWidth="600.0" styleClass="vbox">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <Label styleClass="label" text="Technician">
-                     <VBox.margin>
-                        <Insets left="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <VBox prefHeight="77.0" prefWidth="600.0" styleClass="vbox">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <Label styleClass="label" text="Sales Person">
-                     <VBox.margin>
-                        <Insets left="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <VBox prefHeight="77.0" prefWidth="600.0" styleClass="vbox">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <Button fx:id="openAddUserWindowButton" mnemonicParsing="false" onAction="#handleOpenNewUserWindow" text="+" />
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
-   </content>
-</ScrollPane>
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" stylesheets="@../StyleSheets/CustomerStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.UsersViewController">
+   <TableView fx:id="userTableView" styleClass="userTable">
+      <columns>
+         <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+         <TableColumn fx:id="emailColumn" prefWidth="75.0" text="Email" />
+         <TableColumn fx:id="phoneColumn" prefWidth="75.0" text="Phone" />
+      </columns>
+   </TableView>
+   <HBox fx:id="buttonsHBox" />
+</VBox>
