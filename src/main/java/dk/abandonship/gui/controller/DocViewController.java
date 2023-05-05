@@ -153,13 +153,18 @@ public class DocViewController implements Initializable {
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
     private void addTextFieldForEdit(DocumentationTextFieldNode docNode) {
+
+        if(docNode == null) {
+            docNode = new DocumentationTextFieldNode(DocumentationNode.UNUSED_NODE_ID, "");
+        }
+
         TextArea field = new TextArea();
         field.setDisable(!userIsAssignedTechnician);
-        nodeMap.put(field,docNode);
+        nodeMap.put(field, docNode);
         vboxIOButtons.getChildren().add(field);
         vboxIOButtons.getChildren().add(new Label("\n\n")); //Mini spacing
 
-        if(docNode != null){
+        if(docNode.getId() != DocumentationNode.UNUSED_NODE_ID){
             field.setText(docNode.getText());
         }
     }
@@ -169,6 +174,11 @@ public class DocViewController implements Initializable {
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
     private void handleAddLogin(DocumentationLogInNode docNode){
+
+        if(docNode == null) {
+            docNode = new DocumentationLogInNode(DocumentationNode.UNUSED_NODE_ID, "", "");
+        }
+
         VBox vboxLog = new VBox();
         TextField username = new TextField();
         TextField password = new TextField();
@@ -177,9 +187,9 @@ public class DocViewController implements Initializable {
         password.setDisable(!userIsAssignedTechnician);
 
         vboxLog.setAlignment(Pos.CENTER_LEFT);
-        vboxLog.getChildren().add(new Label("UserName"));
+        vboxLog.getChildren().add(new Label("Username"));
         vboxLog.getChildren().add(username);
-        vboxLog.getChildren().add(new Label("PassWord"));
+        vboxLog.getChildren().add(new Label("Password"));
         vboxLog.getChildren().add(password);
 
         nodeMap.put(vboxLog, docNode);
@@ -187,7 +197,7 @@ public class DocViewController implements Initializable {
         vboxIOButtons.getChildren().add(vboxLog);
         vboxIOButtons.getChildren().add(new Label("\n\n"));
 
-        if (docNode != null) {
+        if (docNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
             username.setText(docNode.getUsername());
             password.setText(docNode.getPassword());
         }
