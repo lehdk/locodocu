@@ -16,6 +16,8 @@ import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -63,16 +65,34 @@ public class ProjectManager {
      * @throws SQLException If an error occurred in the saving process.
      */
     private void saveDocumentationTextNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
-        if (set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID){
+        if (set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
+            // Needs to be created
             var result = documentationDAO.createTextNode(((TextArea)set.getKey()).getText(), doc);
             set.setValue(result);
+            doc.addDocumentationNode(result);
         } else {
+            // Needs to be updated
             documentationDAO.updateTextNode(set);
         }
     }
 
-    private void saveDocumentationLoginNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) {
-        System.out.println("Sovs og kartofler");
+    private void saveDocumentationLoginNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
+        var children = ((VBox)set.getKey()).getChildren();
+        String username = ((TextField)children.get(1)).getText();
+        String password = ((TextField)children.get(3)).getText();
+
+        if(set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
+            // Needs to be created
+            var result = documentationDAO.createLoginNode(doc, username, password);
+            if(result == null) {
+                System.err.println("Could not save the node to the data source!");
+                return;
+            }
+            set.setValue(result);
+            doc.addDocumentationNode(result);
+        } else {
+            // Needs to be updated
+        }
     }
 
     private void saveDocumentationPictureNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) {

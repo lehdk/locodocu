@@ -1,5 +1,6 @@
 package dk.abandonship.dataaccess.interfaces;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
@@ -63,4 +64,12 @@ public interface IDocumentationDAO {
      * @throws SQLException
      */
     void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
+
+    /**
+     * Inserts a login node to the datasource
+     * @param doc The documentation the node should be added to
+     * @param username The username data
+     * @param password The password data
+     */
+    DocumentationLogInNode createLoginNode(Documentation doc, String username, String password) throws SQLException;
 }

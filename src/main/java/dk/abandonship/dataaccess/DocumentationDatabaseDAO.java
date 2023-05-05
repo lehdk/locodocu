@@ -1,5 +1,6 @@
 package dk.abandonship.dataaccess;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
@@ -11,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,6 +156,31 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
             statement.executeQuery();
         }
 
+    }
+
+    @Override
+    public DocumentationLogInNode createLoginNode(Documentation doc, String username, String password) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Username], [Password]) VALUES (?,?,?);";
+
+            var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, doc.getId());
+            statement.setString(2, username);
+            statement.setString(3, password);
+
+            var rs = statement.executeQuery();
+
+            if(rs.next()) {
+                return new DocumentationLogInNode(
+                        rs.getInt(1),
+                        username,
+                        password
+                );
+            }
+
+        }
+
+        return null;
     }
 
     private Image convertBteToImg(byte[] arrByte) {
