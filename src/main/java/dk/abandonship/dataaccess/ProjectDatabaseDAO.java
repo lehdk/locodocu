@@ -2,9 +2,11 @@ package dk.abandonship.dataaccess;
 
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
+import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
+import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,8 +17,11 @@ public class ProjectDatabaseDAO implements IProjectDAO {
 
     private final IDocumentationDAO documentationDAO;
 
-    public ProjectDatabaseDAO(IDocumentationDAO documentationDAO) {
+    private final IUserDAO userDAO;
+
+    public ProjectDatabaseDAO(IDocumentationDAO documentationDAO, IUserDAO userDAO) {
         this.documentationDAO = documentationDAO;
+        this.userDAO = userDAO;
     }
 
     @Override
@@ -60,7 +65,24 @@ public class ProjectDatabaseDAO implements IProjectDAO {
 
                 projects.add(project);
             }
+        }
 
+        // Load assigned technicians
+        for(var p : projects) {
+            try(var connection = DBConnector.getInstance().getConnection()) {
+                String sql ="SELECT [UserId] FROM [ProjectUserRelation] WHERE [ProjectId]=?;";
+
+                var statement = connection.prepareStatement(sql);
+                statement.setInt(1, p.getId());
+
+                statement.executeQuery();
+
+                var resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    p.assignTechnician(userDAO.getUser(resultSet.getInt(1)));
+                }
+            }
         }
 
         return projects;

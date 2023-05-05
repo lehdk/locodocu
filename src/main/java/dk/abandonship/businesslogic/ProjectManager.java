@@ -2,6 +2,8 @@ package dk.abandonship.businesslogic;
 
 import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
 import dk.abandonship.dataaccess.ProjectDatabaseDAO;
+import dk.abandonship.dataaccess.RoleDatabaseDAO;
+import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Documentation;
@@ -14,13 +16,10 @@ import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,13 +31,13 @@ public class ProjectManager {
 
     public ProjectManager() {
         this.documentationDAO =  new DocumentationDatabaseDAO();
-        this.projectDAO = new ProjectDatabaseDAO(documentationDAO);
+        this.projectDAO = new ProjectDatabaseDAO(documentationDAO, new UserDatabaseDAO(new RoleDatabaseDAO()));
     }
 
     /**
      * Gets all the projects in the datasource
      * @return A list of the projects
-     * @throws SQLException
+     * @throws SQLException If an error occurred when accessing the database
      */
     public List<Project> getAllProjects() throws SQLException {
         var projects = projectDAO.getAllProjects();
@@ -69,7 +68,6 @@ public class ProjectManager {
                 } else {
                     documentationDAO.updateTextNode(set);
                 }
-                System.out.println(((TextArea) set.getKey()).getText());
             } else if (set.getKey() instanceof VBox) {
 
                 int textField = 0;
@@ -92,7 +90,6 @@ public class ProjectManager {
                         if (v instanceof HBox) {
                             for (Node b : ((HBox) v).getChildren()) {
                                 ImageView img = (ImageView) b;
-                                //System.out.println(convertImgToByte(img.getImage()));
                                 //TODO Save IMAGE
                             }
                         }
@@ -112,15 +109,9 @@ public class ProjectManager {
         }
     }
 
-    private byte[] convertImgToByte(Image img) throws Exception{
-        byte[]  data = img.getUrl().getBytes(StandardCharsets.UTF_8); //TODO NOTE this may only work locally need test
-        return data;
-    }
-
-
     /**
-     * // Sets data on the given object
-     * @param documentation
+     * Sets data on the given object
+     * @param documentation The documentation you want the data from.
      */
     public void loadDocumentationData(Documentation documentation) throws SQLException{
         List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);

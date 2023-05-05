@@ -22,7 +22,7 @@ public class PropertyReader {
             databaseProperties.load(input);
             return databaseProperties;
         } catch (IOException e) {
-            System.out.println("Could not read config.properties");
+            System.err.println("Could not read config.properties");
             throw new RuntimeException(e);
         }
     }
