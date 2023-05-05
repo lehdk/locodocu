@@ -109,4 +109,13 @@ public class User {
 
         return getId() == other.getId();
     }
+
+    public boolean hasRole(int... role) {
+        for(int i : role) {
+            var result = getRoles().stream().filter(r -> r.getId() == i).findFirst().orElse(null);
+            if(result != null) return true;
+        }
+
+        return false;
+    }
 }

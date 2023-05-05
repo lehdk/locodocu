@@ -1,7 +1,11 @@
 package dk.abandonship.entities;
 
+import dk.abandonship.utils.DefaultRoles;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Project {
@@ -11,6 +15,8 @@ public class Project {
     private Timestamp createdAt;
     private Customer customer;
 
+    private List<User> assignedTechnicians;
+
     private Set<Documentation> documentations;
 
     public Project(int id, String name, Timestamp createdAt, Customer customer) {
@@ -19,6 +25,7 @@ public class Project {
         this.createdAt = createdAt;
         this.customer = customer;
         documentations = new HashSet<>();
+        assignedTechnicians = new ArrayList<>();
     }
 
     public int getId() {
@@ -67,6 +74,24 @@ public class Project {
 
     public void removeDocumentation(Documentation documentation) {
         documentations.remove(documentation);
+    }
+
+    public List<User> getAssignedTechnicians() {
+        return assignedTechnicians;
+    }
+
+    public void setAssignedTechnicians(List<User> assignedTechnicians) {
+        this.assignedTechnicians = assignedTechnicians;
+    }
+
+    public void assignTechnician(User user) {
+        if(!user.hasRole(DefaultRoles.TECHNICIAN)) return;
+
+        assignedTechnicians.add(user);
+    }
+
+    public void removeTechnician(User user) {
+        assignedTechnicians.remove(user);
     }
 
     @Override
