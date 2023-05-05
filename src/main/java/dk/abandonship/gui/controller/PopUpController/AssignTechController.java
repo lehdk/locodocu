@@ -44,6 +44,11 @@ public class AssignTechController implements Initializable {
         }
     }
 
+    /**
+     * gives the project that should be assigned technicians to.
+     * and select already selected technicians.
+     * @param project the project that technicians should be assigned to
+     */
     public void setProject(Project project) {
         this.project = project;
 
@@ -59,11 +64,18 @@ public class AssignTechController implements Initializable {
         close();
     }
 
+    /**
+     * Closses pop-up
+     */
     private void close(){
         Stage stage  = (Stage) bntCancel.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Saves the technistans in a list and sends them to DAo to be saved
+     * @param actionEvent
+     */
     public void handleConfirm(ActionEvent actionEvent) {
         List<User> selected = new ArrayList<>();
 

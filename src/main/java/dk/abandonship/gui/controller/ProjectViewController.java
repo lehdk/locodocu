@@ -26,8 +26,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
-    @FXML private ScrollPane scrollPane;
-    @FXML private VBox vbox;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox vbox;
 
     private ProjectModel projectModel;
 
@@ -46,8 +48,8 @@ public class ProjectViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN)) {
-            setAdminBtn();
+        if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
+            setNewProject();
         }
 
         setProjects();
@@ -55,7 +57,7 @@ public class ProjectViewController implements Initializable {
 
     }
 
-    private void setAdminBtn(){
+    private void setNewProject() {
 
         Button btn = new Button("+");
         btn.setPrefWidth(1450);
@@ -65,7 +67,7 @@ public class ProjectViewController implements Initializable {
         vbox.getChildren().add(btn);
     }
 
-    private void setProjects(){
+    private void setProjects() {
         vbox.setSpacing(10);
 
         for (var p : projectModel.getProjectObservableList()) {
@@ -75,17 +77,17 @@ public class ProjectViewController implements Initializable {
 
             Label projectName = new Label();
             projectName.textProperty().setValue("Project: " + p.getName());
-            projectName.setPadding(new Insets(20,20,20,20));
+            projectName.setPadding(new Insets(20, 20, 20, 20));
             hBox.getChildren().add(projectName);
 
             Label customerName = new Label();
             customerName.textProperty().setValue("Customer: " + p.getCustomer().getName());
-            customerName.setPadding(new Insets(20,20,20,20));
+            customerName.setPadding(new Insets(20, 20, 20, 20));
             hBox.getChildren().add(customerName);
 
             Label documentationCount = new Label();
             documentationCount.textProperty().setValue("Documentation count: " + p.getDocumentations().size());
-            documentationCount.setPadding(new Insets(20,20,20,20));
+            documentationCount.setPadding(new Insets(20, 20, 20, 20));
             hBox.getChildren().add(documentationCount);
 
             vBox.setAlignment(Pos.CENTER);
@@ -95,7 +97,6 @@ public class ProjectViewController implements Initializable {
             Button btn2 = new Button("Assign Technicians");
 
             hBoxButtons.getChildren().add(btn);
-            hBoxButtons.getChildren().add(btn2);
 
             vBox.getChildren().add(hBoxButtons);
             vBox.setStyle("-fx-background-color: #030202");
@@ -105,14 +106,18 @@ public class ProjectViewController implements Initializable {
             hBoxButtons.setAlignment(Pos.CENTER);
 
 
-            btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
+            if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
+                hBoxButtons.getChildren().add(btn2);
+            }
+
             btn2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(p));
+            btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
 
             vbox.getChildren().add(vBox);
         }
     }
 
-    private void addProject(){
+    private void addProject() {
         try {
             Stage popupStage = new Stage();
 
@@ -125,13 +130,12 @@ public class ProjectViewController implements Initializable {
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void openProject(Project project){
+    private void openProject(Project project) {
         try {
             var controller = (DocViewController) controllerAssistant.setCenterFX("DocView");
             controller.setProject(project);
@@ -143,7 +147,7 @@ public class ProjectViewController implements Initializable {
 
     }
 
-    private void assignTechnicians(Project project){
+    private void assignTechnicians(Project project) {
         try {
             Stage popupStage = new Stage();
 
@@ -158,8 +162,7 @@ public class ProjectViewController implements Initializable {
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
