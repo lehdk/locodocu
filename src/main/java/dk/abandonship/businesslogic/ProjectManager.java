@@ -7,6 +7,7 @@ import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.entities.Documentation;
+import dk.abandonship.entities.User;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.Project;
@@ -110,5 +111,9 @@ public class ProjectManager {
         for (var pn : picNode) {
             documentation.addDocumentationNode(pn);
         }
+    }
+
+    public void setTechnicians(List<User> selected, Project project) throws Exception{
+        projectDAO.setTechnicians(selected, project);
     }
 }
