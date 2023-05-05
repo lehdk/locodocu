@@ -2,6 +2,7 @@ package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
 import dk.abandonship.entities.Project;
+import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
@@ -153,11 +154,13 @@ public class ProjectViewController implements Initializable {
             Parent root = loader.load();
             Scene popupScene = new Scene(root);
 
+            AssignTechController techController = loader.getController();
+            techController.setProject(project);
+
             popupStage.setScene(popupScene);
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
-
         }
         catch (Exception e) {
             e.printStackTrace();

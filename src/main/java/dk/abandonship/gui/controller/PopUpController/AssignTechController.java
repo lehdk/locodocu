@@ -1,6 +1,8 @@
 package dk.abandonship.gui.controller.PopUpController;
 
+import dk.abandonship.entities.Project;
 import dk.abandonship.entities.User;
+import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.gui.model.UserModel;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.event.ActionEvent;
@@ -13,6 +15,8 @@ import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AssignTechController implements Initializable {
@@ -20,7 +24,9 @@ public class AssignTechController implements Initializable {
     @FXML private CheckComboBox<User> comboBoxTech;
 
     private UserModel userModel;
+    private ProjectModel projectModel;
     private ControllerAssistant controllerAssistant;
+    private Project project;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -30,10 +36,15 @@ public class AssignTechController implements Initializable {
         comboBoxTech.setTitle("Technicians");
 
         try {
+            projectModel =  new ProjectModel();
             comboBoxTech.getItems().addAll(userModel.getAllTechnicians());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public void handleCancel(ActionEvent actionEvent) {
@@ -42,6 +53,25 @@ public class AssignTechController implements Initializable {
     }
 
     public void handleConfirm(ActionEvent actionEvent) {
+        List<User> selected = new ArrayList<>();
+
+        for (User u : comboBoxTech.getItems()) {
+            if(comboBoxTech.getItemBooleanProperty(u).get()){
+                selected.add(u);
+            }
+        }
+
+        if (selected.isEmpty()) {
+            controllerAssistant.displayAlert("Select a technician");
+            return;
+        }
+
+        System.out.println("Succes");
+
+        projectModel.saveTechOnProject(selected, project);
+
+
+
         //TODO Save Technicians
     }
 }
