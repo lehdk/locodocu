@@ -30,12 +30,10 @@ public class ProjectViewController implements Initializable {
     @FXML private VBox vbox;
 
     private ProjectModel projectModel;
-    private LoggedInUserState state;
 
-    private ControllerAssistant controllerAssistant;
+    private final ControllerAssistant controllerAssistant;
 
     public ProjectViewController() {
-        state = LoggedInUserState.getInstance();
         controllerAssistant = ControllerAssistant.getInstance();
         try {
             projectModel = new ProjectModel();
@@ -48,7 +46,7 @@ public class ProjectViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        if (state.hasRole(DefaultRoles.ADMIN)) {
+        if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN)) {
             setAdminBtn();
         }
 
@@ -135,7 +133,6 @@ public class ProjectViewController implements Initializable {
 
     private void openProject(Project project){
         try {
-            System.out.println(project.getName());
             var controller = (DocViewController) controllerAssistant.setCenterFX("DocView");
             controller.setProject(project);
 

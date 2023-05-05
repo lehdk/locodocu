@@ -94,7 +94,7 @@ public class RoleTest {
 
         LoggedInUserState.getInstance().setLoggedInUser(user);
 
-        assertTrue(LoggedInUserState.getInstance().hasRole(DefaultRoles.ADMIN));
+        assertTrue(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN));
     }
 
     @Test
@@ -106,6 +106,6 @@ public class RoleTest {
 
         LoggedInUserState.getInstance().setLoggedInUser(user);
 
-        assertFalse(LoggedInUserState.getInstance().hasRole(DefaultRoles.ADMIN));
+        assertFalse(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN));
     }
 }

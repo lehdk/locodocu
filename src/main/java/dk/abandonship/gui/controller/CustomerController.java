@@ -64,7 +64,7 @@ public class CustomerController implements Initializable {
 
         buttonsHBox.setSpacing(10);
 
-        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.PROJECTMANAGER, DefaultRoles.SALESPERSON)) {
+        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER, DefaultRoles.SALESPERSON)) {
             Button addCustomerButton = new Button("Add Customer");
             addCustomerButton.setOnAction(event -> {
                 try {

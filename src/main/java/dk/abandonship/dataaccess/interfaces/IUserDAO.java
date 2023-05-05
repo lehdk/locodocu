@@ -15,6 +15,14 @@ public interface IUserDAO {
      */
     User getUser(String email) throws SQLException;
 
+    /**
+     * Returns a user with all of its roles
+     * @param id The id of the user you want
+     * @return The user. If no user then return null
+     * @throws SQLException
+     */
+    public User getUser(int id) throws SQLException;
+
     List<User> getAllUsers() throws Exception;
     List<User> getAllTechnicians() throws Exception;
 }

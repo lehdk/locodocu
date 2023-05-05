@@ -1,5 +1,7 @@
 import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
 import dk.abandonship.dataaccess.ProjectDatabaseDAO;
+import dk.abandonship.dataaccess.RoleDatabaseDAO;
+import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.Project;
 import org.junit.jupiter.api.Test;
@@ -29,7 +31,7 @@ public class ProjectTest {
 
     @Test
     void projectsAreNotNull() throws SQLException {
-        var projectDAO = new ProjectDatabaseDAO(new DocumentationDatabaseDAO());
+        var projectDAO = new ProjectDatabaseDAO(new DocumentationDatabaseDAO(), new UserDatabaseDAO(new RoleDatabaseDAO()));
 
         var projects = projectDAO.getAllProjects();
 
