@@ -97,8 +97,12 @@ public class ProjectManager {
             doc.addDocumentationNode(result);
         } else {
             // Needs to be updated
+            boolean updated = documentationDAO.updateLoginNode(set.getValue().getId(), username, password);
+            if(!updated) return;
 
-
+            var currentDocumentationNode = (DocumentationLogInNode) set.getValue();
+            currentDocumentationNode.setUsername(username);
+            currentDocumentationNode.setPassword(password);
         }
     }
 

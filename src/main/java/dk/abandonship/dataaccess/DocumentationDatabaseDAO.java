@@ -183,6 +183,22 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
         return null;
     }
 
+    @Override
+    public boolean updateLoginNode(int nodeId, String username, String password) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "UPDATE [DocumentationLoginNode] SET [Username] = ?, [Password] = ? WHERE [Id] = ?;";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, password);
+            statement.setInt(3, nodeId);
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
+    }
+
     private Image convertBteToImg(byte[] arrByte) {
         Image img = new Image(new ByteArrayInputStream(arrByte));
         return img;

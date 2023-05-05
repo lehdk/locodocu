@@ -66,10 +66,20 @@ public interface IDocumentationDAO {
     void updateTextNode(String text, int id) throws  SQLException;
 
     /**
-     * Inserts a login node to the datasource
-     * @param doc The documentation the node should be added to
-     * @param username The username data
-     * @param password The password data
+     * Inserts a login node to the datasource.
+     * @param doc The documentation the node should be added to.
+     * @param username The username data.
+     * @param password The password data.
      */
     DocumentationLogInNode createLoginNode(Documentation doc, String username, String password) throws SQLException;
+
+    /**
+     * Updates the login node in the datasource.
+     * @param nodeId The id of the node to update.
+     * @param username The new username.
+     * @param password The new password.
+     * @return True if the change was successful, False otherwise.
+     * @throws SQLException If an error happened while updating.
+     */
+    boolean updateLoginNode(int nodeId, String username, String password) throws SQLException;
 }
