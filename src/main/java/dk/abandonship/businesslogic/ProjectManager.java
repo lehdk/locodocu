@@ -72,7 +72,12 @@ public class ProjectManager {
             doc.addDocumentationNode(result);
         } else {
             // Needs to be updated
-            documentationDAO.updateTextNode(set);
+            String text = ((TextArea)set.getKey()).getText();
+            int id = set.getValue().getId();
+            documentationDAO.updateTextNode(text, id);
+
+            var currentDocumentationNode = (DocumentationTextFieldNode) set.getValue();
+            currentDocumentationNode.setText(text);
         }
     }
 
@@ -92,6 +97,8 @@ public class ProjectManager {
             doc.addDocumentationNode(result);
         } else {
             // Needs to be updated
+
+
         }
     }
 

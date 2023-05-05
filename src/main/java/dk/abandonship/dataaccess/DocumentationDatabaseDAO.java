@@ -145,13 +145,13 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
     }
 
     @Override
-    public void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws SQLException {
+    public void updateTextNode(String text, int id) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
             String sql ="UPDATE [DocumentationTextNode] SET [Text] = ? WHERE [Id] = ?;";
 
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, ((TextArea)set.getKey()).getText());
-            statement.setInt(2, set.getValue().getId());
+            statement.setString(1, text);
+            statement.setInt(2, id);
 
             statement.executeQuery();
         }

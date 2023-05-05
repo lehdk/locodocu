@@ -63,7 +63,7 @@ public interface IDocumentationDAO {
      * @param set contain new string value and id that exist in DB
      * @throws SQLException
      */
-    void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
+    void updateTextNode(String text, int id) throws  SQLException;
 
     /**
      * Inserts a login node to the datasource
