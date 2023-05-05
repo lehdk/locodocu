@@ -101,6 +101,8 @@ INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('sale', 'sale
 
 INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES 
     (1, 1),
+    (1, 2),
+    (1, 3),
     (1, 4),
     (2, 2),
     (3, 3),

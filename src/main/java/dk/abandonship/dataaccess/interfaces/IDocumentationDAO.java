@@ -59,10 +59,28 @@ public interface IDocumentationDAO {
 
     /**
      * Updates the value in the dB with the string value where the maps Id is true
-     * @param set contain new string value and id that exist in DB
+     * @param text contain new string value and id that exist in DB
      * @throws SQLException
      */
-    void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws  SQLException;
+    void updateTextNode(String text, int id) throws  SQLException;
+
+    /**
+     * Inserts a login node to the datasource.
+     * @param doc The documentation the node should be added to.
+     * @param username The username data.
+     * @param password The password data.
+     */
+    DocumentationLogInNode createLoginNode(Documentation doc, String username, String password) throws SQLException;
+
+    /**
+     * Updates the login node in the datasource.
+     * @param nodeId The id of the node to update.
+     * @param username The new username.
+     * @param password The new password.
+     * @return True if the change was successful, False otherwise.
+     * @throws SQLException If an error happened while updating.
+     */
+    boolean updateLoginNode(int nodeId, String username, String password) throws SQLException;
 
     /**
      * Creates new Document to add nodes to

@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectManager {
 
@@ -37,7 +38,6 @@ public class ProjectManager {
 
     /**
      * Gets all the projects in the datasource
-     *
      * @return A list of the projects
      * @throws SQLException If an error occurred when accessing the database
      */
@@ -60,58 +60,72 @@ public class ProjectManager {
         projectDAO.createProject(projectDTO);
     }
 
-    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception {
+    /**
+     * Saves the DocumentationTextNode in the data source
+     * @param set The Map Entry containing the fx node and DocumentationNode
+     * @param doc The documentation you want to save the node to
+     * @throws SQLException If an error occurred in the saving process.
+     */
+    private void saveDocumentationTextNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
+        if (set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
+            // Needs to be created
+            var result = documentationDAO.createTextNode(((TextArea)set.getKey()).getText(), doc);
+            set.setValue(result);
+            doc.addDocumentationNode(result);
+        } else {
+            // Needs to be updated
+            String text = ((TextArea)set.getKey()).getText();
+            int id = set.getValue().getId();
+            documentationDAO.updateTextNode(text, id);
+
+            var currentDocumentationNode = (DocumentationTextFieldNode) set.getValue();
+            currentDocumentationNode.setText(text);
+        }
+    }
+
+    private void saveDocumentationLoginNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
+        var children = ((VBox)set.getKey()).getChildren();
+        String username = ((TextField)children.get(1)).getText();
+        String password = ((TextField)children.get(3)).getText();
+
+        if(set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
+            // Needs to be created
+            var result = documentationDAO.createLoginNode(doc, username, password);
+            if(result == null) {
+                System.err.println("Could not save the node to the data source!");
+                return;
+            }
+            set.setValue(result);
+            doc.addDocumentationNode(result);
+        } else {
+            // Needs to be updated
+            boolean updated = documentationDAO.updateLoginNode(set.getValue().getId(), username, password);
+            if(!updated) return;
+
+            var currentDocumentationNode = (DocumentationLogInNode) set.getValue();
+            currentDocumentationNode.setUsername(username);
+            currentDocumentationNode.setPassword(password);
+        }
+    }
+
+    private void saveDocumentationPictureNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) {
+
+    }
+
+    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception{
         for (var set : nodeMap.entrySet()) {
-            if (set.getKey() instanceof TextArea) {
-
-                if (set.getValue() == null) {
-                    var result = documentationDAO.createTextNode(((TextArea) set.getKey()).getText(), doc);
-                    set.setValue(result);
-                } else {
-                    documentationDAO.updateTextNode(set);
-                }
-            } else if (set.getKey() instanceof VBox) {
-
-                int textField = 0;
-                int hBox = 0;
-
-                for (Node v : ((VBox) set.getKey()).getChildren()) {
-                    if (v instanceof HBox) {
-                        hBox++;
-
-                    } else if (v instanceof TextField) {
-                        textField++;
-                    }
-                }
-
-                if (hBox >= 1) {
-                    for (Node v : ((VBox) set.getKey()).getChildren()) {
-                        if (v instanceof TextField) {
-                            ((TextField) v).getText();
-                        }
-                        if (v instanceof HBox) {
-                            for (Node b : ((HBox) v).getChildren()) {
-                                ImageView img = (ImageView) b;
-                                //TODO Save IMAGE
-                            }
-                        }
-                    }
-                } else if (textField >= 2) {
-                    for (Node v : ((VBox) set.getKey()).getChildren()) {
-                        if (v instanceof TextField) {
-                            System.out.println(((TextField) v).getText());
-                            //TODO SAVE log-in
-                        }
-                    }
-                }
-
+            if(set.getValue() instanceof DocumentationTextFieldNode){
+                saveDocumentationTextNode(set, doc);
+            } else if (set.getValue() instanceof DocumentationLogInNode) {
+                saveDocumentationLoginNode(set, doc);
+            } else if (set.getValue() instanceof  DocumentationPictureNode) {
+                saveDocumentationPictureNode(set, doc);
             }
         }
     }
 
     /**
      * Sets data on the given object
-     *
      * @param documentation The documentation you want the data from.
      */
     public void loadDocumentationData(Documentation documentation) throws SQLException {
