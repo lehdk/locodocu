@@ -16,7 +16,7 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
         List<Customer> customers = new ArrayList<>();
 
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "SELECT [Id], [Name], [Email], [Phone], [Address] FROM [Customer];";
+            String sql = "SELECT [Id], [Name], [Email], [Phone], [Address], [PostalCode] FROM [Customer];";
 
             var statement = connection.prepareStatement(sql);
 
@@ -28,7 +28,8 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
                         resultSet.getString("Name"),
                         resultSet.getString("Email"),
                         resultSet.getString("Phone"),
-                        resultSet.getString("Address")
+                        resultSet.getString("Address"),
+                        resultSet.getString("PostalCode")
                 ));
             }
         }
@@ -39,13 +40,14 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
     @Override
     public Customer addCustomer(CustomerDTO customerDTO) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "INSERT INTO [Customer] ([Name], [Phone], [Email], [Address]) VALUES (?,?,?,?);";
+            String sql = "INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES (?,?,?,?,?);";
 
             var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, customerDTO.getName());
             statement.setString(2, customerDTO.getPhone());
             statement.setString(3, customerDTO.getEmail());
             statement.setString(4, customerDTO.getAddress());
+            statement.setString(5, customerDTO.getPostalCode());
 
             statement.executeUpdate();
 
@@ -78,14 +80,15 @@ public class CustomerDatabaseDAO implements ICustomerDAO {
     public boolean editCustomer(Customer customer, CustomerDTO newData) throws SQLException {
 
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "UPDATE [Customer] SET [Name]=?,[Phone]=?,[Email]=?,[Address]=? WHERE [Id]=?";
+            String sql = "UPDATE [Customer] SET [Name]=?,[Phone]=?,[Email]=?,[Address]=?,[PostalCode]=? WHERE [Id]=?";
 
             var statement = connection.prepareStatement(sql);
             statement.setString(1, newData.getName());
             statement.setString(2, newData.getPhone());
             statement.setString(3, newData.getEmail());
             statement.setString(4, newData.getAddress());
-            statement.setInt(5, customer.getId());
+            statement.setString(5, newData.getPostalCode());
+            statement.setInt(6, customer.getId());
 
             int affectedRows = statement.executeUpdate();
 

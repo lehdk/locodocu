@@ -14,11 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AddEditCustomerController implements Initializable {
-
     private CustomerDTO result;
 
     @FXML
-    private TextField txtName, txtEmail, txtPhone, txtAddress;
+    private TextField txtName, txtEmail, txtPhone, txtAddress, txtPostalCode;
 
     @FXML
     private Button btnAdd, btnCancel;
@@ -32,6 +31,7 @@ public class AddEditCustomerController implements Initializable {
         txtName.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
         txtEmail.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
         txtAddress.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
+        txtPostalCode.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
 
         validateInputs();
     }
@@ -41,6 +41,7 @@ public class AddEditCustomerController implements Initializable {
         txtEmail.textProperty().setValue(customer.getEmail());
         txtPhone.textProperty().setValue(customer.getPhone());
         txtAddress.textProperty().setValue(customer.getAddress());
+        txtPostalCode.textProperty().setValue(customer.getPostalCode());
     }
 
     private void validateInputs() {
@@ -53,7 +54,9 @@ public class AddEditCustomerController implements Initializable {
 
         boolean addressOk = txtAddress.getText().trim().length() > 5;
 
-        btnAdd.setDisable(!(nameOk && emailOk && addressOk));
+        boolean postalCodeOk = txtPostalCode.getText().trim().length() > 1;
+
+        btnAdd.setDisable(!(nameOk && emailOk && addressOk && postalCodeOk));
     }
 
     public void handleCancel() {
@@ -67,7 +70,8 @@ public class AddEditCustomerController implements Initializable {
                 txtName.getText().trim(),
                 txtEmail.getText().trim(),
                 txtPhone.getText().trim(),
-                txtAddress.getText().trim()
+                txtAddress.getText().trim(),
+                txtPostalCode.getText().trim()
         );
 
         closeWindow();

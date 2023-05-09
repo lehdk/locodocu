@@ -42,6 +42,8 @@ public class CustomerController implements Initializable {
     @FXML
     private TableColumn<Customer, String> addressColumn;
     @FXML
+    private TableColumn<Customer, String> postalCodeColumn;
+    @FXML
     private HBox buttonsHBox;
 
     private Button deleteCustomerButton, editCustomerButton;
@@ -59,6 +61,7 @@ public class CustomerController implements Initializable {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
 
         customerTableView.setItems(customerModel.getCustomerObservableList());
 
