@@ -1,7 +1,7 @@
 package dk.abandonship.gui.controller;
 
-import dk.abandonship.businesslogic.LoginManager;
 import dk.abandonship.gui.model.LoginModel;
+import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,18 +13,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LogInController implements Initializable {
-
-    private final LoginManager loginManager;
-
     @FXML private TextField fieldEmail;
     @FXML private PasswordField fieldPassword;
     @FXML private Label lblError;
     private LoginModel model;
-    private ControllerAssistant controllerAssistant;
+    private final ControllerAssistant controllerAssistant;
 
     public LogInController() {
         controllerAssistant = ControllerAssistant.getInstance();
-        loginManager = new LoginManager();
+        LoggedInUserState.getInstance().setLoggedInUser(null);
     }
 
     @Override
@@ -42,8 +39,6 @@ public class LogInController implements Initializable {
                 controllerAssistant.setTopFX("NavBar");
                 controllerAssistant.setCenterFX("projectsView");
             }
-
-            // TODO: Redirect to logged in page
         } catch (Exception e) {
             e.printStackTrace();
             lblError.setText("Error logging in!");

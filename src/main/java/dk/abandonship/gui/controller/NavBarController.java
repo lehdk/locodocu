@@ -1,47 +1,37 @@
 package dk.abandonship.gui.controller;
 
-import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class NavBarController implements Initializable {
 
-
     @FXML private HBox navBar;
     private ControllerAssistant controllerAssistant;
-    private LoggedInUserState userState;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         controllerAssistant = ControllerAssistant.getInstance();
-        userState = LoggedInUserState.getInstance();
 
-        createButtons(userState);
+        createButtons();
     }
 
-    private void  createButtons(LoggedInUserState userState) {
+    private void createButtons() {
 
         navBar.setSpacing(20);
 
-        if (userState != null){
-            Button btn1 = new Button("Project");
-            btn1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> projects());
+        Button btn1 = new Button("Project");
+        btn1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> projects());
 
-            navBar.getChildren().add(btn1);
+        navBar.getChildren().add(btn1);
 
-            navBar.setSpacing(20);
-        }
+        navBar.setSpacing(20);
 
         Button customerButton = new Button("Customers");
         customerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -53,7 +43,16 @@ public class NavBarController implements Initializable {
         });
         navBar.getChildren().add(customerButton);
 
-
+        Button logoutButton = new Button("Log out");
+        logoutButton.setOnAction(event -> {
+            try {
+                controllerAssistant.setTopFX(null);
+                controllerAssistant.setCenterFX("LogIn");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        navBar.getChildren().add(logoutButton);
     }
 
     private void projects() {
