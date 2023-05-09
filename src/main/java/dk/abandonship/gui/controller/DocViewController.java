@@ -7,9 +7,7 @@ import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
-import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.controller.PopUpController.CreateDocController;
-import dk.abandonship.gui.controller.PopUpController.CreateProjectView;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
@@ -197,17 +195,21 @@ public class DocViewController implements Initializable {
     private void handleAddLogin(DocumentationLogInNode docNode){
 
         if(docNode == null) {
-            docNode = new DocumentationLogInNode(DocumentationNode.UNUSED_NODE_ID, "", "");
+            docNode = new DocumentationLogInNode(DocumentationNode.UNUSED_NODE_ID, "", "", "");
         }
 
         VBox vboxLog = new VBox();
+        TextField device = new TextField();
         TextField username = new TextField();
         TextField password = new TextField();
 
+        device.setDisable(!userIsAssignedTechnician);
         username.setDisable(!userIsAssignedTechnician);
         password.setDisable(!userIsAssignedTechnician);
 
         vboxLog.setAlignment(Pos.CENTER_LEFT);
+        vboxLog.getChildren().add(new Label("Device"));
+        vboxLog.getChildren().add(device);
         vboxLog.getChildren().add(new Label("Username"));
         vboxLog.getChildren().add(username);
         vboxLog.getChildren().add(new Label("Password"));
@@ -219,6 +221,7 @@ public class DocViewController implements Initializable {
         vboxIOButtons.getChildren().add(new Label("\n\n"));
 
         if (docNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
+            device.setText(docNode.getDevice());
             username.setText(docNode.getUsername());
             password.setText(docNode.getPassword());
         }
