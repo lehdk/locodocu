@@ -18,7 +18,7 @@
    <PasswordField fx:id="fieldPassword" layoutX="947.0" layoutY="387.0" onAction="#handleLogIn" prefHeight="50.0" prefWidth="235.0" text="1234" />
    <Label layoutX="950.0" layoutY="224.0" prefHeight="34.0" prefWidth="60.0" style="-fx-text-fill: #030202" text="Email" />
    <Label layoutX="947.0" layoutY="338.0" prefHeight="34.0" prefWidth="53.0" style="-fx-text-fill: #030202" text="Password" />
-   <Button layoutX="988.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="50.0" prefWidth="153.0" style="-fx-text-fill: #030202" text="Log - In" />
+   <Button layoutX="988.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="50.0" prefWidth="153.0" style="-fx-text-fill: #030202" text="Login" />
    <Label fx:id="lblError" layoutX="94.0" layoutY="351.0" prefHeight="34.0" prefWidth="590.0" style="-fx-text-fill: #ff0000" />
    <ImageView fitHeight="344.0" fitWidth="556.0" layoutX="85.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../../img/Wuavlogo.png" />
