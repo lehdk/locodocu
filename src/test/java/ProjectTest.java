@@ -1,4 +1,3 @@
-import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
 import dk.abandonship.dataaccess.ProjectDatabaseDAO;
 import dk.abandonship.dataaccess.RoleDatabaseDAO;
 import dk.abandonship.dataaccess.UserDatabaseDAO;
@@ -19,7 +18,7 @@ public class ProjectTest {
         int id = 42;
         String name = "Det store blå skib";
         Timestamp createdAt = Timestamp.from(Instant.now());
-        Customer customer = new Customer(1, null, null, null, null);
+        Customer customer = new Customer(1, null, null, null, null, null);
 
         Project p = new Project(id, name, createdAt, customer);
 
@@ -31,7 +30,7 @@ public class ProjectTest {
 
     @Test
     void projectsAreNotNull() throws SQLException {
-        var projectDAO = new ProjectDatabaseDAO(new DocumentationDatabaseDAO(), new UserDatabaseDAO(new RoleDatabaseDAO()));
+        var projectDAO = new ProjectDatabaseDAO(new UserDatabaseDAO(new RoleDatabaseDAO()));
 
         var projects = projectDAO.getAllProjects();
 

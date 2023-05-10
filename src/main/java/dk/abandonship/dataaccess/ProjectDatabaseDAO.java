@@ -10,18 +10,13 @@ import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDatabaseDAO implements IProjectDAO {
-
-    private final IDocumentationDAO documentationDAO;
-
     private final IUserDAO userDAO;
 
-    public ProjectDatabaseDAO(IDocumentationDAO documentationDAO, IUserDAO userDAO) {
-        this.documentationDAO = documentationDAO;
+    public ProjectDatabaseDAO(IUserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -32,7 +27,7 @@ public class ProjectDatabaseDAO implements IProjectDAO {
 
         try(var connection = DBConnector.getInstance().getConnection()) {
 
-            String sql = "SELECT \n" +
+            String sql = "SELECT " +
                     "[Project].[Id] AS [ProjectId]," +
                     "[Project].[Name] AS [ProjectName]," +
                     "[CreatedAt] AS [ProjectCreatedAt]," +
@@ -40,7 +35,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                     "[Customer].[Name] AS [CustomerName]," +
                     "[Customer].[Email] AS [CustomerEmail]," +
                     "[Customer].[Phone] AS [CustomerPhone]," +
-                    "[Customer].[Address] AS [CustomerAddress]" +
+                    "[Customer].[Address] AS [CustomerAddress]," +
+                    "[Customer].[PostalCode] AS [CustomerPostalCode]" +
                     "FROM [Project]" +
                     "JOIN [Customer] ON [CustomerId] = [Customer].[Id]";
 
@@ -54,7 +50,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                         resultSet.getString("CustomerName"),
                         resultSet.getString("CustomerEmail"),
                         resultSet.getString("CustomerPhone"),
-                        resultSet.getString("CustomerAddress")
+                        resultSet.getString("CustomerAddress"),
+                        resultSet.getString("CustomerPostalCode")
                 );
 
                 Project project = new Project(

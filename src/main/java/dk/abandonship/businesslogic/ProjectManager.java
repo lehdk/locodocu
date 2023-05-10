@@ -33,7 +33,7 @@ public class ProjectManager {
 
     public ProjectManager() {
         this.documentationDAO = new DocumentationDatabaseDAO();
-        this.projectDAO = new ProjectDatabaseDAO(documentationDAO, new UserDatabaseDAO(new RoleDatabaseDAO()));
+        this.projectDAO = new ProjectDatabaseDAO(new UserDatabaseDAO(new RoleDatabaseDAO()));
     }
 
     /**
