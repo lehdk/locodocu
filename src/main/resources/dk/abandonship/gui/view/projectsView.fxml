@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background: transparent" styleClass="ScrollPane" stylesheets="@../StyleSheets/IndexStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
-   <content>
-      <VBox fx:id="vbox" alignment="CENTER" style="-fx-background: transparent" styleClass="VBox" />
-   </content>
-</ScrollPane>
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" stylesheets="@../StyleSheets/CustomerStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
+   <children>
+      <TableView fx:id="projectTableView" onMouseClicked="#openItem" styleClass="customerTable">
+         <columns>
+            <TableColumn fx:id="projectName" prefWidth="134.4000244140625" text="Project Name" />
+            <TableColumn fx:id="customerName" prefWidth="123.20001220703125" text="Customer" />
+            <TableColumn fx:id="docCount" prefWidth="150.0" text="Documentation Count" />
+         </columns>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </TableView>
+      <HBox fx:id="buttonsHBox">
+         <VBox.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

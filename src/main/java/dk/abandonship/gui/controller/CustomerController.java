@@ -162,6 +162,7 @@ public class CustomerController implements Initializable {
     }
 
     public void handleDeleteCustomer() {
+        //TODO update dellete stmt
         var selectedItem = customerTableView.getSelectionModel().getSelectedItem();
         if(selectedItem == null) return;
 
