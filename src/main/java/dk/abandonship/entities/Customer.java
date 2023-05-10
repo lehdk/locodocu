@@ -7,13 +7,15 @@ public class Customer {
     private String email;
     private String phone;
     private String address;
+    private String postalCode;
 
-    public Customer(int id, String name, String email, String phone, String address) {
+    public Customer(int id, String name, String email, String phone, String address, String postalCode) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.postalCode = postalCode;
     }
 
     public int getId() {
@@ -54,6 +56,14 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     @Override

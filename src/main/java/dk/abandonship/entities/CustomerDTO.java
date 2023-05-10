@@ -5,12 +5,14 @@ public class CustomerDTO {
     private String email;
     private String phone;
     private String address;
+    private String postalCode;
 
-    public CustomerDTO(String name, String email, String phone, String address) {
+    public CustomerDTO(String name, String email, String phone, String address, String postalCode) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.postalCode = postalCode;
     }
 
     public String getName() {
@@ -45,13 +47,22 @@ public class CustomerDTO {
         this.address = address;
     }
 
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
     public Customer convertToCustomer(int id) {
         return new Customer(
                 id,
                 name,
                 email,
                 phone,
-                address
+                address,
+                postalCode
         );
     }
 }

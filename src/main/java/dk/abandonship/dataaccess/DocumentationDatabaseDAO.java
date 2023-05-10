@@ -4,11 +4,8 @@ import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
-import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
-import javafx.scene.Node;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
@@ -16,7 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
@@ -85,6 +85,7 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
             while(resultSet.next()) {
                 logNodes.add(new DocumentationLogInNode(
                         resultSet.getInt("Id"),
+                        resultSet.getString("Device"),
                         resultSet.getString("Username"),
                         resultSet.getString("Password")
                         )
@@ -185,39 +186,41 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
     }
 
     @Override
-    public DocumentationLogInNode createLoginNode(Documentation doc, String username, String password) throws SQLException {
+    public DocumentationLogInNode createLoginNode(Documentation doc, String device, String username, String password) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Username], [Password]) VALUES (?,?,?);";
+            String sql = "INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Device], [Username], [Password]) VALUES (?,?,?,?);";
 
             var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, doc.getId());
-            statement.setString(2, username);
-            statement.setString(3, password);
+            statement.setString(2, device);
+            statement.setString(3, username);
+            statement.setString(4, password);
 
             var rs = statement.executeQuery();
 
             if(rs.next()) {
                 return new DocumentationLogInNode(
                         rs.getInt(1),
+                        device,
                         username,
                         password
                 );
             }
-
         }
 
         return null;
     }
 
     @Override
-    public boolean updateLoginNode(int nodeId, String username, String password) throws SQLException {
+    public boolean updateLoginNode(int nodeId, String device, String username, String password) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "UPDATE [DocumentationLoginNode] SET [Username] = ?, [Password] = ? WHERE [Id] = ?;";
+            String sql = "UPDATE [DocumentationLoginNode] SET [Device] = ?, [Username] = ?, [Password] = ? WHERE [Id] = ?;";
 
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setInt(3, nodeId);
+            statement.setString(1, device);
+            statement.setString(2, username);
+            statement.setString(3, password);
+            statement.setInt(4, nodeId);
 
             int affectedRows = statement.executeUpdate();
 
@@ -226,7 +229,6 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
     }
 
     private Image convertBteToImg(byte[] arrByte) {
-        Image img = new Image(new ByteArrayInputStream(arrByte));
-        return img;
+        return new Image(new ByteArrayInputStream(arrByte));
     }
 }

@@ -17,8 +17,6 @@ import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
@@ -33,7 +31,7 @@ public class ProjectManager {
 
     public ProjectManager() {
         this.documentationDAO = new DocumentationDatabaseDAO();
-        this.projectDAO = new ProjectDatabaseDAO(documentationDAO, new UserDatabaseDAO(new RoleDatabaseDAO()));
+        this.projectDAO = new ProjectDatabaseDAO(new UserDatabaseDAO(new RoleDatabaseDAO()));
     }
 
     /**
@@ -85,12 +83,13 @@ public class ProjectManager {
 
     private void saveDocumentationLoginNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
         var children = ((VBox)set.getKey()).getChildren();
-        String username = ((TextField)children.get(1)).getText();
-        String password = ((TextField)children.get(3)).getText();
+        String device = ((TextField)children.get(1)).getText();
+        String username = ((TextField)children.get(3)).getText();
+        String password = ((TextField)children.get(5)).getText();
 
         if(set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
             // Needs to be created
-            var result = documentationDAO.createLoginNode(doc, username, password);
+            var result = documentationDAO.createLoginNode(doc, device, username, password);
             if(result == null) {
                 System.err.println("Could not save the node to the data source!");
                 return;
@@ -99,10 +98,11 @@ public class ProjectManager {
             doc.addDocumentationNode(result);
         } else {
             // Needs to be updated
-            boolean updated = documentationDAO.updateLoginNode(set.getValue().getId(), username, password);
+            boolean updated = documentationDAO.updateLoginNode(set.getValue().getId(), device, username, password);
             if(!updated) return;
 
             var currentDocumentationNode = (DocumentationLogInNode) set.getValue();
+            currentDocumentationNode.setDevice(device);
             currentDocumentationNode.setUsername(username);
             currentDocumentationNode.setPassword(password);
         }

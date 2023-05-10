@@ -53,6 +53,7 @@ public class CustomerModel {
             customer.setEmail(newData.getEmail());
             customer.setAddress(newData.getAddress());
             customer.setPhone(newData.getPhone());
+            customer.setPostalCode(newData.getPostalCode());
         }
 
         return wasEdited;

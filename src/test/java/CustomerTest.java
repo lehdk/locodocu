@@ -14,14 +14,16 @@ public class CustomerTest {
         String email = "info@mærsk.dk";
         String phone = "42425242";
         String address = "Fantasivej 42, København";
+        String postalCode = "4212";
 
-        Customer c = new Customer(id, name, email, phone, address);
+        Customer c = new Customer(id, name, email, phone, address, postalCode);
 
-        assertEquals(c.getId(), id);
-        assertEquals(c.getName(), name);
-        assertEquals(c.getEmail(), email);
-        assertEquals(c.getPhone(), phone);
-        assertEquals(c.getAddress(), address);
+        assertEquals(id, c.getId());
+        assertEquals(name, c.getName());
+        assertEquals(email, c.getEmail());
+        assertEquals(phone, c.getPhone());
+        assertEquals(address, c.getAddress());
+        assertEquals(postalCode, c.getPostalCode());
     }
 
     @Test
@@ -40,8 +42,9 @@ public class CustomerTest {
         String email = "test@customer.dk";
         String phone = "12345678";
         String address = "Test Road Nr. 42, Nashville";
+        String postalCode = "89475";
 
-        CustomerDTO customerDTO = new CustomerDTO(name, email, phone, address);
+        CustomerDTO customerDTO = new CustomerDTO(name, email, phone, address, postalCode);
 
         Customer customer = customerDTO.convertToCustomer(id);
 
@@ -50,6 +53,6 @@ public class CustomerTest {
         assertEquals(email, customer.getEmail());
         assertEquals(phone, customer.getPhone());
         assertEquals(address, customer.getAddress());
+        assertEquals(postalCode, customer.getPostalCode());
     }
-
 }

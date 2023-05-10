@@ -39,6 +39,7 @@ CREATE TABLE [Customer] (
     [Email] VARCHAR(255) NOT NULL,
     [Phone] VARCHAR(20),
     [Address] VARCHAR(255) NOT NULL,
+    [PostalCode] VARCHAR(10) NOT NULL,
 );
 
 CREATE TABLE [Project] (
@@ -74,6 +75,7 @@ CREATE TABLE [DocumentationTextNode] (
 
 CREATE TABLE [DocumentationLoginNode] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [Device] NVARCHAR(100),
     [Username] NVARCHAR(50),
     [Password] NVARCHAR(50),
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
@@ -109,7 +111,7 @@ INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES
     (4, 4);
 
 -- Create fake project and documentation
-INSERT INTO [Customer] ([Name], [Phone], [Email], [Address]) VALUES ('Mærsk', '42424242', 'noreply@maersk.dk', 'Mærsk vej, 42, 4242 Fantasiby'); -- Id 1
+INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES ('Mærsk', '42424242', 'noreply@maersk.dk', 'Mærsk vej, 42, Fantasiby', '4242'); -- Id 1
 
 INSERT INTO [Project] ([Name], [CustomerId]) VALUES ('Det store blå skib', 1); -- Id 1
 
@@ -118,11 +120,11 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (1, 3);
 INSERT INTO [Documentation] ([Name]) VALUES ('Broen'); -- Id 1
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (1, 1);
 INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (1, 'We have made the best audio system to scare away pirates arrrrrr.');
-INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Username], [Password]) VALUES (1, 'admin', 'password');
+INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Device], [Username], [Password]) VALUES (1, 'Router', 'admin', 'password');
 INSERT INTO [DocumentationPictureNode] ([DocumentationId], [Title], [Data]) VALUES (1, 'Very nice picture', 0x4242);
 
 -- Fake documentation
-INSERT INTO [Customer] ([Name], [Phone], [Email], [Address]) VALUES ('Lego', '78491494', 'noreply@lego.dk', 'Lego vej, 420, 7190 Billund'); -- Id 2
+INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES ('Lego', '78491494', 'noreply@lego.dk', 'Lego vej, 420, Billund', '7190'); -- Id 2
 
 INSERT INTO [Project] ([Name], [CustomerId]) VALUES ('Lego House', 2); -- Id 2
 
