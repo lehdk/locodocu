@@ -11,9 +11,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Stack;
 
 public class ProjectModel {
 
@@ -58,24 +58,42 @@ public class ProjectModel {
      * @return a new observableList with data that matches the prompt
      */
     public ObservableList getSearchResult(String text) {
-        List<Project> searchList = new ArrayList<>();
+        Stack<Project> searchList = new Stack<>();
 
         if (text.isEmpty()) return  projectObservableList;
 
 
         for (Project p : projectObservableList) {
-            if (p.getName().toLowerCase().contains(text)) {
+            if (p.getName().toLowerCase().contains(text)) {                         //if name contains prompt text
                 searchList.add(p);
-            } else if (p.getCustomer().getName().toLowerCase().contains(text)) {
+            } else if (p.getCustomer().getName().toLowerCase().contains(text)) {     // if customer contains prompt text
                 searchList.add(p);
-            } else if (p.getCustomer().getPostalCode().contains(text)) {
+            } else if (p.getCustomer().getPostalCode().contains(text)) {             // if customer postal code contains prompt text
+                searchList.add(p);
+            } else if (p.getCustomer().getAddress().toLowerCase().contains(text)) {  // if customers address contains prompt text
+                searchList.add(p);
+            } else if (docContains(p, text.toLowerCase())){                          //if a document name on a project contains prompt text
                 searchList.add(p);
             }
         }
 
-        System.out.println(searchList);
-
         ObservableList<Project> searchListObb = FXCollections.observableList(searchList);
         return searchListObb;
+    }
+
+    /**
+     * if projects documentations list contains a doc named after promt text
+     * @param project that should be checked for a specifik doc
+     * @param text the name of document
+     * @return
+     */
+    private boolean docContains(Project project, String text){
+        for (var d : project.getDocumentations()) {
+            if (d.getName().toLowerCase().contains(text)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
