@@ -94,6 +94,9 @@ public class ProjectViewController implements Initializable {
         buttonsHBox.getChildren().add(btn);
     }
 
+    /**
+     * sets the value of the tableview with data from observable list over projects in model
+     */
     private void setProjects() {
         projectName.setCellValueFactory(new PropertyValueFactory<>("name"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customer"));
@@ -104,7 +107,9 @@ public class ProjectViewController implements Initializable {
 
     }
 
-
+    /**
+     * open createProject view in a pop-up box
+     */
     private void addProject() {
         try {
             Stage popupStage = new Stage();
@@ -118,11 +123,17 @@ public class ProjectViewController implements Initializable {
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
 
+            setProjects();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Open project and sets it in center view
+     * @param project project that should be opend
+     */
     private void openProject(Project project) {
         try {
             var controller = (DocViewController) controllerAssistant.setCenterFX("DocView");
@@ -133,6 +144,10 @@ public class ProjectViewController implements Initializable {
 
     }
 
+    /**
+     * open assignTechVIew in a pop-up box
+     * @param project project technicians should be assigned to
+     */
     private void assignTechnicians(Project project) {
         try {
             Stage popupStage = new Stage();
@@ -153,6 +168,11 @@ public class ProjectViewController implements Initializable {
         }
     }
 
+
+    /**
+     * Set doubleClick to open a doc on the project Tableview
+     * @param mouseEvent click from mouse on a item in table
+     */
     public void openItem(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) //Checking double click
         {
@@ -161,9 +181,10 @@ public class ProjectViewController implements Initializable {
     }
 
 
-    public void selectFilter(ActionEvent actionEvent) {
-
-    }
+    /**
+     * serchesin model for the promt in the fieldSearch
+     * @param actionEvent
+     */
     public void search(ActionEvent actionEvent) {
         projectTableView.setItems(projectModel.getSearchResult(fieldSearch.getText().toLowerCase()));
     }

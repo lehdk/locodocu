@@ -52,6 +52,11 @@ public class ProjectModel {
         projectManager.createDocument(docName, project);
     }
 
+    /**
+     * Serches the obersevableList for proumt
+     * @param text the thing the list should contain
+     * @return a new observableList with data that matches the prompt
+     */
     public ObservableList getSearchResult(String text) {
         List<Project> searchList = new ArrayList<>();
 
