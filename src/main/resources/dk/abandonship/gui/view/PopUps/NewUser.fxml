@@ -33,8 +33,8 @@
             <TextField fx:id="txtEmail" GridPane.rowIndex="3" />
             <Label text="Phone" GridPane.rowIndex="4" />
             <TextField fx:id="txtPhone" GridPane.rowIndex="5" />
-            <Label text="Password" GridPane.rowIndex="4" />
-            <TextField fx:id="txtPassword" GridPane.rowIndex="5" />
+            <Label text="Password" GridPane.rowIndex="6" />
+            <TextField fx:id="txtPassword" GridPane.rowIndex="7" />
         </GridPane>
     </center>
     <bottom>

@@ -23,6 +23,8 @@ public interface IUserDAO {
      */
     public User getUser(int id) throws SQLException;
 
-    List<User> getAllUsers() throws Exception;
+    List<User> getAllUsers() throws SQLException;
     List<User> getAllTechnicians() throws Exception;
+    public void createUser(User user) throws SQLException;
+    public boolean deleteUser(User user) throws SQLException;
 }

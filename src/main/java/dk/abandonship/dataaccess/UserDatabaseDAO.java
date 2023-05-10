@@ -3,11 +3,13 @@ package dk.abandonship.dataaccess;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
+import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +88,7 @@ public class UserDatabaseDAO implements IUserDAO {
     }
 
     @Override
-    public List<User> getAllUsers() throws Exception {
+    public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
 
         try(var connection = DBConnector.getInstance().getConnection()) {
@@ -155,15 +157,16 @@ public class UserDatabaseDAO implements IUserDAO {
         return technicians;
     }
 
-    public void createUser(User user) throws SQLServerException {
+    public void createUser(User user) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "INSERT INTO [User] ([Name], [Email], [Phone], [Password] VALUES ?,?,?,?)";
+            String sql = "INSERT INTO [Users] ([Name], [Email], [Phone], [Password], [DisabledAt]) VALUES (?,?,?,?,?)";
 
             var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPhone());
             statement.setString(4, user.getPassword());
+            statement.setTimestamp(5, new Timestamp(1));
 
             statement.executeUpdate();
         }
@@ -174,10 +177,11 @@ public class UserDatabaseDAO implements IUserDAO {
 
     public boolean deleteUser(User user) throws SQLException {
         try( var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "DELETE FROM [User] WHERE [Id]=?";
+            String sql = "DELETE FROM [Users] WHERE [Id]=?";
 
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, user.getId());
+
 
             int affectedRows = statement.executeUpdate();
 

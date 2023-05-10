@@ -2,6 +2,7 @@ package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
 
+import dk.abandonship.entities.CustomerDTO;
 import dk.abandonship.entities.User;
 import dk.abandonship.gui.controller.PopUpController.AddEditUserController;
 import dk.abandonship.gui.model.UserModel;
@@ -55,7 +56,7 @@ public class UsersViewController implements Initializable {
         userTableView.setItems(userModel.getUserObserveableList());
 
         buttonsHBox.setSpacing(10);
-        if(LoggedInUserState.getInstance().hasRole(DefaultRoles.ADMIN)) {
+        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN)) {
             Button addUserButton = new Button("Add User");
             addUserButton.setOnAction(event -> {
                 try {
@@ -122,9 +123,12 @@ public class UsersViewController implements Initializable {
 
         popupStage.showAndWait();
 
+        User result = controller.getResult();
+        if(result == null) return;
+
         try {
             if(user == null) {
-                userModel.addUser(user);
+                userModel.addUser(result);
             } else {
                 boolean wasEdited = userModel.editUser(user);
                 if(wasEdited) userTableView.refresh();

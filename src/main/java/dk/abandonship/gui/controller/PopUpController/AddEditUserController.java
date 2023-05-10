@@ -4,13 +4,17 @@ import dk.abandonship.entities.User;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddEditUserController implements Initializable {
 
-    private AddEditCustomerController addEditCustomerController;
+    private User result;
     public TextField txtPassword;
     public TextField txtName;
     public TextField txtEmail;
@@ -18,17 +22,13 @@ public class AddEditUserController implements Initializable {
     public Button btnAdd;
     public Button btnCancel;
 
-    public AddEditUserController() {
-        addEditCustomerController = new AddEditCustomerController();
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        txtName.textProperty().addListener((obs, oldValue, newValue) -> addEditCustomerController.validateInputs());
-        txtEmail.textProperty().addListener((obs, oldValue, newValue) -> addEditCustomerController.validateInputs());
-        txtPassword.textProperty().addListener((obs, oldValue, newValue) -> addEditCustomerController.validateInputs());
+        txtName.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
+        txtEmail.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
+        txtPassword.textProperty().addListener((obs, oldValue, newValue) -> validateInputs());
 
-        addEditCustomerController.validateInputs();
+        validateInputs();
     }
 
     public void editMode(User user) {
@@ -38,11 +38,43 @@ public class AddEditUserController implements Initializable {
         txtPassword.textProperty().setValue(user.getPassword());
     }
 
-    public void handleAdd() {
+    private void validateInputs() {
+        Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+        boolean nameOk = txtName.getText().trim().length() > 3;
+
+        Matcher emailMatcher = emailPattern.matcher(txtEmail.getText().trim());
+        boolean emailOk = emailMatcher.matches();
+
+        boolean passwordOk = txtPassword.getText().trim().length() > 5;
+
+        btnAdd.setDisable(!(nameOk && emailOk && passwordOk));
+    }
+
+    public void handleAdd() {
+        result = new User(
+                1,
+                txtName.getText().trim(),
+                txtEmail.getText().trim(),
+                txtPhone.getText().trim(),
+                txtPassword.getText().trim(),
+                null
+        );
+
+        closeWindow();
     }
 
     public void handleCancel() {
-        addEditCustomerController.closeWindow();
+        result = null;
+        closeWindow();
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) btnCancel.getScene().getWindow();
+        stage.close();
+    }
+
+    public User getResult() {
+        return result;
     }
 }

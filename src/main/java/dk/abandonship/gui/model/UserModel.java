@@ -9,12 +9,18 @@ import javafx.collections.ObservableList;
 import java.sql.SQLException;
 
 public class UserModel {
-    private UserManager userManager;
+    private final UserManager userManager;
 
-    private ObservableList<User> userObservableList;
+    private final ObservableList<User> userObservableList;
 
     public UserModel() {
         userManager = new UserManager();
+        try {
+            userObservableList = FXCollections.observableList(userManager.getAllUsers());
+        } catch (SQLException e) {
+            System.err.println("Could not load customers!");
+            throw new RuntimeException(e);
+        }
     }
 
     public ObservableList getAllTechnicians() throws Exception{
@@ -27,15 +33,23 @@ public class UserModel {
     }
 
 
-    public boolean deleteUser(User user) throws SQLException {
-        return userManager.deleteUser(user);
+    public void deleteUser(User user) throws SQLException {
+        boolean wasDeleted = userManager.deleteUser(user);
+
+        if(wasDeleted) {
+            userObservableList.remove(user);
+        }
     }
 
     public boolean editUser(User user) {
         return true;
     }
 
-    public void addUser(User user) throws SQLServerException {
+    public void addUser(User user) throws SQLException {
         userManager.createUser(user);
+
+        if(user != null) {
+            userObservableList.add(user);
+        }
     }
 }

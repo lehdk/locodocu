@@ -43,7 +43,7 @@ public class AddEditCustomerController implements Initializable {
         txtAddress.textProperty().setValue(customer.getAddress());
     }
 
-    void validateInputs() {
+    private void validateInputs() {
         Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
         boolean nameOk = txtName.getText().trim().length() > 3;
@@ -73,7 +73,7 @@ public class AddEditCustomerController implements Initializable {
         closeWindow();
     }
 
-    void closeWindow() {
+    private void closeWindow() {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
     }

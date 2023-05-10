@@ -19,7 +19,7 @@ public class UserManager {
         userDAO = new UserDatabaseDAO(roleDAO);
     }
 
-    public List<User> getAllUsers() throws Exception{
+    public List<User> getAllUsers() throws SQLException {
         return userDAO.getAllUsers();
     }
 
@@ -27,12 +27,12 @@ public class UserManager {
         return userDAO.getAllTechnicians();
     }
 
-    public void createUser(User user) throws SQLServerException {
-        userDatabaseDAO.createUser(user);
+    public void createUser(User user) throws SQLException {
+        userDAO.createUser(user);
     }
 
     public boolean deleteUser(User user) throws SQLException {
-        return userDatabaseDAO.deleteUser(user);
+        return userDAO.deleteUser(user);
     }
 
 }
