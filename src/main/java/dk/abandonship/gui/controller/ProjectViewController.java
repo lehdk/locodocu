@@ -7,16 +7,17 @@ import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import dk.abandonship.utils.DefaultRoles;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,8 +27,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
+    @FXML private TextField fieldSearch;
+    @FXML private TableColumn projectName, customerName,  docCount;
     @FXML
-    private ScrollPane scrollPane;
+    private HBox buttonsHBox;
+    @FXML
+    private TableView projectTableView;
     @FXML
     private VBox vbox;
 
@@ -46,77 +51,65 @@ public class ProjectViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        projectTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        projectTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateSelectedDisabledButtons());
+
+        setOpenProjectBtn();
 
         if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
-            setNewProject();
+            setNewProjectBtn();
+            setAssignBtn();
         }
 
+        buttonsHBox.setSpacing(15);
         setProjects();
 
 
     }
 
-    private void setNewProject() {
+    private void updateSelectedDisabledButtons() {
+    }
 
-        Button btn = new Button("+");
-        btn.setPrefWidth(1450);
-        btn.setPrefHeight(125);
+    private void setOpenProjectBtn(){
+        Button btn = new Button("Open Project");
+        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject((Project) projectTableView.getSelectionModel().getSelectedItem()));
+        buttonsHBox.getChildren().add(btn);
+    }
+
+    private void setNewProjectBtn() {
+
+        Button btn = new Button("Add New Project");
+        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
-        btn.setStyle("-fx-font-size: 60px");
-        vbox.getChildren().add(btn);
+        buttonsHBox.getChildren().add(btn);
+    }
+    private void setAssignBtn() {
+        Button btn = new Button("Assign Technicians");
+        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians((Project) projectTableView.getSelectionModel().getSelectedItem()));
+        buttonsHBox.getChildren().add(btn);
     }
 
+    /**
+     * sets the value of the tableview with data from observable list over projects in model
+     */
     private void setProjects() {
-        vbox.setSpacing(10);
-
-        for (var p : projectModel.getProjectObservableList()) {
-            VBox vBox = new VBox();
-            HBox hBox = new HBox();
-            HBox hBoxButtons = new HBox();
-
-            Label projectName = new Label();
-            projectName.textProperty().setValue("Project: " + p.getName());
-            projectName.setPadding(new Insets(20, 20, 20, 20));
-            hBox.getChildren().add(projectName);
-
-            Label customerName = new Label();
-            customerName.textProperty().setValue("Customer: " + p.getCustomer().getName());
-            customerName.setPadding(new Insets(20, 20, 20, 20));
-            hBox.getChildren().add(customerName);
-
-            Label documentationCount = new Label();
-            documentationCount.textProperty().setValue("Documentation count: " + p.getDocumentations().size());
-            documentationCount.setPadding(new Insets(20, 20, 20, 20));
-            hBox.getChildren().add(documentationCount);
-
-            vBox.setAlignment(Pos.CENTER);
-            hBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().add(hBox);
-            Button btn = new Button("   View details   ");
-            Button btn2 = new Button("Assign Technicians");
-
-            hBoxButtons.getChildren().add(btn);
-
-            vBox.getChildren().add(hBoxButtons);
-            vBox.setStyle("-fx-background-color: #030202");
-            vBox.getChildren().add(new Label(" \n"));
-
-            hBoxButtons.setSpacing(15);
-            hBoxButtons.setAlignment(Pos.CENTER);
+        projectName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        customerName.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        docCount.setCellValueFactory(new PropertyValueFactory<>("documentations"));
 
 
-            if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
-                hBoxButtons.getChildren().add(btn2);
-            }
+        projectTableView.setItems(projectModel.getProjectObservableList());
 
-            btn2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(p));
-            btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
-
-            vbox.getChildren().add(vBox);
-        }
     }
 
+    /**
+     * open createProject view in a pop-up box
+     */
     private void addProject() {
         try {
             Stage popupStage = new Stage();
@@ -130,23 +123,31 @@ public class ProjectViewController implements Initializable {
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
 
+            setProjects();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Open project and sets it in center view
+     * @param project project that should be opend
+     */
     private void openProject(Project project) {
         try {
             var controller = (DocViewController) controllerAssistant.setCenterFX("DocView");
             controller.setProject(project);
-
-            //TODO open project window acording to user role
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
 
     }
 
+    /**
+     * open assignTechVIew in a pop-up box
+     * @param project project technicians should be assigned to
+     */
     private void assignTechnicians(Project project) {
         try {
             Stage popupStage = new Stage();
@@ -165,5 +166,26 @@ public class ProjectViewController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Set doubleClick to open a doc on the project Tableview
+     * @param mouseEvent click from mouse on a item in table
+     */
+    public void openItem(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) //Checking double click
+        {
+            openProject((Project) projectTableView.getSelectionModel().getSelectedItem());
+        }
+    }
+
+
+    /**
+     * serchesin model for the promt in the fieldSearch
+     * @param actionEvent
+     */
+    public void search(ActionEvent actionEvent) {
+        projectTableView.setItems(projectModel.getSearchResult(fieldSearch.getText().toLowerCase()));
     }
 }

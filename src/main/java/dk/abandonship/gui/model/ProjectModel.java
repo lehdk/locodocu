@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -49,5 +50,32 @@ public class ProjectModel {
 
     public void createNewDoc(String docName, Project project) throws Exception {
         projectManager.createDocument(docName, project);
+    }
+
+    /**
+     * Serches the obersevableList for proumt
+     * @param text the thing the list should contain
+     * @return a new observableList with data that matches the prompt
+     */
+    public ObservableList getSearchResult(String text) {
+        List<Project> searchList = new ArrayList<>();
+
+        if (text.isEmpty()) return  projectObservableList;
+
+
+        for (Project p : projectObservableList) {
+            if (p.getName().toLowerCase().contains(text)) {
+                searchList.add(p);
+            } else if (p.getCustomer().getName().toLowerCase().contains(text)) {
+                searchList.add(p);
+            } else if (p.getCustomer().getPostalCode().contains(text)) {
+                searchList.add(p);
+            }
+        }
+
+        System.out.println(searchList);
+
+        ObservableList<Project> searchListObb = FXCollections.observableList(searchList);
+        return searchListObb;
     }
 }
