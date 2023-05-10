@@ -68,7 +68,9 @@ public class ProjectModel {
                 searchList.add(p);
             } else if (p.getCustomer().getName().toLowerCase().contains(text)) {     // if customer contains prompt text
                 searchList.add(p);
-            } else if (p.getCustomer().getPostalCode().contains(text)) {             // if customer address contains prompt text
+            } else if (p.getCustomer().getPostalCode().contains(text)) {             // if customer postal code contains prompt text
+                searchList.add(p);
+            } else if (p.getCustomer().getAddress().toLowerCase().contains(text)) {  // if customers address contains prompt text
                 searchList.add(p);
             } else if (docContains(p, text.toLowerCase())){                          //if a document name on a project contains prompt text
                 searchList.add(p);
