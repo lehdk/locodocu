@@ -75,6 +75,7 @@ CREATE TABLE [DocumentationTextNode] (
 
 CREATE TABLE [DocumentationLoginNode] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [Device] NVARCHAR(100),
     [Username] NVARCHAR(50),
     [Password] NVARCHAR(50),
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
@@ -119,7 +120,7 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (1, 3);
 INSERT INTO [Documentation] ([Name]) VALUES ('Broen'); -- Id 1
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (1, 1);
 INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (1, 'We have made the best audio system to scare away pirates arrrrrr.');
-INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Username], [Password]) VALUES (1, 'admin', 'password');
+INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Device], [Username], [Password]) VALUES (1, 'Router', 'admin', 'password');
 INSERT INTO [DocumentationPictureNode] ([DocumentationId], [Title], [Data]) VALUES (1, 'Very nice picture', 0x4242);
 
 -- Fake documentation
