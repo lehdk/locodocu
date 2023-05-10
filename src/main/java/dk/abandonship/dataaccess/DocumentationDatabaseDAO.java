@@ -143,17 +143,86 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
     }
 
     @Override
-    public void updateTextNode( Map.Entry<Node, DocumentationNode> set) throws SQLException {
+    public void updateTextNode(String text, int id) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
             String sql ="UPDATE [DocumentationTextNode] SET [Text] = ? WHERE [Id] = ?;";
 
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, ((TextArea)set.getKey()).getText());
-            statement.setInt(2, set.getValue().getId());
+            statement.setString(1, text);
+            statement.setInt(2, id);
 
             statement.executeQuery();
         }
 
+    }
+
+    @Override
+    public Documentation createNewDoc(String docName, Project project) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="INSERT INTO [Documentation] ([Name]) VALUES (?);";
+
+            PreparedStatement stm1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stm1.setString(1, docName);
+
+            ResultSet rs = stm1.executeQuery();
+
+
+            if(rs.next()){
+                int docId = rs.getInt(1);
+                String sql2 = "INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (?, ?);";
+
+                PreparedStatement stmt2 = connection.prepareStatement(sql2);
+                stmt2.setInt(1, project.getId());
+                stmt2.setInt(2, docId);
+
+                stmt2.execute();
+
+                return new Documentation(docId,docName);
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public DocumentationLogInNode createLoginNode(Documentation doc, String username, String password) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [DocumentationLoginNode] ([DocumentationId], [Username], [Password]) VALUES (?,?,?);";
+
+            var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, doc.getId());
+            statement.setString(2, username);
+            statement.setString(3, password);
+
+            var rs = statement.executeQuery();
+
+            if(rs.next()) {
+                return new DocumentationLogInNode(
+                        rs.getInt(1),
+                        username,
+                        password
+                );
+            }
+
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean updateLoginNode(int nodeId, String username, String password) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "UPDATE [DocumentationLoginNode] SET [Username] = ?, [Password] = ? WHERE [Id] = ?;";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, password);
+            statement.setInt(3, nodeId);
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
     }
 
     private Image convertBteToImg(byte[] arrByte) {

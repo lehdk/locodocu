@@ -10,6 +10,7 @@ import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +99,31 @@ public class ProjectDatabaseDAO implements IProjectDAO {
             stmt.setInt(2, projectDTO.getCustomer().getId());
 
             stmt.execute();
+        }
+    }
+
+    @Override
+    public void setTechnicians(List<User> selected, Project project) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+
+            String sql1 = "DELETE FROM [ProjectUserRelation] WHERE [ProjectId] = ?;";
+            PreparedStatement ps1 = connection.prepareStatement(sql1);
+
+            ps1.setInt(1, project.getId());
+
+
+            ps1.execute();
+
+            String sql = "INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (?, ?);";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            for (User u : selected) {
+                ps.setInt(1, project.getId());
+                ps.setInt(2, u.getId());
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
         }
     }
 }

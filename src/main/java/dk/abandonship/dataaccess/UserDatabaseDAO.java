@@ -25,7 +25,7 @@ public class UserDatabaseDAO implements IUserDAO {
     public User getUser(String email) throws SQLException {
         User resultUser = null;
 
-        try(var connection = DBConnector.getInstance().getConnection()) {
+        try (var connection = DBConnector.getInstance().getConnection()) {
             String sql = "SELECT * FROM [Users] WHERE [Email]=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -33,7 +33,7 @@ public class UserDatabaseDAO implements IUserDAO {
 
             var resultSet = statement.executeQuery();
 
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 resultUser = new User(
                         resultSet.getInt("Id"),
                         resultSet.getString("Name"),
@@ -45,7 +45,7 @@ public class UserDatabaseDAO implements IUserDAO {
             }
         }
 
-        if(resultUser == null) return null;
+        if (resultUser == null) return null;
 
         var roles = roleDAO.getAllRolesForUser(resultUser);
 
@@ -58,7 +58,7 @@ public class UserDatabaseDAO implements IUserDAO {
     public User getUser(int id) throws SQLException {
         User resultUser = null;
 
-        try(var connection = DBConnector.getInstance().getConnection()) {
+        try (var connection = DBConnector.getInstance().getConnection()) {
             String sql = "SELECT * FROM [Users] WHERE [Id]=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -66,7 +66,7 @@ public class UserDatabaseDAO implements IUserDAO {
 
             var resultSet = statement.executeQuery();
 
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 resultUser = new User(
                         resultSet.getInt("Id"),
                         resultSet.getString("Name"),
@@ -78,7 +78,7 @@ public class UserDatabaseDAO implements IUserDAO {
             }
         }
 
-        if(resultUser == null) return null;
+        if (resultUser == null) return null;
 
         var roles = roleDAO.getAllRolesForUser(resultUser);
 
@@ -91,14 +91,14 @@ public class UserDatabaseDAO implements IUserDAO {
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
 
-        try(var connection = DBConnector.getInstance().getConnection()) {
+        try (var connection = DBConnector.getInstance().getConnection()) {
             String sql = "SELECT * FROM Users";
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             var resultSet = stmt.executeQuery();
 
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 User resultUser = new User(
                         resultSet.getInt("Id"),
                         resultSet.getString("Name"),
@@ -108,7 +108,7 @@ public class UserDatabaseDAO implements IUserDAO {
                         resultSet.getTimestamp("DisabledAt")
                 );
 
-                if(resultUser != null) {
+                if (resultUser != null) {
 
                     var roles = roleDAO.getAllRolesForUser(resultUser);
 
@@ -127,14 +127,14 @@ public class UserDatabaseDAO implements IUserDAO {
     public List<User> getAllTechnicians() throws Exception {
         List<User> technicians = new ArrayList<>();
 
-        try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "SELECT * FROM Users WHERE id IN (SELECT UserId FROM UserRoleRelation WHERE RoleId = 3)";
+        try (var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "SELECT * FROM Users WHERE Id IN (SELECT UserId FROM UserRoleRelation WHERE RoleId = 3)";
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
             var resultSet = statement.executeQuery();
 
-            if(resultSet.next()) {
+            while (resultSet.next()) {
                 User resultUser = new User(
                         resultSet.getInt("Id"),
                         resultSet.getString("Name"),
@@ -144,14 +144,11 @@ public class UserDatabaseDAO implements IUserDAO {
                         resultSet.getTimestamp("DisabledAt")
                 );
 
-                if(resultUser != null) {
+                var roles = roleDAO.getAllRolesForUser(resultUser);
 
-                    var roles = roleDAO.getAllRolesForUser(resultUser);
+                resultUser.setAllRoles(roles);
+                technicians.add(resultUser);
 
-                    resultUser.setAllRoles(roles);
-
-                    technicians.add(resultUser);
-                }
             }
         }
         return technicians;

@@ -2,6 +2,7 @@ package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
 import dk.abandonship.entities.Project;
+import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
@@ -25,8 +26,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
-    @FXML private ScrollPane scrollPane;
-    @FXML private VBox vbox;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox vbox;
 
     private ProjectModel projectModel;
 
@@ -45,8 +48,8 @@ public class ProjectViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN)) {
-            setAdminBtn();
+        if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
+            setNewProject();
         }
 
         setProjects();
@@ -54,7 +57,7 @@ public class ProjectViewController implements Initializable {
 
     }
 
-    private void setAdminBtn(){
+    private void setNewProject() {
 
         Button btn = new Button("+");
         btn.setPrefWidth(1450);
@@ -64,47 +67,57 @@ public class ProjectViewController implements Initializable {
         vbox.getChildren().add(btn);
     }
 
-    private void setProjects(){
+    private void setProjects() {
         vbox.setSpacing(10);
 
         for (var p : projectModel.getProjectObservableList()) {
             VBox vBox = new VBox();
             HBox hBox = new HBox();
+            HBox hBoxButtons = new HBox();
 
             Label projectName = new Label();
             projectName.textProperty().setValue("Project: " + p.getName());
-            projectName.setPadding(new Insets(20,20,20,20));
+            projectName.setPadding(new Insets(20, 20, 20, 20));
             hBox.getChildren().add(projectName);
 
             Label customerName = new Label();
             customerName.textProperty().setValue("Customer: " + p.getCustomer().getName());
-            customerName.setPadding(new Insets(20,20,20,20));
+            customerName.setPadding(new Insets(20, 20, 20, 20));
             hBox.getChildren().add(customerName);
 
             Label documentationCount = new Label();
             documentationCount.textProperty().setValue("Documentation count: " + p.getDocumentations().size());
-            documentationCount.setPadding(new Insets(20,20,20,20));
+            documentationCount.setPadding(new Insets(20, 20, 20, 20));
             hBox.getChildren().add(documentationCount);
 
             vBox.setAlignment(Pos.CENTER);
             hBox.setAlignment(Pos.CENTER);
             vBox.getChildren().add(hBox);
-            Button btn = new Button("View details");
-            vBox.getChildren().add(btn);
+            Button btn = new Button("   View details   ");
+            Button btn2 = new Button("Assign Technicians");
+
+            hBoxButtons.getChildren().add(btn);
+
+            vBox.getChildren().add(hBoxButtons);
             vBox.setStyle("-fx-background-color: #030202");
             vBox.getChildren().add(new Label(" \n"));
 
+            hBoxButtons.setSpacing(15);
+            hBoxButtons.setAlignment(Pos.CENTER);
+
+
+            if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
+                hBoxButtons.getChildren().add(btn2);
+            }
+
+            btn2.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(p));
             btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(p));
 
             vbox.getChildren().add(vBox);
         }
     }
 
-    private void addProject(){
-        //FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
-
-
-        //Method 1
+    private void addProject() {
         try {
             Stage popupStage = new Stage();
 
@@ -117,13 +130,12 @@ public class ProjectViewController implements Initializable {
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void openProject(Project project){
+    private void openProject(Project project) {
         try {
             var controller = (DocViewController) controllerAssistant.setCenterFX("DocView");
             controller.setProject(project);
@@ -133,5 +145,25 @@ public class ProjectViewController implements Initializable {
             controllerAssistant.displayError(e);
         }
 
+    }
+
+    private void assignTechnicians(Project project) {
+        try {
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/AssignTechView.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            AssignTechController techController = loader.getController();
+            techController.setProject(project);
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

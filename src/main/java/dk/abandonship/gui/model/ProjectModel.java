@@ -2,6 +2,7 @@ package dk.abandonship.gui.model;
 
 import dk.abandonship.businesslogic.ProjectManager;
 import dk.abandonship.entities.Documentation;
+import dk.abandonship.entities.User;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
@@ -11,6 +12,7 @@ import javafx.scene.Node;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class ProjectModel {
 
@@ -38,5 +40,14 @@ public class ProjectModel {
 
     public void loadDocumentationData(Documentation documentation) throws SQLException {
         projectManager.loadDocumentationData(documentation);
+    }
+
+    public void saveTechOnProject(List<User> selected, Project project) throws Exception{
+        project.setAssignedTechnicians(selected);
+        projectManager.setTechnicians(selected, project);
+    }
+
+    public void createNewDoc(String docName, Project project) throws Exception {
+        projectManager.createDocument(docName, project);
     }
 }

@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 public class CreateProjectView implements Initializable {
 
     @FXML private TextField fieldAddress;
-    @FXML private ComboBox<User> comboBoxTechnicians;
     @FXML private ComboBox<Customer> comboBoxCustomer;
     @FXML private DatePicker datePicker;
     @FXML private Button btnCancel, btnConfirm1;
@@ -42,7 +41,6 @@ public class CreateProjectView implements Initializable {
             userModel = new UserModel();
             customerModel = new CustomerModel();
 
-            comboBoxTechnicians.setItems(userModel.getAllTechnicians());
             comboBoxCustomer.setItems(customerModel.getCustomerObservableList());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
@@ -62,10 +60,7 @@ public class CreateProjectView implements Initializable {
             controllerAssistant.displayAlert("Missing a proper date");
             return false;
         }
-        if (comboBoxTechnicians.getValue() == null) {
-            controllerAssistant.displayAlert("Missing a Technician");
-            return false;
-        }
+
 
         return true;
     }
@@ -75,8 +70,6 @@ public class CreateProjectView implements Initializable {
         String address  = fieldAddress.getText();
         Customer customer =  comboBoxCustomer.getValue();
         LocalDate time = datePicker.getValue();
-        User technician = comboBoxTechnicians.getValue();
-
 
         ProjectDTO project = new ProjectDTO(address,customer,time);
 

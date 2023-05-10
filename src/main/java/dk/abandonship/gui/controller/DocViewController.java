@@ -1,19 +1,26 @@
 package dk.abandonship.gui.controller;
 
+import dk.abandonship.Main;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
+import dk.abandonship.gui.controller.PopUpController.AssignTechController;
+import dk.abandonship.gui.controller.PopUpController.CreateDocController;
+import dk.abandonship.gui.controller.PopUpController.CreateProjectView;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,7 +28,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.net.URL;
@@ -37,6 +46,8 @@ public class DocViewController implements Initializable {
     private ControllerAssistant controllerAssistant;
     private LinkedHashMap<Node, DocumentationNode> nodeMap;
 
+    private boolean userIsAssignedTechnician = false;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -49,9 +60,21 @@ public class DocViewController implements Initializable {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         vboxModifyButtons.setSpacing(10);
 
+        HBox hBox = new HBox();
+        Button btn = new Button("Create new doc");
         docs = new ComboBox<>();
+
+        hBox.getChildren().add(docs);
+        hBox.getChildren().add(btn);
+
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(15);
+
         docs.valueProperty().addListener(event -> openDoc());
-        vboxModifyButtons.getChildren().add(docs);
+        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> createNewDoc());
+
+        vboxModifyButtons.getChildren().add(hBox);
+        vboxModifyButtons.getChildren().add(new Label("\n\n"));
     }
 
     public void setProject(Project project){
@@ -65,6 +88,8 @@ public class DocViewController implements Initializable {
     private void openDoc() {
         Documentation documentation = docs.getValue();
 
+        userIsAssignedTechnician = project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser());
+
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(15);
@@ -77,7 +102,7 @@ public class DocViewController implements Initializable {
 
         nodeMap = new LinkedHashMap<>();
 
-        if(project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser())) {
+        if(userIsAssignedTechnician) {
             Button btnAddTextField = new Button("Add Text Field");
             Button btnAddLogin = new Button("Add Login");
             Button btnAddImage = new Button("Add Image");
@@ -148,13 +173,19 @@ public class DocViewController implements Initializable {
      * creates a text area
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
-    private void addTextFieldForEdit(DocumentationTextFieldNode docNode){
+    private void addTextFieldForEdit(DocumentationTextFieldNode docNode) {
+
+        if(docNode == null) {
+            docNode = new DocumentationTextFieldNode(DocumentationNode.UNUSED_NODE_ID, "");
+        }
+
         TextArea field = new TextArea();
-        nodeMap.put(field,docNode);
+        field.setDisable(!userIsAssignedTechnician);
+        nodeMap.put(field, docNode);
         vboxIOButtons.getChildren().add(field);
         vboxIOButtons.getChildren().add(new Label("\n\n")); //Mini spacing
 
-        if(docNode != null){
+        if(docNode.getId() != DocumentationNode.UNUSED_NODE_ID){
             field.setText(docNode.getText());
         }
     }
@@ -164,14 +195,22 @@ public class DocViewController implements Initializable {
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
     private void handleAddLogin(DocumentationLogInNode docNode){
+
+        if(docNode == null) {
+            docNode = new DocumentationLogInNode(DocumentationNode.UNUSED_NODE_ID, "", "");
+        }
+
         VBox vboxLog = new VBox();
         TextField username = new TextField();
         TextField password = new TextField();
 
+        username.setDisable(!userIsAssignedTechnician);
+        password.setDisable(!userIsAssignedTechnician);
+
         vboxLog.setAlignment(Pos.CENTER_LEFT);
-        vboxLog.getChildren().add(new Label("UserName"));
+        vboxLog.getChildren().add(new Label("Username"));
         vboxLog.getChildren().add(username);
-        vboxLog.getChildren().add(new Label("PassWord"));
+        vboxLog.getChildren().add(new Label("Password"));
         vboxLog.getChildren().add(password);
 
         nodeMap.put(vboxLog, docNode);
@@ -179,7 +218,7 @@ public class DocViewController implements Initializable {
         vboxIOButtons.getChildren().add(vboxLog);
         vboxIOButtons.getChildren().add(new Label("\n\n"));
 
-        if (docNode != null) {
+        if (docNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
             username.setText(docNode.getUsername());
             password.setText(docNode.getPassword());
         }
@@ -192,8 +231,10 @@ public class DocViewController implements Initializable {
     private void handleAddPicture(DocumentationPictureNode docNode) {
         VBox vboxPic = new VBox();
         HBox hBox = new HBox();
-        TextField field = new TextField();
         ImageView view = new ImageView();
+        TextField field = new TextField();
+
+        field.setDisable(!userIsAssignedTechnician);
 
         vboxPic.getChildren().add(new Label("Title"));
         vboxPic.getChildren().add(field);
@@ -209,7 +250,7 @@ public class DocViewController implements Initializable {
         vboxPic.getChildren().add(hBox);
         vboxPic.getChildren().add(new Label(""));
 
-        if(project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser()))
+        if(userIsAssignedTechnician)
             vboxPic.getChildren().add(btnSetPicture);
 
         nodeMap.put(vboxPic, docNode);
@@ -231,11 +272,10 @@ public class DocViewController implements Initializable {
         }
     }
 
-
     /**
-     * Opens a FileChoser to sellect an image
+     * Opens a FileChooser to select an image
      * @param view IMageView the Picture should be displayed in
-     * @param btn the btn pressed to open filechoser
+     * @param btn the btn pressed to open FileChooser
      */
     private void selectPicture(ImageView view, Button btn) {
         try {
@@ -266,4 +306,28 @@ public class DocViewController implements Initializable {
             controllerAssistant.displayError(e);
         }
     }
+
+    private void createNewDoc(){
+        try {
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateDoc.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            CreateDocController docController = loader.getController();
+            docController.setProject(project);
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+
+            docs.setItems(FXCollections.observableArrayList(project.getDocumentations()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
