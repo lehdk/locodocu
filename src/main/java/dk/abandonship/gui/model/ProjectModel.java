@@ -57,14 +57,13 @@ public class ProjectModel {
 
         if (text.isEmpty()) return  projectObservableList;
 
-        System.out.println(searchList);
 
         for (Project p : projectObservableList) {
             if (p.getName().toLowerCase().contains(text)) {
                 searchList.add(p);
             } else if (p.getCustomer().getName().toLowerCase().contains(text)) {
                 searchList.add(p);
-            } else if (p.getCustomer().getPostalCode().contains("text")) {
+            } else if (p.getCustomer().getPostalCode().contains(text)) {
                 searchList.add(p);
             }
         }
