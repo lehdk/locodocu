@@ -33,6 +33,7 @@ public class LogInController implements Initializable {
         try {
             boolean success = model.logIn(fieldEmail.getText(), fieldPassword.getText());
 
+
             if(!success) lblError.setText("Wrong username or password");
 
             if(success){
