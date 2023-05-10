@@ -81,6 +81,12 @@ public class ProjectModel {
         return searchListObb;
     }
 
+    /**
+     * if projects documentations list contains a doc named after promt text
+     * @param project that should be checked for a specifik doc
+     * @param text the name of document
+     * @return
+     */
     private boolean docContains(Project project, String text){
         for (var d : project.getDocumentations()) {
             if (d.getName().toLowerCase().contains(text)){
