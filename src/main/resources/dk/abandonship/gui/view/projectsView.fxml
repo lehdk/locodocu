@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" stylesheets="@../StyleSheets/CustomerStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
    <children>
+      <HBox alignment="CENTER_RIGHT">
+         <children>
+            <TextField fx:id="fieldSearch" onAction="#search" promptText="Search Field">
+               <HBox.margin>
+                  <Insets left="15.0" right="5.0" />
+               </HBox.margin>
+            </TextField>
+            <Button mnemonicParsing="false" onAction="#search" text="🔎">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </VBox.margin>
+      </HBox>
       <TableView fx:id="projectTableView" onMouseClicked="#openItem" styleClass="customerTable">
          <columns>
-            <TableColumn fx:id="projectName" prefWidth="134.4000244140625" text="Project Name" />
-            <TableColumn fx:id="customerName" prefWidth="123.20001220703125" text="Customer" />
-            <TableColumn fx:id="docCount" prefWidth="150.0" text="Documentation Count" />
+            <TableColumn fx:id="projectName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Name" />
+            <TableColumn fx:id="customerName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="123.20001220703125" text="Customer" />
+            <TableColumn fx:id="docCount" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Documentations" />
          </columns>
          <VBox.margin>
             <Insets />

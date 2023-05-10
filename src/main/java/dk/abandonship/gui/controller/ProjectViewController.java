@@ -7,6 +7,7 @@ import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import dk.abandonship.utils.DefaultRoles;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,6 +27,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
+    @FXML private TextField fieldSearch;
     @FXML private TableColumn projectName, customerName,  docCount;
     @FXML
     private HBox buttonsHBox;
@@ -156,5 +158,13 @@ public class ProjectViewController implements Initializable {
         {
             openProject((Project) projectTableView.getSelectionModel().getSelectedItem());
         }
+    }
+
+
+    public void selectFilter(ActionEvent actionEvent) {
+
+    }
+    public void search(ActionEvent actionEvent) {
+        projectTableView.setItems(projectModel.getSearchResult(fieldSearch.getText().toLowerCase()));
     }
 }
