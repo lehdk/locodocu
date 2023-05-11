@@ -1,5 +1,6 @@
 package dk.abandonship.gui.model;
 
+import dk.abandonship.businesslogic.PrintPdfManager;
 import dk.abandonship.businesslogic.ProjectManager;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.User;
@@ -19,10 +20,13 @@ public class ProjectModel {
 
     private final ProjectManager projectManager;
 
+    private final PrintPdfManager pdfManager;
+
     private final ObservableList<Project> projectObservableList;
 
     public ProjectModel() throws Exception {
         projectManager = new ProjectManager();
+        pdfManager = new PrintPdfManager();
 
         projectObservableList = FXCollections.observableList(projectManager.getAllProjects());
     }
@@ -50,6 +54,10 @@ public class ProjectModel {
 
     public void createNewDoc(String docName, Project project) throws Exception {
         projectManager.createDocument(docName, project);
+    }
+
+    public void printPdf(LinkedHashMap<Node, DocumentationNode> nodeMap, String path, Project project, Documentation documentation) throws Exception {
+        pdfManager.generatePDF(nodeMap.values(), path, project, documentation);
     }
 
     /**

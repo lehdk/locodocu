@@ -58,8 +58,7 @@ public class ControllerAssistant {
 
     public void displayAlert(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("!!Invaid!!");
-        alert.setHeaderText("Something went wrong, \n" + message);
+        alert.setHeaderText(message);
         alert.showAndWait();
     }
 
