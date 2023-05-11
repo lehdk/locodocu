@@ -25,10 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 
 import java.io.File;
 import java.net.URL;
@@ -122,6 +119,8 @@ public class DocViewController implements Initializable {
 
         Button btnPrint = new Button("Print PDF");
 
+        btnPrint.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> printPDF());
+
         savAndCancelBox.getChildren().add(btnPrint);
 
         vboxModifyButtons.getChildren().add(vboxIOButtons);
@@ -142,6 +141,26 @@ public class DocViewController implements Initializable {
             } else if (dn instanceof DocumentationPictureNode){
                 handleAddPicture((DocumentationPictureNode) dn);
             }
+        }
+    }
+
+    private void printPDF() {
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            Stage stage  = (Stage) scrollPane.getScene().getWindow();
+
+            File selectedDirectory = directoryChooser.showDialog(stage);
+
+            if(selectedDirectory == null){
+                controllerAssistant.displayAlert("No Path Fund");
+            }else{
+                System.out.println(selectedDirectory.getAbsolutePath());
+                projectModel.printPdf(nodeMap, selectedDirectory.getPath(), project, docs.getValue());
+                controllerAssistant.displayAlert("Successfully printedPDF");
+            }
+
+        } catch (Exception e) {
+            controllerAssistant.displayError(e);
         }
     }
 
