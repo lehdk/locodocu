@@ -3,6 +3,8 @@ package dk.abandonship.dataaccess;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
+import dk.abandonship.entities.Customer;
+import dk.abandonship.entities.CustomerDTO;
 import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 
@@ -92,13 +94,13 @@ public class UserDatabaseDAO implements IUserDAO {
         List<User> users = new ArrayList<>();
 
         try (var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "SELECT * FROM Users";
+            String sql = "SELECT * FROM [Users]";
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             var resultSet = stmt.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 User resultUser = new User(
                         resultSet.getInt("Id"),
                         resultSet.getString("Name"),
@@ -118,7 +120,6 @@ public class UserDatabaseDAO implements IUserDAO {
                 }
             }
         }
-
 
         return users;
     }
@@ -179,6 +180,25 @@ public class UserDatabaseDAO implements IUserDAO {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, user.getId());
 
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+        }
+    }
+
+    public boolean edituser(User user) throws SQLException {
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "UPDATE [Users] SET [Name]=?,[Email]=?,[Phone]=?,[Password]=?,[DisabledAt]=? WHERE [Id]=?";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getPhone());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getPassword());
+            statement.setTimestamp(5, null);
+            statement.setInt(6, user.getId());
 
             int affectedRows = statement.executeUpdate();
 

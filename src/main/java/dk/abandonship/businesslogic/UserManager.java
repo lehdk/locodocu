@@ -13,7 +13,6 @@ import java.util.List;
 public class UserManager {
     private IUserDAO userDAO;
     private IRoleDAO roleDAO;
-    private UserDatabaseDAO userDatabaseDAO;
     public UserManager() {
         roleDAO = new RoleDatabaseDAO();
         userDAO = new UserDatabaseDAO(roleDAO);
@@ -33,6 +32,10 @@ public class UserManager {
 
     public boolean deleteUser(User user) throws SQLException {
         return userDAO.deleteUser(user);
+    }
+
+    public boolean editUser(User user) throws SQLException {
+        return userDAO.edituser(user);
     }
 
 }

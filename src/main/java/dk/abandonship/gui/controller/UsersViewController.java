@@ -13,17 +13,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -37,12 +35,11 @@ public class UsersViewController implements Initializable {
     public TableColumn<User, String> emailColumn;
     public TableColumn<User, String> phoneColumn;
     public HBox buttonsHBox;
-    private Button deleteUserButton, editUserButton;
+    private Button deleteUserButton, editUserButton, assignRoleButton;
 
     public UsersViewController() {
         userModel = new UserModel();
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -56,7 +53,8 @@ public class UsersViewController implements Initializable {
         userTableView.setItems(userModel.getUserObserveableList());
 
         buttonsHBox.setSpacing(10);
-        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN)) {
+
+        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN, DefaultRoles.PROJECTMANAGER)) {
             Button addUserButton = new Button("Add User");
             addUserButton.setOnAction(event -> {
                 try {
@@ -68,7 +66,7 @@ public class UsersViewController implements Initializable {
             });
             buttonsHBox.getChildren().add(addUserButton);
 
-            editUserButton = new Button("Edit Customer");
+            editUserButton = new Button("Edit User");
             editUserButton.setOnAction(event -> {
                 var selectedItem = userTableView.getSelectionModel().getSelectedItem();
                 if(selectedItem == null) return;
@@ -83,9 +81,13 @@ public class UsersViewController implements Initializable {
             });
             buttonsHBox.getChildren().add(editUserButton);
 
-            deleteUserButton = new Button("Delete Customer");
+            deleteUserButton = new Button("Delete User");
             deleteUserButton.setOnAction(event -> handleDeleteUser());
             buttonsHBox.getChildren().add(deleteUserButton);
+
+            assignRoleButton = new Button("Assign Roles");
+            //Create assign roles method and popup.
+            buttonsHBox.getChildren().add(assignRoleButton);
         }
 
         updateSelectedDisabledButtons();

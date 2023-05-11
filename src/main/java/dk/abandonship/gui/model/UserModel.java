@@ -32,7 +32,6 @@ public class UserModel {
         return userObservableList;
     }
 
-
     public void deleteUser(User user) throws SQLException {
         boolean wasDeleted = userManager.deleteUser(user);
 
@@ -41,8 +40,8 @@ public class UserModel {
         }
     }
 
-    public boolean editUser(User user) {
-        return true;
+    public boolean editUser(User user) throws SQLException {
+        return userManager.editUser(user);
     }
 
     public void addUser(User user) throws SQLException {

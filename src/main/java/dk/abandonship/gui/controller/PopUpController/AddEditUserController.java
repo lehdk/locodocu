@@ -19,8 +19,7 @@ public class AddEditUserController implements Initializable {
     public TextField txtName;
     public TextField txtEmail;
     public TextField txtPhone;
-    public Button btnAdd;
-    public Button btnCancel;
+    public Button btnAdd, btnCancel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
