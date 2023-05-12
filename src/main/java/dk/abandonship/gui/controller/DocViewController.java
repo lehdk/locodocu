@@ -27,7 +27,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
@@ -247,86 +250,80 @@ public class DocViewController implements Initializable {
     }
 
     /**
-     *  creates a picture view with a field and imageview
-     * @param docNode a docNode that can contain exiting data, should be null if it's a new field
+     * Adds a picture node to the documentation.
+     * @param pictureNode The picture node to add. Set to null if this is a new field.
      */
-    private void handleAddPicture(DocumentationPictureNode docNode) {
-        VBox vboxPic = new VBox();
-        HBox hBox = new HBox();
-        ImageView view = new ImageView();
-        TextField field = new TextField();
-
-        field.setDisable(!userIsAssignedTechnician);
-
-        vboxPic.getChildren().add(new Label("Title"));
-        vboxPic.getChildren().add(field);
-        vboxPic.getChildren().add(new Label(""));
-
-        Button btnSetPicture = new Button("Set Picture");
-        btnSetPicture.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> selectPicture(view, btnSetPicture));
-
-        hBox.setSpacing(30);
-
-        hBox.getChildren().add(view);
-
-        vboxPic.getChildren().add(hBox);
-        vboxPic.getChildren().add(new Label(""));
-
-        if(userIsAssignedTechnician)
-            vboxPic.getChildren().add(btnSetPicture);
-
-        nodeMap.put(vboxPic, docNode);
-
-        vboxIOButtons.getChildren().add(vboxPic);
-        vboxIOButtons.getChildren().add(new Label("\n\n"));
-
-        if (docNode != null) {
-            field.setText(docNode.getPictureTittle());
-            ImageView loadView = new ImageView();
-
-            loadView.setImage(docNode.getImages());
-
-            loadView.setFitHeight(300);
-            loadView.setFitWidth(300);
-            loadView.setPreserveRatio(true);
-
-            hBox.getChildren().add(loadView);
+    private void handleAddPicture(DocumentationPictureNode pictureNode) {
+        if(pictureNode == null) {
+            pictureNode = new DocumentationPictureNode(DocumentationNode.UNUSED_NODE_ID, "", null);
         }
+
+        VBox container = new VBox();
+        container.setSpacing(5);
+
+        nodeMap.put(container, pictureNode);
+
+        container.getChildren().add(new Label("Title"));
+        var titleTextField = new TextField();
+        container.getChildren().add(titleTextField);
+
+        ImageView imageView = new ImageView();
+        container.getChildren().add(imageView);
+        updateShownImage(imageView, pictureNode);
+
+        var setImageButton = new Button("Set Image");
+        DocumentationPictureNode finalDocNode = pictureNode;
+        setImageButton.setOnAction(event -> handleSetImage(finalDocNode, imageView));
+        container.getChildren().add(setImageButton);
+
+        if (pictureNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
+            titleTextField.setText(pictureNode.getPictureTitle());
+        }
+
+        vboxIOButtons.getChildren().add(container);
     }
 
     /**
-     * Opens a FileChooser to select an image
-     * @param view IMageView the Picture should be displayed in
-     * @param btn the btn pressed to open FileChooser
+     * Updates the shown image
+     * @param imageView The image view to update
+     * @param pictureNode The image to show.
      */
-    private void selectPicture(ImageView view, Button btn) {
-        try {
+    private void updateShownImage(ImageView imageView, DocumentationPictureNode pictureNode) {
+        if(pictureNode.getImageData() == null) return;
 
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Select Image");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
-            Stage stage = (Stage) btn.getScene().getWindow();
-            File selectedFile = fileChooser.showOpenDialog(stage);
+        imageView.setFitHeight(400);
+        imageView.setFitWidth(400);
 
-            if (selectedFile != null && selectedFile.getName().endsWith(".png") || selectedFile != null && selectedFile.getName().endsWith(".jpg")
-                    || selectedFile != null && selectedFile.getName().endsWith(".gif")) {
+        var image = new Image(new ByteArrayInputStream(pictureNode.getImageData()));
+        imageView.setImage(image);
+    }
 
-                Image image = new Image(selectedFile.toURI().toString());
+    /**
+     * Opens a file chooser and saves the image data into the DocumentationPictureNode.
+     * @param pictureNode The picture node to set image data to.
+     * @param imageView The associated image view.
+     */
+    private void handleSetImage(DocumentationPictureNode pictureNode, ImageView imageView) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+        Stage stage = (Stage) scrollPane.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
 
-                view.setImage(image);
-
-                view.setFitHeight(300);
-                view.setFitWidth(300);
-                view.setPreserveRatio(true);
-
-            } else {
-                controllerAssistant.displayAlert("could not initialize picture");
-            }
-
-        } catch (Exception e) {
-            controllerAssistant.displayError(e);
+        if(selectedFile == null || !selectedFile.canRead()) {
+            controllerAssistant.displayAlert("Could not read the chose image");
         }
+
+        try(var fileInputStream = new FileInputStream(selectedFile)) {
+            var imageData = fileInputStream.readAllBytes();
+
+            pictureNode.setImageData(imageData);
+        } catch (IOException ess) {
+            throw new RuntimeException(ess);
+        }
+
+        updateShownImage(imageView, pictureNode);
     }
 
     private void createNewDoc(){
@@ -351,5 +348,4 @@ public class DocViewController implements Initializable {
             e.printStackTrace();
         }
     }
-
 }
