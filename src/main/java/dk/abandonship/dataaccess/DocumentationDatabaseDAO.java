@@ -6,9 +6,7 @@ import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
-import javafx.scene.image.Image;
 
-import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,7 +72,7 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
     public List<DocumentationLogInNode> getDocumentationLogIn(Documentation documentation) throws SQLException {
         List<DocumentationLogInNode> logNodes = new ArrayList<>();
 
-        try(var connection = DBConnector.getInstance().getConnection()) {
+        try (var connection = DBConnector.getInstance().getConnection()) {
             String sql = "SELECT * FROM [DocumentationLoginNode] WHERE [DocumentationId]=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -82,7 +80,7 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
             var resultSet = statement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 logNodes.add(new DocumentationLogInNode(
                         resultSet.getInt("Id"),
                         resultSet.getString("Device"),
@@ -94,6 +92,30 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
         }
 
         return logNodes;
+    }
+
+    public DocumentationPictureNode createPictureNode(DocumentationPictureNode pictureNode, String title, Documentation doc) throws SQLException {
+        try (var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [DocumentationPictureNode] ([Title], [DocumentationId], [Data]) VALUES (?,?,?);";
+
+            var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, title);
+            statement.setInt(2, doc.getId());
+            statement.setBytes(3, pictureNode.getImageData());
+
+            statement.executeUpdate();
+
+            try(var resultSet = statement.getGeneratedKeys()) {
+                if(resultSet.next()) {
+                    pictureNode.setId(resultSet.getInt(1));
+                    pictureNode.setPictureTitle(title);
+
+                    return pictureNode;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -110,15 +132,31 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
             while(resultSet.next()) {
                 picNodes.add(new DocumentationPictureNode(
-                                resultSet.getInt("Id"),
-                                resultSet.getString("Title"),
-                                convertBteToImg(resultSet.getBytes("Data"))
-                        )
+                        resultSet.getInt("Id"),
+                        resultSet.getString("Title"),
+                        resultSet.getBytes("Data")
+                    )
                 );
             }
         }
 
         return picNodes;
+    }
+
+    @Override
+    public boolean updatePictureNode(DocumentationPictureNode node, String newTitle) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="UPDATE [DocumentationPictureNode] SET [Title] = ?, [Data] = ? WHERE [Id] = ?;";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, newTitle);
+            statement.setBytes(2, node.getImageData());
+            statement.setInt(3, node.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows == 1;
+        }
     }
 
     @Override
@@ -154,7 +192,6 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
             statement.executeQuery();
         }
-
     }
 
     @Override
@@ -226,9 +263,5 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
 
             return affectedRows != 0;
         }
-    }
-
-    private Image convertBteToImg(byte[] arrByte) {
-        return new Image(new ByteArrayInputStream(arrByte));
     }
 }

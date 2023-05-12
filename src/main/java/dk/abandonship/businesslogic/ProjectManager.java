@@ -108,8 +108,18 @@ public class ProjectManager {
         }
     }
 
-    private void saveDocumentationPictureNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) {
+    private void saveDocumentationPictureNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
+        var node = (DocumentationPictureNode) set.getValue();
 
+        var children = ((VBox)set.getKey()).getChildren();
+        String title = ((TextField)children.get(1)).getText();
+
+        if(node.getId() == DocumentationNode.UNUSED_NODE_ID) {
+            documentationDAO.createPictureNode(node, title, doc);
+        } else {
+            var success = documentationDAO.updatePictureNode(node, title);
+            if(success) node.setPictureTitle(title);
+        }
     }
 
     public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception{

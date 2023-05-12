@@ -38,12 +38,31 @@ public interface IDocumentationDAO {
     List<DocumentationLogInNode> getDocumentationLogIn(Documentation documentation) throws SQLException;
 
     /**
-     * returns picture and tittle, from the database where the data is saved to the specific document
-     * @param documentation the document you want the text fields from
-     * @return a node with a document tittle and a picture
-     * @throws SQLException If an error occurred while getting from data source.
+     * Saves a picture to the data source.
+     * @param pictureNode The picture node to save
+     * @param title The title of the image.
+     * @param doc The Documentation to save the picture to.
+     * @return The picture node with the new Id.
+     * @throws SQLException If an error occurred while saving the image.
      */
+    DocumentationPictureNode createPictureNode(DocumentationPictureNode pictureNode, String title, Documentation doc) throws SQLException;
+
+        /**
+         * returns picture and tittle, from the database where the data is saved to the specific document
+         * @param documentation the document you want the text fields from
+         * @return a node with a document tittle and a picture
+         * @throws SQLException If an error occurred while getting from data source.
+         */
     List<DocumentationPictureNode> getPictureNode(Documentation documentation) throws SQLException;
+
+    /**
+     * Updates a picture node.
+     * @param node The node to update.
+     * @param newTitle The new title of the image
+     * @return True if success. False otherwise.
+     * @throws SQLException If an error occurred while updating the picture.
+     */
+    boolean updatePictureNode(DocumentationPictureNode node, String newTitle) throws SQLException;
 
     /**
      * creates a text-field in the DB under the document
