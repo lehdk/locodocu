@@ -24,6 +24,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
@@ -105,6 +111,21 @@ public class ProjectViewController implements Initializable {
 
         projectTableView.setItems(projectModel.getProjectObservableList());
 
+    }
+
+    public void isOld(){
+        List<Project> oldProjects = new ArrayList<>();
+
+        LocalDate now = LocalDate.now();
+
+        for (var v : projectModel.getProjectObservableList()){
+
+            if (v.getCreatedAt().toLocalDateTime().isBefore(now.minusMonths(48).atStartOfDay())){
+                oldProjects.add(v);
+            }
+        }
+
+        if (!oldProjects.isEmpty()) controllerAssistant.displayAlert("these old project might be considered for deletion\n" + oldProjects);
     }
 
     /**

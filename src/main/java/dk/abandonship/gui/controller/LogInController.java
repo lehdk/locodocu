@@ -1,6 +1,8 @@
 package dk.abandonship.gui.controller;
 
+import dk.abandonship.entities.Project;
 import dk.abandonship.gui.model.LoginModel;
+import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.fxml.FXML;
@@ -10,12 +12,18 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class LogInController implements Initializable {
-    @FXML private TextField fieldEmail;
-    @FXML private PasswordField fieldPassword;
-    @FXML private Label lblError;
+    @FXML
+    private TextField fieldEmail;
+    @FXML
+    private PasswordField fieldPassword;
+    @FXML
+    private Label lblError;
     private LoginModel model;
     private final ControllerAssistant controllerAssistant;
 
@@ -34,15 +42,20 @@ public class LogInController implements Initializable {
             boolean success = model.logIn(fieldEmail.getText(), fieldPassword.getText());
 
 
-            if(!success) lblError.setText("Wrong username or password");
+            if (!success) lblError.setText("Wrong username or password");
 
-            if(success){
+
+            if (success) {
                 controllerAssistant.setTopFX("NavBar");
-                controllerAssistant.setCenterFX("projectsView");
+                var projectViewController = (ProjectViewController) controllerAssistant.setCenterFX("projectsView");
+                projectViewController.isOld();
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             lblError.setText("Error logging in!");
         }
     }
+
 }
