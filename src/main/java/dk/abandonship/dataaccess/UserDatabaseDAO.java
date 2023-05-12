@@ -206,4 +206,23 @@ public class UserDatabaseDAO implements IUserDAO {
         }
     }
 
+    public void addRole(User user, Role role) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql1 = "DELETE FROM [UserRoleRelation] Where [UserId]=?;";
+            var firstStatement = connection.prepareStatement(sql1);
+
+            firstStatement.setInt(1, user.getId());
+
+            firstStatement.executeUpdate();
+
+            String sql = "INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES (?, ?);";
+
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, user.getId());
+            statement.setInt(2, role.getId());
+
+            statement.executeUpdate();
+        }
+    }
+
 }

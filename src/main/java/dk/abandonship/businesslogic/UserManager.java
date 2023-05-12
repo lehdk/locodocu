@@ -5,6 +5,7 @@ import dk.abandonship.dataaccess.RoleDatabaseDAO;
 import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
+import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 
 import java.sql.SQLException;
@@ -36,6 +37,14 @@ public class UserManager {
 
     public boolean editUser(User user) throws SQLException {
         return userDAO.edituser(user);
+    }
+
+    public void addRole(User user, Role role) throws SQLException {
+        userDAO.addRole(user, role);
+    }
+
+    public List<Role> getAllRoles() throws SQLException {
+        return roleDAO.getAllRoles();
     }
 
 }

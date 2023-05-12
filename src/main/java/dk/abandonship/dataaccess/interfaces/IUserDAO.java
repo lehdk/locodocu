@@ -1,5 +1,6 @@
 package dk.abandonship.dataaccess.interfaces;
 
+import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 
 import java.sql.SQLException;
@@ -28,4 +29,5 @@ public interface IUserDAO {
     public void createUser(User user) throws SQLException;
     public boolean deleteUser(User user) throws SQLException;
     public boolean edituser(User user) throws SQLException;
+    public void addRole(User user, Role role) throws SQLException;
 }

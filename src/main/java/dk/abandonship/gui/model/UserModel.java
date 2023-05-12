@@ -2,11 +2,13 @@ package dk.abandonship.gui.model;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.businesslogic.UserManager;
+import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserModel {
     private final UserManager userManager;
@@ -50,5 +52,13 @@ public class UserModel {
         if(user != null) {
             userObservableList.add(user);
         }
+    }
+
+    public void addRole(User user, Role role) throws SQLException {
+        userManager.addRole(user, role);
+    }
+
+    public List<Role> getAllRoles() throws SQLException {
+        return userManager.getAllRoles();
     }
 }
