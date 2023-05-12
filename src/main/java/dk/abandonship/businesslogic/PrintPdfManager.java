@@ -28,7 +28,7 @@ public class PrintPdfManager {
      * @param path the path on the device the PDF document should be saved to.
      * @param project the project the document belongs to.
      * @param documentation the document that should be printed
-     * @throws Exception
+     * @throws Exception if an error acours
      */
     public void generatePDF(Collection<DocumentationNode> nodeCollection, String path, Project project, Documentation documentation) throws Exception{
 
@@ -86,11 +86,15 @@ public class PrintPdfManager {
 
                 } else if (node instanceof DocumentationPictureNode) {
                     //TODO Print images and their tittle
-                    var imgPar = new Paragraph(((DocumentationPictureNode) node).getPictureTittle());
-                    var img = ((DocumentationPictureNode) node).getImages();
+                    var imgPar = new Paragraph(((DocumentationPictureNode) node).getPictureTitle());
+                    var imageData = ((DocumentationPictureNode) node).getImageData();
+
+                    Image img = Image.getInstance(imageData);
+                    img.scaleAbsolute(300,300);
+                    img.setSpacingAfter(10);
 
                     document.add(imgPar);
-                    document.add((Element) img);
+                    document.add(img);
                     document.add(new Paragraph("\n"));
                 }
             }
