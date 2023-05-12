@@ -86,6 +86,12 @@ public class PrintPdfManager {
 
                 } else if (node instanceof DocumentationPictureNode) {
                     //TODO Print images and their tittle
+                    var imgPar = new Paragraph(((DocumentationPictureNode) node).getPictureTittle());
+                    var img = ((DocumentationPictureNode) node).getImages();
+
+                    document.add(imgPar);
+                    document.add((Element) img);
+                    document.add(new Paragraph("\n"));
                 }
             }
 
