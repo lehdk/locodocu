@@ -292,7 +292,9 @@ public class DocViewController implements Initializable {
         Stage stage = (Stage) scrollPane.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
 
-        if(selectedFile == null) return;
+        if(selectedFile == null || !selectedFile.canRead()) {
+            controllerAssistant.displayAlert("Could not read the chose image");
+        }
 
         try(var fileInputStream = new FileInputStream(selectedFile)) {
             var imageData = fileInputStream.readAllBytes();
@@ -327,5 +329,4 @@ public class DocViewController implements Initializable {
             e.printStackTrace();
         }
     }
-
 }
