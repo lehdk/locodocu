@@ -1,30 +1,29 @@
 package dk.abandonship.entities.documetationNodes;
 
-import javafx.scene.image.Image;
+public class DocumentationPictureNode extends DocumentationNode {
+    private String pictureTitle;
 
-public class DocumentationPictureNode extends DocumentationNode{
-    private String pictureTittle;
-    private Image images;
+    private byte[] imageData;
 
-    public DocumentationPictureNode(int id, String pictureTittle, Image images) {
+    public DocumentationPictureNode(int id, String pictureTitle, byte[] imageData) {
         super(id);
-        this.pictureTittle = pictureTittle;
-        this.images = images;
+        this.pictureTitle = pictureTitle;
+        this.imageData = imageData;
     }
 
-    public String getPictureTittle() {
-        return pictureTittle;
+    public String getPictureTitle() {
+        return pictureTitle;
     }
 
-    public void setPictureTittle(String pictureTittle) {
-        this.pictureTittle = pictureTittle;
+    public void setPictureTitle(String pictureTitle) {
+        this.pictureTitle = pictureTitle;
     }
 
-    public Image getImages() {
-        return images;
+    public byte[] getImageData() {
+        return imageData;
     }
 
-    public void setImages(Image images) {
-        this.images = images;
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
     }
 }
