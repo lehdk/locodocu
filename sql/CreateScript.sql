@@ -143,3 +143,7 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (2, 3);
 INSERT INTO [Documentation] ([Name]) VALUES ('Receptionen'); -- Id 2
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (2, 2);
 INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (2, 'Many lights');
+
+INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test1', 1, '2010-9-2');
+INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test2', 1, '2010-9-2');
+INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test3', 1, '2010-9-2');

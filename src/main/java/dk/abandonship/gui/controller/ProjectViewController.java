@@ -3,6 +3,7 @@ package dk.abandonship.gui.controller;
 import dk.abandonship.Main;
 import dk.abandonship.entities.Project;
 import dk.abandonship.gui.controller.PopUpController.AssignTechController;
+import dk.abandonship.gui.controller.PopUpController.OldProjectController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
@@ -24,6 +25,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
@@ -107,6 +114,24 @@ public class ProjectViewController implements Initializable {
 
     }
 
+    public void isOld(){
+        List<Project> oldProjects = new ArrayList<>();
+
+        LocalDate now = LocalDate.now();
+
+        for (var v : projectModel.getProjectObservableList()){
+
+            if (v.getCreatedAt().toLocalDateTime().isBefore(now.minusMonths(48).atStartOfDay())){
+                oldProjects.add(v);
+            }
+        }
+
+
+        if (!oldProjects.isEmpty())openOldProjectPop(oldProjects);
+
+        //if (!oldProjects.isEmpty()) controllerAssistant.displayAlert("these old project might be considered for deletion\n" + oldProjects);
+    }
+
     /**
      * open createProject view in a pop-up box
      */
@@ -168,6 +193,25 @@ public class ProjectViewController implements Initializable {
         }
     }
 
+    private void openOldProjectPop(List<Project> oldProjects) {
+        try {
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/OldProjectPopUp.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            OldProjectController oldController = loader.getController();
+            oldController.setOldProjects(oldProjects);
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            controllerAssistant.displayError(e);
+        }
+    }
 
     /**
      * Set doubleClick to open a doc on the project Tableview

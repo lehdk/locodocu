@@ -46,4 +46,11 @@ public class ProjectDatabaseDAOProxy implements IProjectDAO {
 
         databaseLogDAO.insertToLog("setTechnicians", new Gson().toJson(selected) + new Gson().toJson(project), null);
     }
+
+    @Override
+    public void deleteMultipleProjects(List<Project> projects) throws SQLException {
+        projectDAO.deleteMultipleProjects(projects);
+
+        databaseLogDAO.insertToLog("deleteMultipleProjects", new Gson().toJson(projects), null);
+    }
 }
