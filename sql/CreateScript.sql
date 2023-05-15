@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS Documentation;
 DROP TABLE IF EXISTS Project;
 DROP TABLE IF EXISTS Customer;
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS DatabaseLog;
 
 CREATE TABLE [Users] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
@@ -86,6 +87,15 @@ CREATE TABLE [DocumentationPictureNode] (
     [Title] NVARCHAR(50),
     [Data] VARBINARY(MAX),
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
+);
+
+CREATE TABLE [DatabaseLog] (
+    [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [UserId] INT,
+    [Method] VARCHAR(50),
+    [Request] VARCHAR(MAX),
+    [Response] VARCHAR(MAX),
+    [Timestamp] DATETIME2 DEFAULT GETUTCDATE()
 );
 
 -- Insert data
