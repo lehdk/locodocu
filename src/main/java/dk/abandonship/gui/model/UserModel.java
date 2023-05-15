@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 public class UserModel {
     private final UserManager userManager;
@@ -60,5 +61,9 @@ public class UserModel {
 
     public List<Role> getAllRoles() throws SQLException {
         return userManager.getAllRoles();
+    }
+
+    public Set<Role> getAllRolesForUser(User user) throws SQLException {
+        return userManager.getAllRolesForUser(user);
     }
 }

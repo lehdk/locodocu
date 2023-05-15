@@ -10,6 +10,7 @@ import dk.abandonship.entities.User;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 public class UserManager {
     private IUserDAO userDAO;
@@ -45,6 +46,10 @@ public class UserManager {
 
     public List<Role> getAllRoles() throws SQLException {
         return roleDAO.getAllRoles();
+    }
+
+    public Set<Role> getAllRolesForUser(User user) throws SQLException {
+        return roleDAO.getAllRolesForUser(user);
     }
 
 }

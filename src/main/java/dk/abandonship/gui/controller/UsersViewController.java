@@ -25,8 +25,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class UsersViewController implements Initializable {
 
@@ -54,22 +54,23 @@ public class UsersViewController implements Initializable {
         ContextMenu roleAssign = new ContextMenu();
         roleAssign.setStyle("-fx-background-color: #3D445C;");
 
-        try {
-            for (var r : userModel.getAllRoles()) {
-                var role = new CheckMenuItem(r.getName());
-                roleAssign.getItems().add(role);
-                role.setOnAction(event -> handleAssignRole(r));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
         userTableView.setRowFactory(tv -> {
             var row = new TableRow<User>();
             row.setContextMenu(roleAssign);
             return row;
         });
         userTableView.setItems(userModel.getUserObserveableList());
+
+        try {
+            for (var r : userModel.getAllRoles()) {
+                var role = new CheckMenuItem(r.getName());
+                roleAssign.getItems().add(role);
+                role.setSelected(true);
+                role.setOnAction(event -> handleAssignRole(r));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         buttonsHBox.setSpacing(10);
 
@@ -171,6 +172,7 @@ public class UsersViewController implements Initializable {
 
     public void handleAssignRole(Role role) {
         try {
+            userModel.getAllRolesForUser(userTableView.getSelectionModel().getSelectedItem());
             userModel.addRole(userTableView.getSelectionModel().getSelectedItem(), role);
         } catch (SQLException e) {
             System.err.println("Could not add role to user!");
