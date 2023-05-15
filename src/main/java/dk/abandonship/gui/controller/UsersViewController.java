@@ -51,30 +51,40 @@ public class UsersViewController implements Initializable {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
-        ContextMenu roleAssign = new ContextMenu();
-        roleAssign.setStyle("-fx-background-color: #3D445C;");
-
-        userTableView.setRowFactory(tv -> {
-            var row = new TableRow<User>();
-            row.setContextMenu(roleAssign);
-            return row;
-        });
         userTableView.setItems(userModel.getUserObserveableList());
 
-        try {
-            for (var r : userModel.getAllRoles()) {
-                var role = new CheckMenuItem(r.getName());
-                roleAssign.getItems().add(role);
-                role.setSelected(true);
-                role.setOnAction(event -> handleAssignRole(r));
+        userTableView.setRowFactory(tv -> {
+            try {
+                ContextMenu roleAssign = new ContextMenu();
+                roleAssign.setStyle("-fx-background-color: #3D445C;");
+
+                var row = new TableRow<User>();
+                row.setContextMenu(roleAssign);
+
+
+                for (var r : userModel.getAllRoles()) {
+                    var role = new CheckMenuItem(r.getName());
+                    roleAssign.getItems().add(role);
+
+                    if (row.getItem() != null && row.getItem().getRoles().contains(r)){
+                        role.setSelected(true);
+                    } else {
+                        role.setSelected(false);
+                    }
+                    role.setOnAction(event -> handleAssignRole(r));
+                }
+
+                return row;
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
+
 
         buttonsHBox.setSpacing(10);
 
-        if(LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN, DefaultRoles.PROJECTMANAGER)) {
+        if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.ADMIN, DefaultRoles.PROJECTMANAGER)) {
             Button addUserButton = new Button("Add User");
             addUserButton.setOnAction(event -> {
                 try {
@@ -89,7 +99,7 @@ public class UsersViewController implements Initializable {
             editUserButton = new Button("Edit User");
             editUserButton.setOnAction(event -> {
                 var selectedItem = userTableView.getSelectionModel().getSelectedItem();
-                if(selectedItem == null) return;
+                if (selectedItem == null) return;
 
                 try {
                     handleAddEditUser(selectedItem);
@@ -112,11 +122,11 @@ public class UsersViewController implements Initializable {
     private void updateSelectedDisabledButtons() {
         var selectedItem = userTableView.getSelectionModel().getSelectedItem();
 
-        if(deleteUserButton != null) {
+        if (deleteUserButton != null) {
             deleteUserButton.setDisable(selectedItem == null);
         }
 
-        if(editUserButton != null) {
+        if (editUserButton != null) {
             editUserButton.setDisable(selectedItem == null);
         }
     }
@@ -129,7 +139,7 @@ public class UsersViewController implements Initializable {
         Parent root = loader.load();
         AddEditUserController controller = loader.getController();
 
-        if(user != null) {
+        if (user != null) {
             controller.editMode(user);
         }
 
@@ -142,14 +152,14 @@ public class UsersViewController implements Initializable {
         popupStage.showAndWait();
 
         User result = controller.getResult();
-        if(result == null) return;
+        if (result == null) return;
 
         try {
-            if(user == null) {
+            if (user == null) {
                 userModel.addUser(result);
             } else {
                 boolean wasEdited = userModel.editUser(user);
-                if(wasEdited) userTableView.refresh();
+                if (wasEdited) userTableView.refresh();
                 userTableView.getSelectionModel().clearSelection();
             }
         } catch (SQLException e) {
@@ -160,7 +170,7 @@ public class UsersViewController implements Initializable {
 
     public void handleDeleteUser() {
         var selectedItem = userTableView.getSelectionModel().getSelectedItem();
-        if(selectedItem == null) return;
+        if (selectedItem == null) return;
 
         try {
             userModel.deleteUser(selectedItem);
