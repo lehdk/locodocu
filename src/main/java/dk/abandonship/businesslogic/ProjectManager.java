@@ -137,6 +137,9 @@ public class ProjectManager {
      * @param documentation The documentation you want the data from.
      */
     public void loadDocumentationData(Documentation documentation) throws SQLException {
+
+        if(documentation == null) return;
+
         List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);
         List<DocumentationLogInNode> docLog = documentationDAO.getDocumentationLogIn(documentation);
         List<DocumentationPictureNode> picNode = documentationDAO.getPictureNode(documentation);
