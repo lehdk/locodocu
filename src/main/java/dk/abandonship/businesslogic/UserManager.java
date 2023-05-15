@@ -1,19 +1,16 @@
 package dk.abandonship.businesslogic;
 
-import dk.abandonship.dataaccess.RoleDatabaseDAO;
-import dk.abandonship.dataaccess.UserDatabaseDAO;
-import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
+import dk.abandonship.dataaccess.proxies.UserDatabaseDAOProxy;
 import dk.abandonship.entities.User;
 
 import java.util.List;
 
 public class UserManager {
-    private IUserDAO userDAO;
-    private IRoleDAO roleDAO;
+    private final IUserDAO userDAO;
+
     public UserManager() {
-        roleDAO = new RoleDatabaseDAO();
-        userDAO = new UserDatabaseDAO(roleDAO);
+        userDAO = new UserDatabaseDAOProxy();
     }
 
     public List<User> getAllUsers() throws Exception{
@@ -23,5 +20,4 @@ public class UserManager {
     public List<User> getAllTechnicians() throws Exception{
         return userDAO.getAllTechnicians();
     }
-
 }

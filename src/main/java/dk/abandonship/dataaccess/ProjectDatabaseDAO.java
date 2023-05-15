@@ -1,6 +1,5 @@
 package dk.abandonship.dataaccess;
 
-import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.entities.Customer;
