@@ -25,5 +25,10 @@ public interface IProjectDAO {
      */
     void setTechnicians(List<User> selected, Project project) throws SQLException;
 
+    /**
+     * Uses Batch to delete multiple projects
+     * @param projects List of projects that should be deleted
+     * @throws SQLException
+     */
     void deleteMultipleProjects(List<Project> projects) throws SQLException;
 }
