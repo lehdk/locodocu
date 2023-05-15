@@ -5,6 +5,7 @@ import dk.abandonship.gui.model.LoginModel;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
+import dk.abandonship.utils.DefaultRoles;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -48,7 +49,10 @@ public class LogInController implements Initializable {
             if (success) {
                 controllerAssistant.setTopFX("NavBar");
                 var projectViewController = (ProjectViewController) controllerAssistant.setCenterFX("projectsView");
-                projectViewController.isOld();
+
+                if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
+                    projectViewController.isOld();
+                }
             }
 
 

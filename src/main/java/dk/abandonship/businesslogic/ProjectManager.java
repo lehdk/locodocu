@@ -164,4 +164,8 @@ public class ProjectManager {
         Documentation doc = documentationDAO.createNewDoc(docName, project);
         project.getDocumentations().add(doc);
     }
+
+    public void deleteProjects(List<Project> projects) throws Exception{
+        projectDAO.deleteMultipleProjects(projects);
+    }
 }

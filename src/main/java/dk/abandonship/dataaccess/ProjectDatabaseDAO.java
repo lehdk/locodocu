@@ -123,4 +123,19 @@ public class ProjectDatabaseDAO implements IProjectDAO {
             ps.executeBatch();
         }
     }
+
+    @Override
+    public void deleteMultipleProjects(List<Project> projects) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "DELETE FROM [Project] WHERE Id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            for (Project p : projects){
+                ps.setInt(1, p.getId());
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+        }
+    }
 }

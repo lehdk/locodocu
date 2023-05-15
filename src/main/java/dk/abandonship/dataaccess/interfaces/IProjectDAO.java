@@ -24,4 +24,6 @@ public interface IProjectDAO {
      * @throws SQLException
      */
     void setTechnicians(List<User> selected, Project project) throws SQLException;
+
+    void deleteMultipleProjects(List<Project> projects) throws SQLException;
 }
