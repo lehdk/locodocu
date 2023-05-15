@@ -48,7 +48,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="btnConfirm1" mnemonicParsing="false" onAction="#handleConfirm" text="Dellete" GridPane.columnIndex="1" />
+            <Button fx:id="btnConfirm1" mnemonicParsing="false" onAction="#handleConfirm" text="Delete" GridPane.columnIndex="1" />
             <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleClose" text="Cancel" />
          </children>
          <BorderPane.margin>
@@ -57,7 +57,7 @@
       </GridPane>
    </bottom>
    <top>
-      <Label text="Old Project should be considerd to be delleted" BorderPane.alignment="CENTER">
+      <Label text="Old Project should be considerd to be deleted" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="10.0" top="10.0" />
          </BorderPane.margin>
