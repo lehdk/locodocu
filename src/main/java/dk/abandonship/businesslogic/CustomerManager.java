@@ -1,7 +1,7 @@
 package dk.abandonship.businesslogic;
 
-import dk.abandonship.dataaccess.CustomerDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.ICustomerDAO;
+import dk.abandonship.dataaccess.proxies.CustomerDatabaseDAOProxy;
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.CustomerDTO;
 
@@ -13,7 +13,7 @@ public class CustomerManager {
     private final ICustomerDAO customerDAO;
 
     public CustomerManager() {
-        customerDAO = new CustomerDatabaseDAO();
+        customerDAO = new CustomerDatabaseDAOProxy();
     }
 
     public List<Customer> getAllCustomers() throws SQLException {
