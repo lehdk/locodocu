@@ -5,6 +5,8 @@ import dk.abandonship.Main;
 import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 import dk.abandonship.gui.controller.PopUpController.AddEditUserController;
+import dk.abandonship.gui.controller.PopUpController.AssignRolesController;
+import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.model.UserModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.DefaultRoles;
@@ -36,7 +38,7 @@ public class UsersViewController implements Initializable {
     public TableColumn<User, String> emailColumn;
     public TableColumn<User, String> phoneColumn;
     public HBox buttonsHBox;
-    private Button deleteUserButton, editUserButton;
+    private Button deleteUserButton, editUserButton, assignRolesButton;
 
     public UsersViewController() {
         userModel = new UserModel();
@@ -52,35 +54,6 @@ public class UsersViewController implements Initializable {
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
         userTableView.setItems(userModel.getUserObserveableList());
-
-        userTableView.setRowFactory(tv -> {
-            try {
-                ContextMenu roleAssign = new ContextMenu();
-                roleAssign.setStyle("-fx-background-color: #3D445C;");
-
-                var row = new TableRow<User>();
-                row.setContextMenu(roleAssign);
-
-
-                for (var r : userModel.getAllRoles()) {
-                    var role = new CheckMenuItem(r.getName());
-                    roleAssign.getItems().add(role);
-
-                    if (row.getItem() != null && row.getItem().getRoles().contains(r)){
-                        role.setSelected(true);
-                    } else {
-                        role.setSelected(false);
-                    }
-                    role.setOnAction(event -> handleAssignRole(r));
-                }
-
-                return row;
-
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
 
         buttonsHBox.setSpacing(10);
 
@@ -114,6 +87,10 @@ public class UsersViewController implements Initializable {
             deleteUserButton = new Button("Delete User");
             deleteUserButton.setOnAction(event -> handleDeleteUser());
             buttonsHBox.getChildren().add(deleteUserButton);
+
+            assignRolesButton = new Button("Assign Roles");
+            //assignRolesButton.setOnAction(event -> );
+            buttonsHBox.getChildren().add(assignRolesButton);
         }
 
         updateSelectedDisabledButtons();
@@ -182,10 +159,20 @@ public class UsersViewController implements Initializable {
 
     public void handleAssignRole(Role role) {
         try {
-            userModel.getAllRolesForUser(userTableView.getSelectionModel().getSelectedItem());
-            userModel.addRole(userTableView.getSelectionModel().getSelectedItem(), role);
-        } catch (SQLException e) {
-            System.err.println("Could not add role to user!");
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/AssignRolesView.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            AssignRolesController rolesController = loader.getController();
+            rolesController.handleCancel();
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
