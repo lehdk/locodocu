@@ -24,7 +24,7 @@ public class DrawingController implements Initializable {
 
     @FXML private Pane container;
     @FXML private Canvas canvasDrawing;
-    @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  btnColorPicker, bntEraser;
+    @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  bntEraser;
     private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy, eraserStrategy;
     private IDrawingStrategy selectedStrategy;
 
@@ -69,9 +69,6 @@ public class DrawingController implements Initializable {
 
     public void handleSelectLine(ActionEvent actionEvent) {
         selectedStrategy = lineDrawStrategy;
-    }
-
-    public void handlePickColor(ActionEvent actionEvent) {
     }
 
     public void handleEraser(ActionEvent actionEvent) {
