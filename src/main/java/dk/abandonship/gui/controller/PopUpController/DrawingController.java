@@ -1,6 +1,7 @@
 package dk.abandonship.gui.controller.PopUpController;
 
 import dk.abandonship.Main;
+import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.EraserStrategy;
 import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.IDrawingStrategy;
 import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.ImageDrawingStrategy;
 import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.LineDrawStrategy;
@@ -22,7 +23,7 @@ public class DrawingController implements Initializable {
 
     @FXML private Canvas canvasDrawing;
     @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  btnColorPicker, bntEraser;
-    private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy;
+    private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy, eraserStrategy;
     private IDrawingStrategy selectedStrategy;
 
     @Override
@@ -32,6 +33,7 @@ public class DrawingController implements Initializable {
         imageWifi = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/wifi.png"))));
         imageJunctionBox = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/JunctionBoxpng.png"))));
         lineDrawStrategy = new LineDrawStrategy();
+        eraserStrategy = new EraserStrategy();
 
         selectedStrategy = imageMonitor;
     }
@@ -63,7 +65,7 @@ public class DrawingController implements Initializable {
     }
 
     public void handleEraser(ActionEvent actionEvent) {
-
+        selectedStrategy = eraserStrategy;
     }
 
     public void handelClose(ActionEvent actionEvent) {
@@ -76,11 +78,16 @@ public class DrawingController implements Initializable {
     }
 
     public void canvasClick(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent.getX() + "  :  " + mouseEvent.getY());
-
         GraphicsContext gc = canvasDrawing.getGraphicsContext2D();
         gc.setLineWidth(5);
 
         selectedStrategy.draw(gc, mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    public void handleDrag(MouseEvent mouseEvent) {
+        GraphicsContext gc = canvasDrawing.getGraphicsContext2D();
+        gc.setLineWidth(5);
+
+        selectedStrategy.drag(gc, mouseEvent.getX(), mouseEvent.getY());
     }
 }

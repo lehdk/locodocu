@@ -23,4 +23,7 @@ public class LineDrawStrategy implements IDrawingStrategy {
             startY = null;
         }
     }
+
+    @Override
+    public void drag(GraphicsContext gc, double x, double y) { }
 }

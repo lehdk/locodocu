@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1440.0" style="-fx-background-color: #3D445C;" styleClass="Scroll-Pane" stylesheets="@../../StyleSheets/IndexStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.DrawingController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1440.0" style="-fx-background-color: #3D445C;" styleClass="Scroll-Pane" stylesheets="@../../StyleSheets/IndexStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.DrawingController">
    <bottom>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -72,6 +69,6 @@
       </GridPane>
    </right>
    <center>
-      <Canvas fx:id="canvasDrawing" height="672.0" onMouseClicked="#canvasClick" width="962.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="canvasDrawing" height="672.0" onDragDetected="#handleDrag" onMouseClicked="#canvasClick" onMouseDragged="#handleDrag" width="962.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

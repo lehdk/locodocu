@@ -15,4 +15,7 @@ public class ImageDrawingStrategy implements IDrawingStrategy{
     public void draw(GraphicsContext gc, double x, double y) {
         gc.drawImage(image, x-150/2, y-150/2 ,150,150);
     }
+
+    @Override
+    public void drag(GraphicsContext gc, double x, double y) { }
 }
