@@ -69,6 +69,11 @@
       </GridPane>
    </right>
    <center>
-      <Canvas fx:id="canvasDrawing" height="672.0" onDragDetected="#handleDrag" onMouseClicked="#canvasClick" onMouseDragged="#handleDrag" width="962.0" BorderPane.alignment="CENTER" />
+       <Pane fx:id="container" style="-fx-border-color: rgb(25, 25, 25); -fx-border-width: 5; -fx-border-style: solid;">
+         <Canvas fx:id="canvasDrawing" onDragDetected="#handleDrag" onMouseClicked="#canvasClick" onMouseDragged="#handleDrag" BorderPane.alignment="CENTER" />
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+       </Pane>
    </center>
 </BorderPane>

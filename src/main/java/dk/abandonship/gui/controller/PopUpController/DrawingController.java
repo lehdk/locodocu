@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
 
 public class DrawingController implements Initializable {
 
+    @FXML private Pane container;
     @FXML private Canvas canvasDrawing;
     @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  btnColorPicker, bntEraser;
     private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy, eraserStrategy;
@@ -36,6 +38,14 @@ public class DrawingController implements Initializable {
         eraserStrategy = new EraserStrategy();
 
         selectedStrategy = imageMonitor;
+
+        container.widthProperty().addListener((obs, oldVal, newVal) -> {
+            canvasDrawing.setWidth(newVal.doubleValue());
+        });
+
+        container.heightProperty().addListener((obs, oldVal, newVal) -> {
+            canvasDrawing.setHeight(newVal.doubleValue());
+        });
     }
 
     public void handleSaveToDoc(ActionEvent actionEvent) {
