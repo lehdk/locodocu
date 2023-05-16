@@ -72,6 +72,6 @@
       </GridPane>
    </right>
    <center>
-      <Canvas fx:id="canvasDrawing" height="672.0" width="962.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="canvasDrawing" height="672.0" onMouseClicked="#canvasClick" width="962.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
