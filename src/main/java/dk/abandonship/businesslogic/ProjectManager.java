@@ -1,11 +1,9 @@
 package dk.abandonship.businesslogic;
 
-import dk.abandonship.dataaccess.DocumentationDatabaseDAO;
-import dk.abandonship.dataaccess.ProjectDatabaseDAO;
-import dk.abandonship.dataaccess.RoleDatabaseDAO;
-import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
+import dk.abandonship.dataaccess.proxies.DocumentationDatabaseDAOProxy;
+import dk.abandonship.dataaccess.proxies.ProjectDatabaseDAOProxy;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.User;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
@@ -30,8 +28,8 @@ public class ProjectManager {
     private final IDocumentationDAO documentationDAO;
 
     public ProjectManager() {
-        this.documentationDAO = new DocumentationDatabaseDAO();
-        this.projectDAO = new ProjectDatabaseDAO(new UserDatabaseDAO(new RoleDatabaseDAO()));
+        this.documentationDAO = new DocumentationDatabaseDAOProxy();
+        this.projectDAO = new ProjectDatabaseDAOProxy();
     }
 
     /**
@@ -139,6 +137,9 @@ public class ProjectManager {
      * @param documentation The documentation you want the data from.
      */
     public void loadDocumentationData(Documentation documentation) throws SQLException {
+
+        if(documentation == null) return;
+
         List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);
         List<DocumentationLogInNode> docLog = documentationDAO.getDocumentationLogIn(documentation);
         List<DocumentationPictureNode> picNode = documentationDAO.getPictureNode(documentation);
@@ -163,5 +164,9 @@ public class ProjectManager {
     public void createDocument(String docName, Project project) throws Exception {
         Documentation doc = documentationDAO.createNewDoc(docName, project);
         project.getDocumentations().add(doc);
+    }
+
+    public void deleteProjects(List<Project> projects) throws Exception{
+        projectDAO.deleteMultipleProjects(projects);
     }
 }

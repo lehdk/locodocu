@@ -1,11 +1,9 @@
 package dk.abandonship.businesslogic;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dk.abandonship.dataaccess.RoleDatabaseDAO;
-import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.entities.Role;
+import dk.abandonship.dataaccess.proxies.UserDatabaseDAOProxy;
 import dk.abandonship.entities.User;
 
 import java.sql.SQLException;
@@ -13,11 +11,11 @@ import java.util.List;
 import java.util.Set;
 
 public class UserManager {
-    private IUserDAO userDAO;
+    private final IUserDAO userDAO;
     private IRoleDAO roleDAO;
+
     public UserManager() {
-        roleDAO = new RoleDatabaseDAO();
-        userDAO = new UserDatabaseDAO(roleDAO);
+        userDAO = new UserDatabaseDAOProxy();
     }
 
     public List<User> getAllUsers() throws SQLException {
@@ -51,5 +49,4 @@ public class UserManager {
     public Set<Role> getAllRolesForUser(User user) throws SQLException {
         return roleDAO.getAllRolesForUser(user);
     }
-
 }

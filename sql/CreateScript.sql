@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS Documentation;
 DROP TABLE IF EXISTS Project;
 DROP TABLE IF EXISTS Customer;
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS DatabaseLog;
 
 CREATE TABLE [Users] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
@@ -88,6 +89,15 @@ CREATE TABLE [DocumentationPictureNode] (
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
 );
 
+CREATE TABLE [DatabaseLog] (
+    [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [UserId] INT,
+    [Method] VARCHAR(50),
+    [Request] VARCHAR(MAX),
+    [Response] VARCHAR(MAX),
+    [Timestamp] DATETIME2 DEFAULT GETUTCDATE()
+);
+
 -- Insert data
 INSERT INTO [Roles] ([Name]) VALUES 
     ('admin'), -- Id 1
@@ -133,3 +143,7 @@ INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (2, 3);
 INSERT INTO [Documentation] ([Name]) VALUES ('Receptionen'); -- Id 2
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (2, 2);
 INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (2, 'Many lights');
+
+INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test1', 1, '2010-9-2');
+INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test2', 1, '2010-9-2');
+INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test3', 1, '2010-9-2');

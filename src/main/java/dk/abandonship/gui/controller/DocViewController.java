@@ -136,6 +136,12 @@ public class DocViewController implements Initializable {
             controllerAssistant.displayError(e);
         }
 
+        displayExistingDocumentationNodes(documentation);
+    }
+
+    private void displayExistingDocumentationNodes(Documentation documentation) {
+        if(documentation == null) return;
+
         for (DocumentationNode dn: documentation.getDocumentationNodes()) {
             if (dn instanceof DocumentationTextFieldNode){
                 addTextFieldForEdit((DocumentationTextFieldNode) dn);
@@ -313,6 +319,7 @@ public class DocViewController implements Initializable {
 
         if(selectedFile == null || !selectedFile.canRead()) {
             controllerAssistant.displayAlert("Could not read the chose image");
+            return;
         }
 
         try(var fileInputStream = new FileInputStream(selectedFile)) {

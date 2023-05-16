@@ -104,4 +104,8 @@ public class ProjectModel {
 
         return false;
     }
+
+    public void deleteProjects(List<Project> Projects) throws Exception{
+        projectManager.deleteProjects(Projects);
+    }
 }

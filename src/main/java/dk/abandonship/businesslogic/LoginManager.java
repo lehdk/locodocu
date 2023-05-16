@@ -1,9 +1,7 @@
 package dk.abandonship.businesslogic;
 
-import dk.abandonship.dataaccess.RoleDatabaseDAO;
-import dk.abandonship.dataaccess.UserDatabaseDAO;
-import dk.abandonship.dataaccess.interfaces.IRoleDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
+import dk.abandonship.dataaccess.proxies.UserDatabaseDAOProxy;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.PasswordHasher;
 
@@ -11,12 +9,9 @@ import java.sql.SQLException;
 
 public class LoginManager {
 
-    private IRoleDAO roleDAO;
-    private IUserDAO userDAO;
+    private final IUserDAO userDAO;
     public LoginManager() {
-
-        roleDAO = new RoleDatabaseDAO();
-        userDAO = new UserDatabaseDAO(roleDAO);
+        userDAO = new UserDatabaseDAOProxy();
     }
 
     /**
@@ -35,5 +30,4 @@ public class LoginManager {
 
         return PasswordHasher.comparePasswordToHash(rawPassword, userToLogin.getPassword());
     }
-
 }

@@ -1,6 +1,5 @@
 package dk.abandonship.dataaccess;
 
-import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.dataaccess.interfaces.IProjectDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
 import dk.abandonship.entities.Customer;
@@ -117,6 +116,21 @@ public class ProjectDatabaseDAO implements IProjectDAO {
             for (User u : selected) {
                 ps.setInt(1, project.getId());
                 ps.setInt(2, u.getId());
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+        }
+    }
+
+    @Override
+    public void deleteMultipleProjects(List<Project> projects) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "DELETE FROM [Project] WHERE Id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            for (Project p : projects){
+                ps.setInt(1, p.getId());
                 ps.addBatch();
             }
 
