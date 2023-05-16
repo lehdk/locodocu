@@ -39,10 +39,10 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="tbnScreen" mnemonicParsing="false" onAction="#handleSpawnScreen" text="screen" />
-            <Button fx:id="btnSound" mnemonicParsing="false" onAction="#handleSpawnSound" text="sound" GridPane.rowIndex="1" />
-            <Button fx:id="btnWifi" mnemonicParsing="false" onAction="#handleSpawnWifi" text="Wifi" GridPane.rowIndex="2" />
-            <Button fx:id="btnJunction" mnemonicParsing="false" onAction="#handleSpawnJunction" text="Junction" GridPane.rowIndex="3" />
+            <Button fx:id="tbnScreen" mnemonicParsing="false" onAction="#handleSelectMonitor" text="screen" />
+            <Button fx:id="btnSound" mnemonicParsing="false" onAction="#handleSelectSpeaker" text="sound" GridPane.rowIndex="1" />
+            <Button fx:id="btnWifi" mnemonicParsing="false" onAction="#handleSelectWifi" text="Wifi" GridPane.rowIndex="2" />
+            <Button fx:id="btnJunction" mnemonicParsing="false" onAction="#handleSelectJunction" text="Junction" GridPane.rowIndex="3" />
          </children>
          <BorderPane.margin>
             <Insets left="10.0" right="10.0" />
@@ -61,7 +61,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="bntBrush" mnemonicParsing="false" onAction="#handleBrush" text="Brush" />
+            <Button fx:id="bntBrush" mnemonicParsing="false" onAction="#handleSelectLine" text="Brush" />
             <Button fx:id="btnColorPicker" mnemonicParsing="false" onAction="#handlePickColor" text="Color picker" GridPane.rowIndex="1" />
             <Button fx:id="bntEraser" mnemonicParsing="false" onAction="#handleEraser" text="Eraser" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" GridPane.rowIndex="3" />

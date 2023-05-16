@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 
 public class DrawingController implements Initializable {
 
-
     @FXML private Canvas canvasDrawing;
     @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  btnColorPicker, bntEraser;
     private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy;
@@ -31,7 +30,7 @@ public class DrawingController implements Initializable {
         imageMonitor = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/monitor.png"))));
         imageSpeaker = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/speaker.png"))));
         imageWifi = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/wifi.png"))));
-        imageJunctionBox = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/JunktionBoxpng.png"))));
+        imageJunctionBox = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/JunctionBoxpng.png"))));
         lineDrawStrategy = new LineDrawStrategy();
 
         selectedStrategy = imageMonitor;
@@ -40,23 +39,23 @@ public class DrawingController implements Initializable {
     public void handleSaveToDoc(ActionEvent actionEvent) {
     }
 
-    public void handleSpawnScreen(ActionEvent actionEvent) {
+    public void handleSelectMonitor(ActionEvent actionEvent) {
         selectedStrategy = imageMonitor;
     }
 
-    public void handleSpawnSound(ActionEvent actionEvent) {
+    public void handleSelectSpeaker(ActionEvent actionEvent) {
         selectedStrategy = imageSpeaker;
     }
 
-    public void handleSpawnWifi(ActionEvent actionEvent) {
+    public void handleSelectWifi(ActionEvent actionEvent) {
         selectedStrategy = imageWifi;
     }
 
-    public void handleSpawnJunction(ActionEvent actionEvent) {
+    public void handleSelectJunction(ActionEvent actionEvent) {
         selectedStrategy = imageJunctionBox;
     }
 
-    public void handleBrush(ActionEvent actionEvent) {
+    public void handleSelectLine(ActionEvent actionEvent) {
         selectedStrategy = lineDrawStrategy;
     }
 
@@ -84,7 +83,4 @@ public class DrawingController implements Initializable {
 
         selectedStrategy.draw(gc, mouseEvent.getX(), mouseEvent.getY());
     }
-
-
-
 }
