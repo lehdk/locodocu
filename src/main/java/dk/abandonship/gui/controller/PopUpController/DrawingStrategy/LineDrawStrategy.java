@@ -3,6 +3,7 @@ package dk.abandonship.gui.controller.PopUpController.DrawingStrategy;
 import javafx.scene.canvas.GraphicsContext;
 
 public class LineDrawStrategy implements IDrawingStrategy {
+    private static final float dotSize = 8;
 
     private Double startX = null;
     private Double startY = null;
@@ -12,8 +13,11 @@ public class LineDrawStrategy implements IDrawingStrategy {
         if(startX == null) {
             startX = x;
             startY = y;
+            gc.fillOval(startX - dotSize / 2, startY - dotSize / 2, dotSize, dotSize);
         } else {
             gc.strokeLine(startX, startY, x, y);
+
+            gc.fillOval( x - dotSize / 2, y - dotSize / 2, dotSize, dotSize);
 
             startX = null;
             startY = null;
