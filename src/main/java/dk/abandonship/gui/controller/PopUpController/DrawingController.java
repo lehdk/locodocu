@@ -3,6 +3,7 @@ package dk.abandonship.gui.controller.PopUpController;
 import dk.abandonship.Main;
 import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.IDrawingStrategy;
 import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.ImageDrawingStrategy;
+import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.LineDrawStrategy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,7 +23,7 @@ public class DrawingController implements Initializable {
 
     @FXML private Canvas canvasDrawing;
     @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  btnColorPicker, bntEraser;
-    private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox;
+    private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy;
     private IDrawingStrategy selectedStrategy;
 
     @Override
@@ -31,6 +32,7 @@ public class DrawingController implements Initializable {
         imageSpeaker = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/speaker.png"))));
         imageWifi = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/wifi.png"))));
         imageJunctionBox = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/JunktionBoxpng.png"))));
+        lineDrawStrategy = new LineDrawStrategy();
 
         selectedStrategy = imageMonitor;
     }
@@ -55,6 +57,7 @@ public class DrawingController implements Initializable {
     }
 
     public void handleBrush(ActionEvent actionEvent) {
+        selectedStrategy = lineDrawStrategy;
     }
 
     public void handlePickColor(ActionEvent actionEvent) {
