@@ -7,6 +7,7 @@ import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
+import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.controller.PopUpController.CreateDocController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
@@ -104,9 +105,11 @@ public class DocViewController implements Initializable {
             Button btnAddTextField = new Button("Add Text Field");
             Button btnAddLogin = new Button("Add Login");
             Button btnAddImage = new Button("Add Image");
+            Button btnAddDrawing = new Button("add technicalDrawing");
             btnAddTextField.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit(null));
             btnAddLogin.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleAddLogin(null));
             btnAddImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleAddPicture(null));
+            btnAddDrawing.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleOpenCanvas());
             Button btnSave = new Button("Save");
             Button btnCancel = new Button("Cancel");
             btnSave.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
@@ -115,6 +118,7 @@ public class DocViewController implements Initializable {
             hBox.getChildren().add(btnAddTextField);
             hBox.getChildren().add(btnAddLogin);
             hBox.getChildren().add(btnAddImage);
+            hBox.getChildren().add(btnAddDrawing);
 
             savAndCancelBox.getChildren().add(btnSave);
             savAndCancelBox.getChildren().add(btnCancel);
@@ -192,6 +196,23 @@ public class DocViewController implements Initializable {
             controllerAssistant.setCenterFX("projectsView");
         } catch (Exception e) {
             controllerAssistant.displayError(e);
+        }
+    }
+
+    private void handleOpenCanvas(){
+        try {
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/Draw.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
