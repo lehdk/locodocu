@@ -1,6 +1,8 @@
 package dk.abandonship.gui.controller.PopUpController;
 
 import dk.abandonship.Main;
+import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.IDrawingStrategy;
+import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.ImageDrawingStrategy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,36 +22,36 @@ public class DrawingController implements Initializable {
 
     @FXML private Canvas canvasDrawing;
     @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  btnColorPicker, bntEraser;
-    private Image imageMonitor, imageSpeaker, imageWifi, imageJunctionBox;
-    private Image image;
+    private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox;
+    private IDrawingStrategy selectedStrategy;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        imageMonitor = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/monitor.png")));
-        imageSpeaker = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/speaker.png")));
-        imageWifi = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/wifi.png")));
-        imageJunctionBox = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/JunktionBoxpng.png")));
+        imageMonitor = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/monitor.png"))));
+        imageSpeaker = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/speaker.png"))));
+        imageWifi = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/wifi.png"))));
+        imageJunctionBox = new ImageDrawingStrategy(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/Canvas/JunktionBoxpng.png"))));
 
-        image = imageMonitor;
+        selectedStrategy = imageMonitor;
     }
 
     public void handleSaveToDoc(ActionEvent actionEvent) {
     }
 
     public void handleSpawnScreen(ActionEvent actionEvent) {
-        image = imageMonitor;
+        selectedStrategy = imageMonitor;
     }
 
     public void handleSpawnSound(ActionEvent actionEvent) {
-        image = imageSpeaker;
+        selectedStrategy = imageSpeaker;
     }
 
     public void handleSpawnWifi(ActionEvent actionEvent) {
-        image = imageWifi;
+        selectedStrategy = imageWifi;
     }
 
     public void handleSpawnJunction(ActionEvent actionEvent) {
-        image = imageJunctionBox;
+        selectedStrategy = imageJunctionBox;
     }
 
     public void handleBrush(ActionEvent actionEvent) {
@@ -77,9 +79,7 @@ public class DrawingController implements Initializable {
         GraphicsContext gc = canvasDrawing.getGraphicsContext2D();
         gc.setLineWidth(5);
 
-        //gc.fillOval(mouseEvent.getX(), mouseEvent.getY(), 10,10);
-
-        gc.drawImage(image, mouseEvent.getX()-150/2, mouseEvent.getY()-150/2 ,150,150);
+        selectedStrategy.draw(gc, mouseEvent.getX(), mouseEvent.getY());
     }
 
 
