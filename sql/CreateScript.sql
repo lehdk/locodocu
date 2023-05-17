@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS DocumentationLoginNode;
 DROP TABLE IF EXISTS DocumentationPictureNode;
 DROP TABLE IF EXISTS DocumentationTextNode;
 DROP TABLE IF EXISTS ProjectDocumentationRelation;
+DROP TABLE IF EXISTS DocumentationCanvasNode;
 DROP TABLE IF EXISTS Documentation;
 DROP TABLE IF EXISTS Project;
 DROP TABLE IF EXISTS Customer;
