@@ -6,10 +6,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
-import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
-import dk.abandonship.entities.documetationNodes.DocumentationNode;
-import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
-import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
+import dk.abandonship.entities.documetationNodes.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -88,6 +85,18 @@ public class PrintPdfManager {
                     //TODO Print images and their tittle
                     var imgPar = new Paragraph(((DocumentationPictureNode) node).getPictureTitle());
                     var imageData = ((DocumentationPictureNode) node).getImageData();
+
+                    Image img = Image.getInstance(imageData);
+                    img.scaleAbsolute(300,300);
+                    img.setSpacingAfter(10);
+
+                    document.add(imgPar);
+                    document.add(img);
+                    document.add(new Paragraph("\n"));
+
+                } else if (node instanceof CanvasDocumentationNode){
+                    var imgPar = new Paragraph("\n\n Technical Drawing");
+                    var imageData = ((CanvasDocumentationNode) node).getImageData();
 
                     Image img = Image.getInstance(imageData);
                     img.scaleAbsolute(300,300);

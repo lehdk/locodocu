@@ -8,10 +8,13 @@ import dk.abandonship.gui.controller.PopUpController.DrawingStrategy.LineDrawStr
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -27,6 +30,7 @@ public class DrawingController implements Initializable {
     @FXML private Button btnSaveToDoc, btnClose, tbnScreen, btnSound, btnWifi, btnJunction, bntBrush,  bntEraser;
     private IDrawingStrategy imageMonitor, imageSpeaker, imageWifi, imageJunctionBox, lineDrawStrategy, eraserStrategy;
     private IDrawingStrategy selectedStrategy;
+    private ImageView renderedImageView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,9 +50,24 @@ public class DrawingController implements Initializable {
         container.heightProperty().addListener((obs, oldVal, newVal) -> {
             canvasDrawing.setHeight(newVal.doubleValue());
         });
+
+        renderedImageView = null;
     }
 
     public void handleSaveToDoc(ActionEvent actionEvent) {
+        WritableImage writableImage = new WritableImage( (int) canvasDrawing.getWidth(), (int) canvasDrawing.getHeight());
+        canvasDrawing.snapshot(null, writableImage);
+        WritableImage image = canvasDrawing.snapshot(new SnapshotParameters(), writableImage);
+
+
+
+        renderedImageView.setImage(image);
+
+        close();
+    }
+
+    public void setImageView(ImageView imageView) {
+        renderedImageView = imageView;
     }
 
     public void handleSelectMonitor(ActionEvent actionEvent) {
