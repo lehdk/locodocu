@@ -46,6 +46,7 @@ public class DocViewController implements Initializable {
     private ControllerAssistant controllerAssistant;
     private LinkedHashMap<Node, DocumentationNode> nodeMap;
     private ImageView imageCanvas;
+    private CanvasDocumentationNode canvasNode;
 
     private boolean userIsAssignedTechnician = false;
 
@@ -78,6 +79,7 @@ public class DocViewController implements Initializable {
         vboxModifyButtons.getChildren().add(new Label("\n\n"));
 
         imageCanvas = null;
+        canvasNode = null;
     }
 
     public void setProject(Project project) {
@@ -147,6 +149,11 @@ public class DocViewController implements Initializable {
         displayExistingDocumentationNodes(documentation);
     }
 
+    /**
+     * opens all nodes in fxml
+     *
+     * @param documentation should contain a set of nodes
+     */
     private void displayExistingDocumentationNodes(Documentation documentation) {
         if (documentation == null) return;
 
@@ -205,39 +212,42 @@ public class DocViewController implements Initializable {
         }
     }
 
-    private void handleCanvas(CanvasDocumentationNode canvasNode) {
-        if (canvasNode == null) {
+    /**
+     * Opens a canvas, and sets a canvas if it pulls it from DB
+     * @param givenCanvasNode node of data for canvas, should be null if it does not contain data
+     */
+    private void handleCanvas(CanvasDocumentationNode givenCanvasNode) {
+        VBox container = null;
+
+        if (givenCanvasNode == null && canvasNode == null) {
             canvasNode = new CanvasDocumentationNode(DocumentationNode.UNUSED_NODE_ID, null);
         }
 
         if (imageCanvas == null) {
             imageCanvas = new ImageView();
 
-            if (canvasNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
+            if (givenCanvasNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
+                canvasNode = givenCanvasNode;
                 var image = new Image(new ByteArrayInputStream(canvasNode.getImageData()));
                 imageCanvas.setImage(image);
-
-                VBox container = new VBox();
-                container.getChildren().add(new Label("TechnicalDrawing"));
-                container.getChildren().add(imageCanvas);
-                vboxIOButtons.getChildren().add(container);
-
-                return;
             }
-        }
 
-        VBox container = new VBox();
-        container.getChildren().add(new Label("TechnicalDrawing"));
-        container.getChildren().add(imageCanvas);
-        vboxIOButtons.getChildren().add(container);
+            container = new VBox();
+            container.getChildren().add(new Label("TechnicalDrawing"));
+            container.getChildren().add(imageCanvas);
+            vboxIOButtons.getChildren().add(container);
+            vboxIOButtons.getChildren().add(new Label("\n\n"));
+
+            return;
+        }
 
         handleOpenCanvas();
 
         try (ByteArrayOutputStream s = new ByteArrayOutputStream();) {
             BufferedImage bImage = SwingFXUtils.fromFXImage(imageCanvas.getImage(), null);
             ImageIO.write(bImage, "png", s);
-            
-            byte[] data  = s.toByteArray();
+
+            byte[] data = s.toByteArray();
 
             canvasNode.setImageData(data);
 
@@ -247,11 +257,11 @@ public class DocViewController implements Initializable {
         }
 
         nodeMap.put(container, canvasNode);
-
-        System.out.println(canvasNode.getImageData());
-
     }
 
+    /**
+     * Oppens canvas drawing program in a new window and gives it an imageview that canvas can set an image in
+     */
     private void handleOpenCanvas() {
         try {
             Stage popupStage = new Stage();

@@ -36,11 +36,11 @@ public class PrintPdfManager {
             PdfWriter.getInstance(document, new FileOutputStream(path + File.separator + "nameDOCtestForPrinting.PDF"));
             document.open();
 
-            var FontTitle = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+            var fontTitle = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
 
-            var projectName = new Paragraph(project.getName(), FontTitle);
-            var title = new Paragraph(documentation.getName(), FontTitle);
-            var customer = new Paragraph(project.getCustomer().getName(), FontTitle);
+            var projectName = new Paragraph(project.getName(), fontTitle);
+            var title = new Paragraph(documentation.getName(), fontTitle);
+            var customer = new Paragraph(project.getCustomer().getName(), fontTitle);
 
             projectName.setAlignment(Element.ALIGN_CENTER);
             title.setAlignment(Element.ALIGN_CENTER);
@@ -82,7 +82,6 @@ public class PrintPdfManager {
                     document.add(table);
 
                 } else if (node instanceof DocumentationPictureNode) {
-                    //TODO Print images and their tittle
                     var imgPar = new Paragraph(((DocumentationPictureNode) node).getPictureTitle());
                     var imageData = ((DocumentationPictureNode) node).getImageData();
 
@@ -95,16 +94,19 @@ public class PrintPdfManager {
                     document.add(new Paragraph("\n"));
 
                 } else if (node instanceof CanvasDocumentationNode){
-                    var imgPar = new Paragraph("\n\n Technical Drawing");
+                    document.newPage();
+
+                    var imgPar = new Paragraph("\n\n Technical Drawing\n", fontTitle);
                     var imageData = ((CanvasDocumentationNode) node).getImageData();
 
                     Image img = Image.getInstance(imageData);
-                    img.scaleAbsolute(300,300);
+                    img.scaleAbsolute(540,300);
                     img.setSpacingAfter(10);
 
                     document.add(imgPar);
                     document.add(img);
                     document.add(new Paragraph("\n"));
+                    document.newPage();
                 }
             }
 

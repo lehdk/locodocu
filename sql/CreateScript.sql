@@ -89,6 +89,12 @@ CREATE TABLE [DocumentationPictureNode] (
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
 );
 
+CREATE TABLE [DocumentationCanvasNode] (
+    [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [Data] VARBINARY(MAX),
+    [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
+);
+
 CREATE TABLE [DatabaseLog] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
     [UserId] INT,
