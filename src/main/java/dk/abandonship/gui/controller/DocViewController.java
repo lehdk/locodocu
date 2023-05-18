@@ -4,7 +4,6 @@ import dk.abandonship.Main;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.documetationNodes.*;
-import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.controller.PopUpController.CreateDocController;
 import dk.abandonship.gui.controller.PopUpController.DrawingController;
 import dk.abandonship.gui.model.ProjectModel;
@@ -231,26 +230,37 @@ public class DocViewController implements Initializable {
                 canvasNode = givenCanvasNode;
                 var image = new Image(new ByteArrayInputStream(canvasNode.getImageData()));
                 imageCanvas.setImage(image);
-                container = new VBox();
-                container.getChildren().add(new Label("TechnicalDrawing"));
-                container.getChildren().add(imageCanvas);
-                vboxIOButtons.getChildren().add(container);
-                vboxIOButtons.getChildren().add(new Label("\n\n"));
+
+                createCanvasContainer(container);
                 return;
             }
-
-            container = new VBox();
-            container.getChildren().add(new Label("TechnicalDrawing"));
-            container.getChildren().add(imageCanvas);
-            vboxIOButtons.getChildren().add(container);
-            vboxIOButtons.getChildren().add(new Label("\n\n"));
-
-
+            createCanvasContainer(container);
         }
 
         handleOpenCanvas();
 
-        try (ByteArrayOutputStream s = new ByteArrayOutputStream();) {
+        convertCanvasToByte();
+
+        nodeMap.put(container, canvasNode);
+    }
+
+    /**
+     * Creates a new container for technical drawing to store data
+     * @param container be null, otherwise container will be overwritten
+     */
+    private void createCanvasContainer(VBox container){
+        container = new VBox();
+        container.getChildren().add(new Label("TechnicalDrawing"));
+        container.getChildren().add(imageCanvas);
+        vboxIOButtons.getChildren().add(container);
+        vboxIOButtons.getChildren().add(new Label("\n\n"));
+    }
+
+    /**
+     * Takes the image from the canvas imageview and convert  to bytes that can be stored in a canvas node
+     */
+    private void convertCanvasToByte(){
+        try (ByteArrayOutputStream s = new ByteArrayOutputStream()) {
             BufferedImage bImage = SwingFXUtils.fromFXImage(imageCanvas.getImage(), null);
             ImageIO.write(bImage, "png", s);
 
@@ -262,8 +272,6 @@ public class DocViewController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        nodeMap.put(container, canvasNode);
     }
 
     /**
