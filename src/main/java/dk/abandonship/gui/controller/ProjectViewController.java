@@ -38,6 +38,9 @@ public class ProjectViewController implements Initializable {
     @FXML private TableColumn<Project, String> projectName, projectAddress, projectPostalCode, customerName,  docCount, createdAt;
     @FXML
     private HBox buttonsHBox;
+
+    private Button openProjectButton, assignedTechniciansButton;
+
     @FXML
     private TableView<Project> projectTableView;
 
@@ -56,14 +59,28 @@ public class ProjectViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        projectTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        projectTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateSelectedDisabledButtons());
+        openProjectButton = new Button("Open Project");
+        openProjectButton.setDisable(true);
+        openProjectButton.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        openProjectButton.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        openProjectButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(projectTableView.getSelectionModel().getSelectedItem()));
+        buttonsHBox.getChildren().add(openProjectButton);
 
-        setOpenProjectBtn();
+        assignedTechniciansButton = new Button("Assign Technicians");
+        assignedTechniciansButton.setDisable(true);
+        assignedTechniciansButton.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        assignedTechniciansButton.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        assignedTechniciansButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(projectTableView.getSelectionModel().getSelectedItem()));
+
+        projectTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        projectTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            openProjectButton.setDisable(newSelection == null);
+            assignedTechniciansButton.setDisable(newSelection == null);
+        });
 
         if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
             setNewProjectBtn();
-            setAssignBtn();
+            buttonsHBox.getChildren().add(assignedTechniciansButton);
         }
 
         buttonsHBox.setSpacing(15);
@@ -76,30 +93,12 @@ public class ProjectViewController implements Initializable {
         });
     }
 
-    private void updateSelectedDisabledButtons() {
-    }
-
-    private void setOpenProjectBtn(){
-        Button btn = new Button("Open Project");
-        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(projectTableView.getSelectionModel().getSelectedItem()));
-        buttonsHBox.getChildren().add(btn);
-    }
-
     private void setNewProjectBtn() {
 
         Button btn = new Button("Add New Project");
         btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
         btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
-        buttonsHBox.getChildren().add(btn);
-    }
-    private void setAssignBtn() {
-        Button btn = new Button("Assign Technicians");
-        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(projectTableView.getSelectionModel().getSelectedItem()));
         buttonsHBox.getChildren().add(btn);
     }
 
