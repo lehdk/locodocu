@@ -225,7 +225,7 @@ public class ProjectViewController implements Initializable {
 
     /**
      * Set doubleClick to open a doc on the project Tableview
-     * @param mouseEvent click from mouse on a item in table
+     * @param mouseEvent click from mouse on an item in table
      */
     public void openItem(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) { //Checking double click

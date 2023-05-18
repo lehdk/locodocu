@@ -8,12 +8,12 @@
    <children>
       <HBox alignment="CENTER_RIGHT">
          <children>
+            <CheckBox fx:id="onlyShowAssigned" mnemonicParsing="false" selected="true" text="Only show assigned" />
             <TextField fx:id="fieldSearch" promptText="Search Field">
                <HBox.margin>
                   <Insets left="15.0" right="5.0" />
                </HBox.margin>
             </TextField>
-            <CheckBox fx:id="onlyShowAssigned" mnemonicParsing="false" selected="true" text="Only show assigned" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" top="10.0" />
