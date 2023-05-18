@@ -3,6 +3,7 @@ package dk.abandonship.dataaccess;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.documetationNodes.CanvasDocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
@@ -220,6 +221,68 @@ public class DocumentationDatabaseDAO implements IDocumentationDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public CanvasDocumentationNode createCanvasNode(CanvasDocumentationNode node, Documentation doc) throws SQLException {
+        try (var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [DocumentationCanvasNode] ([DocumentationId], [Data]) VALUES (?,?);";
+
+            var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, doc.getId());
+            statement.setBytes(2, node.getImageData());
+
+            statement.executeUpdate();
+
+            try(var resultSet = statement.getGeneratedKeys()) {
+                if(resultSet.next()) {
+                    node.setId(resultSet.getInt(1));
+
+                    return node;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<CanvasDocumentationNode> getCanvasNodes(Documentation documentation) throws SQLException {
+        List<CanvasDocumentationNode> picNodes = new ArrayList<>();
+
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "SELECT * FROM [DocumentationCanvasNode] WHERE [DocumentationId]=?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, documentation.getId());
+
+            var resultSet = statement.executeQuery();
+
+            while(resultSet.next()) {
+                picNodes.add(new CanvasDocumentationNode(
+                                resultSet.getInt("Id"),
+                                resultSet.getBytes("Data")
+                        )
+                );
+            }
+        }
+
+        return picNodes;
+    }
+
+    @Override
+    public boolean updateCanvasNode(CanvasDocumentationNode node) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql ="UPDATE [DocumentationCanvasNode] SET[Data] = ? WHERE [Id] = ?;";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setBytes(1, node.getImageData());
+            statement.setInt(2, node.getId());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows == 1;
+        }
     }
 
     @Override

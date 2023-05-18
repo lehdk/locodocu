@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS DocumentationLoginNode;
 DROP TABLE IF EXISTS DocumentationPictureNode;
 DROP TABLE IF EXISTS DocumentationTextNode;
 DROP TABLE IF EXISTS ProjectDocumentationRelation;
+DROP TABLE IF EXISTS DocumentationCanvasNode;
 DROP TABLE IF EXISTS Documentation;
 DROP TABLE IF EXISTS Project;
 DROP TABLE IF EXISTS Customer;
@@ -85,6 +86,12 @@ CREATE TABLE [DocumentationLoginNode] (
 CREATE TABLE [DocumentationPictureNode] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
     [Title] NVARCHAR(50),
+    [Data] VARBINARY(MAX),
+    [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
+);
+
+CREATE TABLE [DocumentationCanvasNode] (
+    [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
     [Data] VARBINARY(MAX),
     [DocumentationId] INT FOREIGN KEY REFERENCES [Documentation](Id) NOT NULL
 );

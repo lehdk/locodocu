@@ -7,6 +7,7 @@ import dk.abandonship.dataaccess.interfaces.IDatabaseLogDAO;
 import dk.abandonship.dataaccess.interfaces.IDocumentationDAO;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.documetationNodes.CanvasDocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
@@ -162,6 +163,45 @@ public class DocumentationDatabaseDAOProxy implements IDocumentationDAO {
         databaseLogDAO.insertToLog(
                 "createNewDoc",
                 new Gson().toJson(docName) + new Gson().toJson(project),
+                new Gson().toJson(result)
+        );
+
+        return result;
+    }
+
+    @Override
+    public CanvasDocumentationNode createCanvasNode(CanvasDocumentationNode node, Documentation doc) throws SQLException{
+        var result = documentationDAO.createCanvasNode(node, doc);
+
+        databaseLogDAO.insertToLog(
+                "createCanvasNode",
+                new Gson().toJson(node) + new Gson().toJson(doc),
+                new Gson().toJson(result)
+        );
+
+        return result;
+    }
+
+    @Override
+    public List<CanvasDocumentationNode> getCanvasNodes(Documentation documentation) throws SQLException {
+        var result = documentationDAO.getCanvasNodes(documentation);
+
+        databaseLogDAO.insertToLog(
+                "getCanvasNodes",
+                new Gson().toJson(documentation) + new Gson().toJson(documentation),
+                new Gson().toJson(result)
+        );
+
+        return result;
+    }
+
+    @Override
+    public boolean updateCanvasNode(CanvasDocumentationNode node) throws SQLException{
+        var result = documentationDAO.updateCanvasNode(node);
+
+        databaseLogDAO.insertToLog(
+                "updateCanvasNode",
+                new Gson().toJson(node) + new Gson().toJson(node),
                 new Gson().toJson(result)
         );
 

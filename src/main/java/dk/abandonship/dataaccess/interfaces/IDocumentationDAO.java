@@ -2,6 +2,7 @@ package dk.abandonship.dataaccess.interfaces;
 
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
+import dk.abandonship.entities.documetationNodes.CanvasDocumentationNode;
 import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
 import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
 import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
@@ -21,9 +22,9 @@ public interface IDocumentationDAO {
     Set<Documentation> getDocumentationForProject(Project project) throws SQLException;
 
     /**
-     * returns textfriel½ds  for given document
+     * returns text fields  for given document
      * @param documentation the document you want the text fields from
-     * @return textfields from the database
+     * @return text fields from the database
      * @throws SQLException If an error occurred while getting from data source.
      */
     List<DocumentationTextFieldNode> getDocumentationTextField(Documentation documentation) throws SQLException;
@@ -106,5 +107,33 @@ public interface IDocumentationDAO {
      * @param project the project the doc should be connected to
      * @throws SQLException If an error occurred while saving to data source.
      */
+
     Documentation createNewDoc(String docName, Project project) throws SQLException;
+
+
+    /**
+     * Creates new canvas in DB
+     * @param node Node including data from img given by canvas
+     * @param doc the document the canvas img should be connected to
+     * @return return a canvas node with id given by DB
+     * @throws SQLException If an error occurred while saving to data source.
+     */
+    CanvasDocumentationNode createCanvasNode(CanvasDocumentationNode node, Documentation doc) throws SQLException;
+
+    /**
+     * returns canvas from the database
+     * @param documentation the document that should come a canvas from
+     * @return list of canvas nodes.
+     * @throws SQLException If an error occurred while saving to data source.
+     */
+    List<CanvasDocumentationNode> getCanvasNodes(Documentation documentation) throws SQLException;
+
+
+    /**
+     * Updates the existing canvas node in DB based on ID
+     * @param node node should contain the ID of the Canvas that should be updated
+     * @return a true boolean if it successfully updated the canvas
+     * @throws SQLException If an error occurred while saving to data source.
+     */
+    boolean updateCanvasNode(CanvasDocumentationNode node) throws SQLException;
 }

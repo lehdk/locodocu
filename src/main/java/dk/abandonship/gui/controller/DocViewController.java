@@ -3,15 +3,14 @@ package dk.abandonship.gui.controller;
 import dk.abandonship.Main;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.Project;
-import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
-import dk.abandonship.entities.documetationNodes.DocumentationNode;
-import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
-import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
+import dk.abandonship.entities.documetationNodes.*;
 import dk.abandonship.gui.controller.PopUpController.CreateDocController;
+import dk.abandonship.gui.controller.PopUpController.DrawingController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,22 +26,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
 public class DocViewController implements Initializable {
-    @FXML private ScrollPane scrollPane;
-    @FXML private VBox vboxModifyButtons, vboxIOButtons;
-    @FXML private ComboBox<Documentation> docs;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox vboxModifyButtons, vboxIOButtons;
+    @FXML
+    private ComboBox<Documentation> docs;
     private Project project;
     private ProjectModel projectModel;
     private ControllerAssistant controllerAssistant;
     private LinkedHashMap<Node, DocumentationNode> nodeMap;
+    private ImageView imageCanvas;
+    private CanvasDocumentationNode canvasNode;
 
     private boolean userIsAssignedTechnician = false;
 
@@ -73,9 +76,12 @@ public class DocViewController implements Initializable {
 
         vboxModifyButtons.getChildren().add(hBox);
         vboxModifyButtons.getChildren().add(new Label("\n\n"));
+
+        imageCanvas = null;
+        canvasNode = null;
     }
 
-    public void setProject(Project project){
+    public void setProject(Project project) {
         this.project = project;
         docs.setItems(FXCollections.observableArrayList(project.getDocumentations()));
     }
@@ -100,13 +106,15 @@ public class DocViewController implements Initializable {
 
         nodeMap = new LinkedHashMap<>();
 
-        if(userIsAssignedTechnician) {
+        if (userIsAssignedTechnician) {
             Button btnAddTextField = new Button("Add Text Field");
             Button btnAddLogin = new Button("Add Login");
             Button btnAddImage = new Button("Add Image");
+            Button btnAddDrawing = new Button("add technicalDrawing");
             btnAddTextField.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addTextFieldForEdit(null));
             btnAddLogin.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleAddLogin(null));
             btnAddImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleAddPicture(null));
+            btnAddDrawing.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> handleCanvas(null));
             Button btnSave = new Button("Save");
             Button btnCancel = new Button("Cancel");
             btnSave.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
@@ -115,6 +123,7 @@ public class DocViewController implements Initializable {
             hBox.getChildren().add(btnAddTextField);
             hBox.getChildren().add(btnAddLogin);
             hBox.getChildren().add(btnAddImage);
+            hBox.getChildren().add(btnAddDrawing);
 
             savAndCancelBox.getChildren().add(btnSave);
             savAndCancelBox.getChildren().add(btnCancel);
@@ -139,16 +148,23 @@ public class DocViewController implements Initializable {
         displayExistingDocumentationNodes(documentation);
     }
 
+    /**
+     * opens all nodes in fxml
+     *
+     * @param documentation should contain a set of nodes
+     */
     private void displayExistingDocumentationNodes(Documentation documentation) {
-        if(documentation == null) return;
+        if (documentation == null) return;
 
-        for (DocumentationNode dn: documentation.getDocumentationNodes()) {
-            if (dn instanceof DocumentationTextFieldNode){
+        for (DocumentationNode dn : documentation.getDocumentationNodes()) {
+            if (dn instanceof DocumentationTextFieldNode) {
                 addTextFieldForEdit((DocumentationTextFieldNode) dn);
-            } else if (dn instanceof DocumentationLogInNode){
+            } else if (dn instanceof DocumentationLogInNode) {
                 handleAddLogin((DocumentationLogInNode) dn);
-            } else if (dn instanceof DocumentationPictureNode){
+            } else if (dn instanceof DocumentationPictureNode) {
                 handleAddPicture((DocumentationPictureNode) dn);
+            } else if (dn instanceof CanvasDocumentationNode) {
+                handleCanvas((CanvasDocumentationNode) dn);
             }
         }
     }
@@ -156,13 +172,13 @@ public class DocViewController implements Initializable {
     private void printPDF() {
         try {
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            Stage stage  = (Stage) scrollPane.getScene().getWindow();
+            Stage stage = (Stage) scrollPane.getScene().getWindow();
 
             File selectedDirectory = directoryChooser.showDialog(stage);
 
-            if(selectedDirectory == null){
+            if (selectedDirectory == null) {
                 controllerAssistant.displayAlert("No Path Fund");
-            }else{
+            } else {
                 System.out.println(selectedDirectory.getAbsolutePath());
                 projectModel.printPdf(nodeMap, selectedDirectory.getPath(), project, docs.getValue());
                 controllerAssistant.displayAlert("Successfully printedPDF");
@@ -196,12 +212,99 @@ public class DocViewController implements Initializable {
     }
 
     /**
+     * Opens a canvas, and sets a canvas if it pulls it from DB
+     *
+     * @param givenCanvasNode node of data for canvas, should be null if it does not contain data
+     */
+    private void handleCanvas(CanvasDocumentationNode givenCanvasNode) {
+        VBox container = null;
+
+        if (givenCanvasNode == null && canvasNode == null) {
+            canvasNode = new CanvasDocumentationNode(DocumentationNode.UNUSED_NODE_ID, null);
+        }
+
+        if (imageCanvas == null) {
+            imageCanvas = new ImageView();
+
+            if (givenCanvasNode != null && givenCanvasNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
+                canvasNode = givenCanvasNode;
+                var image = new Image(new ByteArrayInputStream(canvasNode.getImageData()));
+                imageCanvas.setImage(image);
+
+                createCanvasContainer(container);
+                return;
+            }
+            createCanvasContainer(container);
+        }
+
+        handleOpenCanvas();
+
+        convertCanvasToByte();
+
+        nodeMap.put(container, canvasNode);
+    }
+
+    /**
+     * Creates a new container for technical drawing to store data
+     * @param container be null, otherwise container will be overwritten
+     */
+    private void createCanvasContainer(VBox container){
+        container = new VBox();
+        container.getChildren().add(new Label("TechnicalDrawing"));
+        container.getChildren().add(imageCanvas);
+        vboxIOButtons.getChildren().add(container);
+        vboxIOButtons.getChildren().add(new Label("\n\n"));
+    }
+
+    /**
+     * Takes the image from the canvas imageview and convert  to bytes that can be stored in a canvas node
+     */
+    private void convertCanvasToByte(){
+        try (ByteArrayOutputStream s = new ByteArrayOutputStream()) {
+            BufferedImage bImage = SwingFXUtils.fromFXImage(imageCanvas.getImage(), null);
+            ImageIO.write(bImage, "png", s);
+
+            byte[] data = s.toByteArray();
+
+            canvasNode.setImageData(data);
+
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Oppens canvas drawing program in a new window and gives it an imageview that canvas can set an image in
+     */
+    private void handleOpenCanvas() {
+        try {
+            Stage popupStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/Draw.fxml"));
+            Parent root = loader.load();
+            Scene popupScene = new Scene(root);
+
+            DrawingController drawingController = loader.getController();
+            drawingController.setImageView(imageCanvas);
+
+            popupStage.setScene(popupScene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * creates a text area
+     *
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
     private void addTextFieldForEdit(DocumentationTextFieldNode docNode) {
 
-        if(docNode == null) {
+        if (docNode == null) {
             docNode = new DocumentationTextFieldNode(DocumentationNode.UNUSED_NODE_ID, "");
         }
 
@@ -211,18 +314,19 @@ public class DocViewController implements Initializable {
         vboxIOButtons.getChildren().add(field);
         vboxIOButtons.getChildren().add(new Label("\n\n")); //Mini spacing
 
-        if(docNode.getId() != DocumentationNode.UNUSED_NODE_ID){
+        if (docNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
             field.setText(docNode.getText());
         }
     }
 
     /**
      * Creates a login in a vbox
+     *
      * @param docNode a docNode that can contain exiting data, should be null if it's a new field
      */
-    private void handleAddLogin(DocumentationLogInNode docNode){
+    private void handleAddLogin(DocumentationLogInNode docNode) {
 
-        if(docNode == null) {
+        if (docNode == null) {
             docNode = new DocumentationLogInNode(DocumentationNode.UNUSED_NODE_ID, "", "", "");
         }
 
@@ -257,10 +361,11 @@ public class DocViewController implements Initializable {
 
     /**
      * Adds a picture node to the documentation.
+     *
      * @param pictureNode The picture node to add. Set to null if this is a new field.
      */
     private void handleAddPicture(DocumentationPictureNode pictureNode) {
-        if(pictureNode == null) {
+        if (pictureNode == null) {
             pictureNode = new DocumentationPictureNode(DocumentationNode.UNUSED_NODE_ID, "", null);
         }
 
@@ -291,11 +396,12 @@ public class DocViewController implements Initializable {
 
     /**
      * Updates the shown image
-     * @param imageView The image view to update
+     *
+     * @param imageView   The image view to update
      * @param pictureNode The image to show.
      */
     private void updateShownImage(ImageView imageView, DocumentationPictureNode pictureNode) {
-        if(pictureNode.getImageData() == null) return;
+        if (pictureNode.getImageData() == null) return;
 
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
@@ -306,8 +412,9 @@ public class DocViewController implements Initializable {
 
     /**
      * Opens a file chooser and saves the image data into the DocumentationPictureNode.
+     *
      * @param pictureNode The picture node to set image data to.
-     * @param imageView The associated image view.
+     * @param imageView   The associated image view.
      */
     private void handleSetImage(DocumentationPictureNode pictureNode, ImageView imageView) {
         FileChooser fileChooser = new FileChooser();
@@ -317,12 +424,12 @@ public class DocViewController implements Initializable {
         Stage stage = (Stage) scrollPane.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
 
-        if(selectedFile == null || !selectedFile.canRead()) {
+        if (selectedFile == null || !selectedFile.canRead()) {
             controllerAssistant.displayAlert("Could not read the chose image");
             return;
         }
 
-        try(var fileInputStream = new FileInputStream(selectedFile)) {
+        try (var fileInputStream = new FileInputStream(selectedFile)) {
             var imageData = fileInputStream.readAllBytes();
 
             pictureNode.setImageData(imageData);
@@ -333,7 +440,7 @@ public class DocViewController implements Initializable {
         updateShownImage(imageView, pictureNode);
     }
 
-    private void createNewDoc(){
+    private void createNewDoc() {
         try {
             Stage popupStage = new Stage();
 
