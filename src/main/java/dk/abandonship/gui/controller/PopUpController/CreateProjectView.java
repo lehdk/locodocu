@@ -34,16 +34,19 @@ public class CreateProjectView implements Initializable {
             CustomerModel customerModel = new CustomerModel();
 
             comboBoxCustomer.setItems(customerModel.getCustomerObservableList());
-            comboBoxCustomer.valueProperty().addListener(event -> setPostalCode());
+            comboBoxCustomer.valueProperty().addListener(event -> setAddressInformation());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
     }
 
-    private void setPostalCode(){
+    private void setAddressInformation(){
         if (!fieldAddress.getText().isEmpty()) return;
 
-        fieldAddress.setText(comboBoxCustomer.getValue().getAddress());
+        var selectedCustomer = comboBoxCustomer.getValue();
+
+        fieldAddress.setText(selectedCustomer.getAddress());
+        fieldPostalCode.setText(selectedCustomer.getPostalCode());
     }
 
     private boolean isDataValid(){
