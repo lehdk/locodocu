@@ -12,12 +12,12 @@
    <children>
       <HBox alignment="CENTER_RIGHT">
          <children>
-            <TextField fx:id="fieldSearch" onAction="#search" promptText="Search Field">
+            <TextField fx:id="fieldSearch" promptText="Search Field">
                <HBox.margin>
                   <Insets left="15.0" right="5.0" />
                </HBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#search" text="🔎">
+            <Button mnemonicParsing="false" onAction="#filterProjects" text="🔎">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

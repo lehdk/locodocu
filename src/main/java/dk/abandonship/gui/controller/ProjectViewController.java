@@ -9,6 +9,9 @@ import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import dk.abandonship.utils.DefaultRoles;
+import javafx.animation.PauseTransition;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +25,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -64,6 +68,12 @@ public class ProjectViewController implements Initializable {
 
         buttonsHBox.setSpacing(15);
         setProjects();
+
+        var pauseTransition = new PauseTransition(Duration.millis(150));
+        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(e -> filterProjects());
+            pauseTransition.playFromStart();
+        });
     }
 
     private void updateSelectedDisabledButtons() {
@@ -105,8 +115,7 @@ public class ProjectViewController implements Initializable {
         docCount.setCellValueFactory(new PropertyValueFactory<>("documentations"));
         createdAt.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
 
-        projectTableView.setItems(projectModel.getProjectObservableList());
-
+        filterProjects();
     }
 
     public void isOld(){
@@ -224,9 +233,32 @@ public class ProjectViewController implements Initializable {
 
 
     /**
-     * serchesin model for the prompt in the fieldSearch
+     * Refreshes the projects with the selected filters
      */
-    public void search() {
-        projectTableView.setItems(projectModel.getSearchResult(fieldSearch.getText().toLowerCase()));
+    public void filterProjects() {
+        String filterString = fieldSearch.getText().toLowerCase();
+        var filteredList = new FilteredList<>(projectModel.getProjectObservableList());
+        filteredList.setPredicate(project -> {
+            boolean containsProjectName = project.getName().toLowerCase().contains(filterString);
+            if(containsProjectName) return true;
+
+            boolean containsCustomerName = project.getCustomer().getName().toLowerCase().contains(filterString);
+            if(containsCustomerName) return true;
+
+            boolean containsPostalCode = project.getPostalCode().contains(filterString);
+            if(containsPostalCode) return true;
+
+            boolean containsProjectAddress = project.getAddress().toLowerCase().contains(filterString);
+            if(containsProjectAddress) return true;
+
+            boolean containsDocumentationName = project.getDocumentations().stream().anyMatch(d -> d.getName().toLowerCase().contains(filterString));
+            if(containsDocumentationName) return true;
+
+            return false;
+        });
+
+        var sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(projectTableView.comparatorProperty());
+        projectTableView.setItems(sortedList);
     }
 }
