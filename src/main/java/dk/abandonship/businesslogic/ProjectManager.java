@@ -6,12 +6,9 @@ import dk.abandonship.dataaccess.proxies.DocumentationDatabaseDAOProxy;
 import dk.abandonship.dataaccess.proxies.ProjectDatabaseDAOProxy;
 import dk.abandonship.entities.Documentation;
 import dk.abandonship.entities.User;
-import dk.abandonship.entities.documetationNodes.DocumentationLogInNode;
-import dk.abandonship.entities.documetationNodes.DocumentationNode;
+import dk.abandonship.entities.documetationNodes.*;
 import dk.abandonship.entities.Project;
 import dk.abandonship.entities.ProjectDTO;
-import dk.abandonship.entities.documetationNodes.DocumentationPictureNode;
-import dk.abandonship.entities.documetationNodes.DocumentationTextFieldNode;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -34,6 +31,7 @@ public class ProjectManager {
 
     /**
      * Gets all the projects in the datasource
+     *
      * @return A list of the projects
      * @throws SQLException If an error occurred when accessing the database
      */
@@ -58,6 +56,7 @@ public class ProjectManager {
 
     /**
      * Saves the DocumentationTextNode in the data source
+     *
      * @param set The Map Entry containing the fx node and DocumentationNode
      * @param doc The documentation you want to save the node to
      * @throws SQLException If an error occurred in the saving process.
@@ -65,12 +64,12 @@ public class ProjectManager {
     private void saveDocumentationTextNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
         if (set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
             // Needs to be created
-            var result = documentationDAO.createTextNode(((TextArea)set.getKey()).getText(), doc);
+            var result = documentationDAO.createTextNode(((TextArea) set.getKey()).getText(), doc);
             set.setValue(result);
             doc.addDocumentationNode(result);
         } else {
             // Needs to be updated
-            String text = ((TextArea)set.getKey()).getText();
+            String text = ((TextArea) set.getKey()).getText();
             int id = set.getValue().getId();
             documentationDAO.updateTextNode(text, id);
 
@@ -80,15 +79,15 @@ public class ProjectManager {
     }
 
     private void saveDocumentationLoginNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
-        var children = ((VBox)set.getKey()).getChildren();
-        String device = ((TextField)children.get(1)).getText();
-        String username = ((TextField)children.get(3)).getText();
-        String password = ((TextField)children.get(5)).getText();
+        var children = ((VBox) set.getKey()).getChildren();
+        String device = ((TextField) children.get(1)).getText();
+        String username = ((TextField) children.get(3)).getText();
+        String password = ((TextField) children.get(5)).getText();
 
-        if(set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
+        if (set.getValue().getId() == DocumentationNode.UNUSED_NODE_ID) {
             // Needs to be created
             var result = documentationDAO.createLoginNode(doc, device, username, password);
-            if(result == null) {
+            if (result == null) {
                 System.err.println("Could not save the node to the data source!");
                 return;
             }
@@ -97,7 +96,7 @@ public class ProjectManager {
         } else {
             // Needs to be updated
             boolean updated = documentationDAO.updateLoginNode(set.getValue().getId(), device, username, password);
-            if(!updated) return;
+            if (!updated) return;
 
             var currentDocumentationNode = (DocumentationLogInNode) set.getValue();
             currentDocumentationNode.setDevice(device);
@@ -109,40 +108,62 @@ public class ProjectManager {
     private void saveDocumentationPictureNode(Map.Entry<Node, DocumentationNode> set, Documentation doc) throws SQLException {
         var node = (DocumentationPictureNode) set.getValue();
 
-        var children = ((VBox)set.getKey()).getChildren();
-        String title = ((TextField)children.get(1)).getText();
+        var children = ((VBox) set.getKey()).getChildren();
+        String title = ((TextField) children.get(1)).getText();
 
-        if(node.getId() == DocumentationNode.UNUSED_NODE_ID) {
+        if (node.getId() == DocumentationNode.UNUSED_NODE_ID) {
             documentationDAO.createPictureNode(node, title, doc);
         } else {
             var success = documentationDAO.updatePictureNode(node, title);
-            if(success) node.setPictureTitle(title);
+            if (success) node.setPictureTitle(title);
         }
     }
 
-    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception{
+    private void saveCanvasDocumentationNode(Map.Entry<Node, DocumentationNode> set, Documentation doc)  throws Exception{
+        var node = (CanvasDocumentationNode) set.getValue();
+
+
+        if (node.getId() == DocumentationNode.UNUSED_NODE_ID) {
+            documentationDAO.createCanvasNode(node, doc);
+        } else {
+            documentationDAO.updateCanvasNode(node);
+        }
+    }
+
+    /**
+     * sort nodes to be sved in DB based on the node type
+     * @param nodeMap a map containing nodes
+     * @param doc document nodes should be saved to
+     * @throws Exception
+     */
+    public void saveDoc(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception {
         for (var set : nodeMap.entrySet()) {
-            if(set.getValue() instanceof DocumentationTextFieldNode){
+            if (set.getValue() instanceof DocumentationTextFieldNode) {
                 saveDocumentationTextNode(set, doc);
             } else if (set.getValue() instanceof DocumentationLogInNode) {
                 saveDocumentationLoginNode(set, doc);
-            } else if (set.getValue() instanceof  DocumentationPictureNode) {
+            } else if (set.getValue() instanceof DocumentationPictureNode) {
                 saveDocumentationPictureNode(set, doc);
+            } else if (set.getValue() instanceof CanvasDocumentationNode) {
+                saveCanvasDocumentationNode(set, doc);
             }
         }
     }
 
     /**
      * Sets data on the given object
+     *
      * @param documentation The documentation you want the data from.
      */
     public void loadDocumentationData(Documentation documentation) throws SQLException {
 
-        if(documentation == null) return;
+        if (documentation == null) return;
 
         List<DocumentationTextFieldNode> docTextFields = documentationDAO.getDocumentationTextField(documentation);
         List<DocumentationLogInNode> docLog = documentationDAO.getDocumentationLogIn(documentation);
         List<DocumentationPictureNode> picNode = documentationDAO.getPictureNode(documentation);
+        List<CanvasDocumentationNode> canvasNode = documentationDAO.getCanvasNodes(documentation);
+
 
         for (DocumentationNode dn : docTextFields) {
             documentation.addDocumentationNode(dn);
@@ -155,6 +176,10 @@ public class ProjectManager {
         for (var pn : picNode) {
             documentation.addDocumentationNode(pn);
         }
+
+        for (var cn : canvasNode){
+            documentation.addDocumentationNode(cn);
+        }
     }
 
     public void setTechnicians(List<User> selected, Project project) throws Exception {
@@ -166,7 +191,7 @@ public class ProjectManager {
         project.getDocumentations().add(doc);
     }
 
-    public void deleteProjects(List<Project> projects) throws Exception{
+    public void deleteProjects(List<Project> projects) throws Exception {
         projectDAO.deleteMultipleProjects(projects);
     }
 }

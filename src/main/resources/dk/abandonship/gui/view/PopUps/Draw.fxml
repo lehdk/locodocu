@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1440.0" style="-fx-background-color: #3D445C;" styleClass="Scroll-Pane" stylesheets="@../../StyleSheets/IndexStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.PopUpController.DrawingController">
+   <bottom>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="btnSaveToDoc" mnemonicParsing="false" onAction="#handleSaveToDoc" text="Save To Doc" GridPane.columnIndex="1" />
+            <Button fx:id="btnClose" mnemonicParsing="false" onAction="#handelClose" text="Close" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="15.0" right="15.0" top="20.0" />
+         </BorderPane.margin>
+      </GridPane>
+   </bottom>
+   <left>
+      <GridPane prefHeight="370.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="tbnScreen" mnemonicParsing="false" onAction="#handleSelectMonitor" text="screen" />
+            <Button fx:id="btnSound" mnemonicParsing="false" onAction="#handleSelectSpeaker" text="sound" GridPane.rowIndex="1" />
+            <Button fx:id="btnWifi" mnemonicParsing="false" onAction="#handleSelectWifi" text="Wifi" GridPane.rowIndex="2" />
+            <Button fx:id="btnJunction" mnemonicParsing="false" onAction="#handleSelectJunction" text="Junction" GridPane.rowIndex="3" />
+         </children>
+         <BorderPane.margin>
+            <Insets left="10.0" right="10.0" />
+         </BorderPane.margin>
+      </GridPane>
+   </left>
+   <right>
+      <GridPane prefHeight="370.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="bntBrush" mnemonicParsing="false" onAction="#handleSelectLine" text="Brush" />
+            <Button fx:id="bntEraser" mnemonicParsing="false" onAction="#handleEraser" text="Eraser" GridPane.rowIndex="1" />
+         </children>
+         <BorderPane.margin>
+            <Insets left="10.0" right="10.0" />
+         </BorderPane.margin>
+      </GridPane>
+   </right>
+   <center>
+       <Pane fx:id="container" style="-fx-border-color: rgb(25, 25, 25); -fx-border-width: 5; -fx-border-style: solid;">
+         <Canvas fx:id="canvasDrawing" onDragDetected="#handleDrag" onMouseClicked="#canvasClick" onMouseDragged="#handleDrag" BorderPane.alignment="CENTER" />
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+       </Pane>
+   </center>
+</BorderPane>
