@@ -35,6 +35,7 @@
             <TableColumn fx:id="projectName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Name" />
             <TableColumn fx:id="customerName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="123.20001220703125" text="Customer" />
             <TableColumn fx:id="docCount" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Documentations" />
+            <TableColumn fx:id="createdAt" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Created At (UTC)" />
          </columns>
          <VBox.margin>
             <Insets />
