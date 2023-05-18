@@ -114,6 +114,7 @@ public class DocViewController implements Initializable {
 
             hBox.getChildren().add(btnAddTextField);
             hBox.getChildren().add(btnAddLogin);
+
             hBox.getChildren().add(btnAddImage);
 
             savAndCancelBox.getChildren().add(btnSave);
@@ -260,7 +261,8 @@ public class DocViewController implements Initializable {
      * @param pictureNode The picture node to add. Set to null if this is a new field.
      */
     private void handleAddPicture(DocumentationPictureNode pictureNode) {
-        if(pictureNode == null) {
+
+            if(pictureNode == null) {
             pictureNode = new DocumentationPictureNode(DocumentationNode.UNUSED_NODE_ID, "", null);
         }
 
@@ -271,6 +273,7 @@ public class DocViewController implements Initializable {
 
         container.getChildren().add(new Label("Title"));
         var titleTextField = new TextField();
+        titleTextField.setDisable(!userIsAssignedTechnician);
         container.getChildren().add(titleTextField);
 
         ImageView imageView = new ImageView();
@@ -280,7 +283,9 @@ public class DocViewController implements Initializable {
         var setImageButton = new Button("Set Image");
         DocumentationPictureNode finalDocNode = pictureNode;
         setImageButton.setOnAction(event -> handleSetImage(finalDocNode, imageView));
-        container.getChildren().add(setImageButton);
+
+        if(userIsAssignedTechnician)
+            container.getChildren().add(setImageButton);
 
         if (pictureNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
             titleTextField.setText(pictureNode.getPictureTitle());
