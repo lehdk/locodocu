@@ -36,7 +36,11 @@ public class ProjectModel {
     }
 
     public void createProject(ProjectDTO projectDTO) throws Exception{
-        projectManager.createProject(projectDTO);
+        var result = projectManager.createProject(projectDTO);
+
+        if(result == null) return;
+
+        projectObservableList.add(result);
     }
 
     public void saveToDB(LinkedHashMap<Node, DocumentationNode> nodeMap, Documentation doc) throws Exception {
@@ -65,7 +69,7 @@ public class ProjectModel {
      * @param text the thing the list should contain
      * @return a new observableList with data that matches the prompt
      */
-    public ObservableList getSearchResult(String text) {
+    public ObservableList<Project> getSearchResult(String text) {
         Stack<Project> searchList = new Stack<>();
 
         if (text.isEmpty()) return  projectObservableList;
@@ -85,15 +89,14 @@ public class ProjectModel {
             }
         }
 
-        ObservableList<Project> searchListObb = FXCollections.observableList(searchList);
-        return searchListObb;
+        return FXCollections.observableList(searchList);
     }
 
     /**
      * if projects documentations list contains a doc named after promt text
-     * @param project that should be checked for a specifik doc
+     * @param project that should be checked for a specific doc
      * @param text the name of document
-     * @return
+     * @return If the documentation contains the specified items
      */
     private boolean docContains(Project project, String text){
         for (var d : project.getDocumentations()) {

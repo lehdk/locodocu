@@ -47,6 +47,8 @@ CREATE TABLE [Customer] (
 CREATE TABLE [Project] (
     [Id] INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
     [Name] VARCHAR(255) NOT NULL,
+    [Address] VARCHAR(255) NOT NULL,
+    [PostalCode] VARCHAR(10) NOT NULL,
     [CreatedAt] DATETIME2 DEFAULT GETUTCDATE(),
     [CustomerId] INT FOREIGN KEY REFERENCES [Customer](Id) NOT NULL
 );
@@ -130,7 +132,7 @@ INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES
 -- Create fake project and documentation
 INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES ('Mærsk', '42424242', 'noreply@maersk.dk', 'Mærsk vej, 42, Fantasiby', '4242'); -- Id 1
 
-INSERT INTO [Project] ([Name], [CustomerId]) VALUES ('Det store blå skib', 1); -- Id 1
+INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId]) VALUES ('Det store blå skib', 'Duveddet vej 1', '6800', 1); -- Id 1
 
 INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (1, 3);
 
@@ -143,7 +145,7 @@ INSERT INTO [DocumentationPictureNode] ([DocumentationId], [Title], [Data]) VALU
 -- Fake documentation
 INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES ('Lego', '78491494', 'noreply@lego.dk', 'Lego vej, 420, Billund', '7190'); -- Id 2
 
-INSERT INTO [Project] ([Name], [CustomerId]) VALUES ('Lego House', 2); -- Id 2
+INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId]) VALUES ('Lego House', 'Yes vej 4', '8240', 2); -- Id 2
 
 INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (2, 3);
 
@@ -151,6 +153,6 @@ INSERT INTO [Documentation] ([Name]) VALUES ('Receptionen'); -- Id 2
 INSERT INTO [ProjectDocumentationRelation] ([ProjectId], [DocumentationId]) VALUES (2, 2);
 INSERT INTO [DocumentationTextNode] ([DocumentationId], [Text]) VALUES (2, 'Many lights');
 
-INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test1', 1, '2010-9-2');
-INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test2', 1, '2010-9-2');
-INSERT INTO [Project] ([Name],[CustomerId], [CreatedAt]) VALUES ('test3', 1, '2010-9-2');
+INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId], [CreatedAt]) VALUES ('test1', 'Vej 1', '6800', 1, '2010-9-2');
+INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId], [CreatedAt]) VALUES ('test2', 'Vej 1', '6800', 1, '2010-9-2');
+INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId], [CreatedAt]) VALUES ('test3', 'Vej 1', '6800', 1, '2010-9-2');

@@ -3,12 +3,12 @@ package dk.abandonship.gui.controller;
 import dk.abandonship.Main;
 import dk.abandonship.entities.Project;
 import dk.abandonship.gui.controller.PopUpController.AssignTechController;
+import dk.abandonship.gui.controller.PopUpController.CreateProjectView;
 import dk.abandonship.gui.controller.PopUpController.OldProjectController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import dk.abandonship.utils.DefaultRoles;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,29 +19,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.net.URL;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
     @FXML private TextField fieldSearch;
-    @FXML private TableColumn projectName, customerName,  docCount;
+    @FXML private TableColumn<Project, String> projectName, projectAddress, projectPostalCode, customerName,  docCount, createdAt;
     @FXML
     private HBox buttonsHBox;
     @FXML
-    private TableView projectTableView;
-    @FXML
-    private VBox vbox;
+    private TableView<Project> projectTableView;
 
     private ProjectModel projectModel;
 
@@ -70,8 +64,6 @@ public class ProjectViewController implements Initializable {
 
         buttonsHBox.setSpacing(15);
         setProjects();
-
-
     }
 
     private void updateSelectedDisabledButtons() {
@@ -81,7 +73,7 @@ public class ProjectViewController implements Initializable {
         Button btn = new Button("Open Project");
         btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
         btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject((Project) projectTableView.getSelectionModel().getSelectedItem()));
+        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(projectTableView.getSelectionModel().getSelectedItem()));
         buttonsHBox.getChildren().add(btn);
     }
 
@@ -97,7 +89,7 @@ public class ProjectViewController implements Initializable {
         Button btn = new Button("Assign Technicians");
         btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
         btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians((Project) projectTableView.getSelectionModel().getSelectedItem()));
+        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(projectTableView.getSelectionModel().getSelectedItem()));
         buttonsHBox.getChildren().add(btn);
     }
 
@@ -106,9 +98,12 @@ public class ProjectViewController implements Initializable {
      */
     private void setProjects() {
         projectName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        projectAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        projectPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+
         customerName.setCellValueFactory(new PropertyValueFactory<>("customer"));
         docCount.setCellValueFactory(new PropertyValueFactory<>("documentations"));
-
+        createdAt.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
 
         projectTableView.setItems(projectModel.getProjectObservableList());
 
@@ -126,10 +121,7 @@ public class ProjectViewController implements Initializable {
             }
         }
 
-
         if (!oldProjects.isEmpty())openOldProjectPop(oldProjects);
-
-        //if (!oldProjects.isEmpty()) controllerAssistant.displayAlert("these old project might be considered for deletion\n" + oldProjects);
     }
 
     /**
@@ -141,6 +133,7 @@ public class ProjectViewController implements Initializable {
 
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
             Parent root = loader.load();
+            var controller = (CreateProjectView) loader.getController();
             Scene popupScene = new Scene(root);
 
             popupStage.setScene(popupScene);
@@ -148,8 +141,13 @@ public class ProjectViewController implements Initializable {
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
 
-            setProjects();
+            var result = controller.getResult();
 
+            if(result == null) return;
+
+            projectModel.createProject(result);
+
+            projectTableView.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,7 +155,7 @@ public class ProjectViewController implements Initializable {
 
     /**
      * Open project and sets it in center view
-     * @param project project that should be opend
+     * @param project project that should be opened
      */
     private void openProject(Project project) {
         try {
@@ -220,16 +218,15 @@ public class ProjectViewController implements Initializable {
     public void openItem(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) //Checking double click
         {
-            openProject((Project) projectTableView.getSelectionModel().getSelectedItem());
+            openProject(projectTableView.getSelectionModel().getSelectedItem());
         }
     }
 
 
     /**
-     * serchesin model for the promt in the fieldSearch
-     * @param actionEvent
+     * serchesin model for the prompt in the fieldSearch
      */
-    public void search(ActionEvent actionEvent) {
+    public void search() {
         projectTableView.setItems(projectModel.getSearchResult(fieldSearch.getText().toLowerCase()));
     }
 }

@@ -267,8 +267,6 @@ public class DocViewController implements Initializable {
             byte[] data = s.toByteArray();
 
             canvasNode.setImageData(data);
-
-            s.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -376,6 +374,7 @@ public class DocViewController implements Initializable {
 
         container.getChildren().add(new Label("Title"));
         var titleTextField = new TextField();
+        titleTextField.setDisable(!userIsAssignedTechnician);
         container.getChildren().add(titleTextField);
 
         ImageView imageView = new ImageView();
@@ -385,7 +384,9 @@ public class DocViewController implements Initializable {
         var setImageButton = new Button("Set Image");
         DocumentationPictureNode finalDocNode = pictureNode;
         setImageButton.setOnAction(event -> handleSetImage(finalDocNode, imageView));
-        container.getChildren().add(setImageButton);
+
+        if(userIsAssignedTechnician)
+            container.getChildren().add(setImageButton);
 
         if (pictureNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
             titleTextField.setText(pictureNode.getPictureTitle());

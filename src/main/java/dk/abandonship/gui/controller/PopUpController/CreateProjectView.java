@@ -2,12 +2,8 @@ package dk.abandonship.gui.controller.PopUpController;
 
 import dk.abandonship.entities.Customer;
 import dk.abandonship.entities.ProjectDTO;
-import dk.abandonship.entities.User;
 import dk.abandonship.gui.model.CustomerModel;
-import dk.abandonship.gui.model.ProjectModel;
-import dk.abandonship.gui.model.UserModel;
 import dk.abandonship.utils.ControllerAssistant;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,36 +18,35 @@ import java.util.ResourceBundle;
 
 public class CreateProjectView implements Initializable {
 
-    @FXML private TextField fieldAddress;
+    @FXML private TextField fieldAddress, fieldPostalCode, fieldName;
     @FXML private ComboBox<Customer> comboBoxCustomer;
     @FXML private DatePicker datePicker;
-    @FXML private Button btnCancel, btnConfirm1;
+    @FXML private Button btnCancel;
 
     private ControllerAssistant controllerAssistant;
 
-    private UserModel userModel;
-    private CustomerModel customerModel;
-    private ProjectModel model;
+    private ProjectDTO result = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         controllerAssistant  = ControllerAssistant.getInstance();
         try {
-            model = new ProjectModel();
-            userModel = new UserModel();
-            customerModel = new CustomerModel();
+            CustomerModel customerModel = new CustomerModel();
 
             comboBoxCustomer.setItems(customerModel.getCustomerObservableList());
-            comboBoxCustomer.valueProperty().addListener(event -> setPostalCode());
+            comboBoxCustomer.valueProperty().addListener(event -> setAddressInformation());
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
     }
 
-    private void setPostalCode(){
+    private void setAddressInformation(){
         if (!fieldAddress.getText().isEmpty()) return;
 
-        fieldAddress.setText(comboBoxCustomer.getValue().getAddress());
+        var selectedCustomer = comboBoxCustomer.getValue();
+
+        fieldAddress.setText(selectedCustomer.getAddress());
+        fieldPostalCode.setText(selectedCustomer.getPostalCode());
     }
 
     private boolean isDataValid(){
@@ -68,33 +63,33 @@ public class CreateProjectView implements Initializable {
             return false;
         }
 
-
         return true;
     }
-    public void handleConfirm(ActionEvent actionEvent){
+    public void handleConfirm(){
         if (!isDataValid()) return;
 
-        String address  = fieldAddress.getText();
-        Customer customer =  comboBoxCustomer.getValue();
+        String name = fieldName.getText();
+        String address = fieldAddress.getText();
+        String postalCode = fieldPostalCode.getText();
+        Customer customer = comboBoxCustomer.getValue();
         LocalDate time = datePicker.getValue();
 
-        ProjectDTO project = new ProjectDTO(address,customer,time);
+        result = new ProjectDTO(name, address, postalCode, customer, time);
 
-        try {
-            model.createProject(project);
-            close();
-        } catch (Exception e){
-            controllerAssistant.displayError(e);
-        }
-
+        handleClose();
     }
 
-    public void handleClose(ActionEvent actionEvent) {
-        close();
-    }
-
-    private void close(){
+    public void handleClose() {
         Stage stage  = (Stage) btnCancel.getScene().getWindow();
         stage.close();
+    }
+
+    public void handleCancel() {
+        result = null;
+        handleClose();
+    }
+
+    public ProjectDTO getResult() {
+        return result;
     }
 }

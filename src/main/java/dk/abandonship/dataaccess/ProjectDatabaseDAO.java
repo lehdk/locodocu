@@ -9,6 +9,7 @@ import dk.abandonship.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
             String sql = "SELECT " +
                     "[Project].[Id] AS [ProjectId]," +
                     "[Project].[Name] AS [ProjectName]," +
+                    "[Project].[Address] AS [ProjectAddress]," +
+                    "[Project].[PostalCode] AS [ProjectPostalCode]," +
                     "[CreatedAt] AS [ProjectCreatedAt]," +
                     "[CustomerId]," +
                     "[Customer].[Name] AS [CustomerName]," +
@@ -37,7 +40,7 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                     "[Customer].[Address] AS [CustomerAddress]," +
                     "[Customer].[PostalCode] AS [CustomerPostalCode]" +
                     "FROM [Project]" +
-                    "JOIN [Customer] ON [CustomerId] = [Customer].[Id]";
+                    "JOIN [Customer] ON [CustomerId] = [Customer].[Id];";
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -56,6 +59,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                 Project project = new Project(
                         resultSet.getInt("ProjectId"),
                         resultSet.getString("ProjectName"),
+                        resultSet.getString("ProjectAddress"),
+                        resultSet.getString("ProjectPostalCode"),
                         resultSet.getTimestamp("ProjectCreatedAt"),
                         customer
                 );
@@ -85,17 +90,76 @@ public class ProjectDatabaseDAO implements IProjectDAO {
         return projects;
     }
 
-    public void createProject(ProjectDTO projectDTO) throws SQLException {
+    public Project getProjectById(int id) throws SQLException {
+
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "INSERT INTO [Project] ([Name], [CustomerId]) VALUES (?, ?);";
 
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            String sql = "SELECT " +
+                    "[Project].[Id] AS [ProjectId]," +
+                    "[Project].[Name] AS [ProjectName]," +
+                    "[Project].[Address] AS [ProjectAddress]," +
+                    "[Project].[PostalCode] AS [ProjectPostalCode]," +
+                    "[CreatedAt] AS [ProjectCreatedAt]," +
+                    "[CustomerId]," +
+                    "[Customer].[Name] AS [CustomerName]," +
+                    "[Customer].[Email] AS [CustomerEmail]," +
+                    "[Customer].[Phone] AS [CustomerPhone]," +
+                    "[Customer].[Address] AS [CustomerAddress]," +
+                    "[Customer].[PostalCode] AS [CustomerPostalCode]" +
+                    "FROM [Project]" +
+                    "JOIN [Customer] ON [CustomerId] = [Customer].[Id]" +
+                    "WHERE [Project].[Id] = ?";
 
-            stmt.setString(1, projectDTO.getAddress());
-            stmt.setInt(2, projectDTO.getCustomer().getId());
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
 
-            stmt.execute();
+            var resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                Customer customer = new Customer(
+                        resultSet.getInt("CustomerId"),
+                        resultSet.getString("CustomerName"),
+                        resultSet.getString("CustomerEmail"),
+                        resultSet.getString("CustomerPhone"),
+                        resultSet.getString("CustomerAddress"),
+                        resultSet.getString("CustomerPostalCode")
+                );
+
+                return new Project(
+                        resultSet.getInt("ProjectId"),
+                        resultSet.getString("ProjectName"),
+                        resultSet.getString("ProjectAddress"),
+                        resultSet.getString("ProjectPostalCode"),
+                        resultSet.getTimestamp("ProjectCreatedAt"),
+                        customer
+                );
+            }
         }
+
+        return null;
+    }
+
+    public Project createProject(ProjectDTO projectDTO) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+            String sql = "INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId]) VALUES (?, ?, ?, ?);";
+
+            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            stmt.setString(1, projectDTO.getName());
+            stmt.setString(2, projectDTO.getAddress());
+            stmt.setString(3, projectDTO.getPostalCode());
+            stmt.setInt(4, projectDTO.getCustomer().getId());
+
+            var rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                int projectId = rs.getInt(1);
+
+                return getProjectById(projectId);
+            }
+        }
+
+        return null;
     }
 
     @Override
