@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
+
+    @FXML
+    private CheckBox onlyShowAssigned;
     @FXML private TextField fieldSearch;
     @FXML private TableColumn<Project, String> projectName, projectAddress, projectPostalCode, customerName,  docCount, createdAt;
     @FXML
@@ -91,6 +94,8 @@ public class ProjectViewController implements Initializable {
             pauseTransition.setOnFinished(e -> filterProjects());
             pauseTransition.playFromStart();
         });
+
+        onlyShowAssigned.selectedProperty().addListener(((observable, oldValue, newValue) -> filterProjects()));
     }
 
     private void setNewProjectBtn() {
@@ -117,7 +122,7 @@ public class ProjectViewController implements Initializable {
         filterProjects();
     }
 
-    public void isOld(){
+    public void isOld() {
         List<Project> oldProjects = new ArrayList<>();
 
         LocalDate now = LocalDate.now();
@@ -172,7 +177,6 @@ public class ProjectViewController implements Initializable {
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
-
     }
 
     /**
@@ -224,12 +228,10 @@ public class ProjectViewController implements Initializable {
      * @param mouseEvent click from mouse on a item in table
      */
     public void openItem(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) //Checking double click
-        {
+        if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) { //Checking double click
             openProject(projectTableView.getSelectionModel().getSelectedItem());
         }
     }
-
 
     /**
      * Refreshes the projects with the selected filters
@@ -238,6 +240,10 @@ public class ProjectViewController implements Initializable {
         String filterString = fieldSearch.getText().toLowerCase();
         var filteredList = new FilteredList<>(projectModel.getProjectObservableList());
         filteredList.setPredicate(project -> {
+            // This must be first
+            boolean isAssignedToUser = project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser());
+            if(onlyShowAssigned.isSelected() && !isAssignedToUser) return false;
+
             boolean containsProjectName = project.getName().toLowerCase().contains(filterString);
             if(containsProjectName) return true;
 
