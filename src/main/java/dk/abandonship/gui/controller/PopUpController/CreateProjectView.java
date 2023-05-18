@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class CreateProjectView implements Initializable {
 
-    @FXML private TextField fieldAddress;
+    @FXML private TextField fieldAddress, fieldPostalCode, fieldName;
     @FXML private ComboBox<Customer> comboBoxCustomer;
     @FXML private DatePicker datePicker;
     @FXML private Button btnCancel;
@@ -60,17 +60,18 @@ public class CreateProjectView implements Initializable {
             return false;
         }
 
-
         return true;
     }
     public void handleConfirm(){
         if (!isDataValid()) return;
 
-        String address  = fieldAddress.getText();
-        Customer customer =  comboBoxCustomer.getValue();
+        String name = fieldName.getText();
+        String address = fieldAddress.getText();
+        String postalCode = fieldPostalCode.getText();
+        Customer customer = comboBoxCustomer.getValue();
         LocalDate time = datePicker.getValue();
 
-        result = new ProjectDTO(address,customer,time);
+        result = new ProjectDTO(name, address, postalCode, customer, time);
 
         handleClose();
     }

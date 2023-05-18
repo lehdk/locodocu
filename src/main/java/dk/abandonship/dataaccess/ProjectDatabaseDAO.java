@@ -30,6 +30,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
             String sql = "SELECT " +
                     "[Project].[Id] AS [ProjectId]," +
                     "[Project].[Name] AS [ProjectName]," +
+                    "[Project].[Address] AS [ProjectAddress]," +
+                    "[Project].[PostalCode] AS [ProjectPostalCode]," +
                     "[CreatedAt] AS [ProjectCreatedAt]," +
                     "[CustomerId]," +
                     "[Customer].[Name] AS [CustomerName]," +
@@ -38,7 +40,7 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                     "[Customer].[Address] AS [CustomerAddress]," +
                     "[Customer].[PostalCode] AS [CustomerPostalCode]" +
                     "FROM [Project]" +
-                    "JOIN [Customer] ON [CustomerId] = [Customer].[Id]";
+                    "JOIN [Customer] ON [CustomerId] = [Customer].[Id];";
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -57,6 +59,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                 Project project = new Project(
                         resultSet.getInt("ProjectId"),
                         resultSet.getString("ProjectName"),
+                        resultSet.getString("ProjectAddress"),
+                        resultSet.getString("ProjectPostalCode"),
                         resultSet.getTimestamp("ProjectCreatedAt"),
                         customer
                 );
@@ -90,9 +94,11 @@ public class ProjectDatabaseDAO implements IProjectDAO {
 
         try(var connection = DBConnector.getInstance().getConnection()) {
 
-            String sql = "SELECT \n" +
+            String sql = "SELECT " +
                     "[Project].[Id] AS [ProjectId]," +
                     "[Project].[Name] AS [ProjectName]," +
+                    "[Project].[Address] AS [ProjectAddress]," +
+                    "[Project].[PostalCode] AS [ProjectPostalCode]," +
                     "[CreatedAt] AS [ProjectCreatedAt]," +
                     "[CustomerId]," +
                     "[Customer].[Name] AS [CustomerName]," +
@@ -122,6 +128,8 @@ public class ProjectDatabaseDAO implements IProjectDAO {
                 return new Project(
                         resultSet.getInt("ProjectId"),
                         resultSet.getString("ProjectName"),
+                        resultSet.getString("ProjectAddress"),
+                        resultSet.getString("ProjectPostalCode"),
                         resultSet.getTimestamp("ProjectCreatedAt"),
                         customer
                 );
@@ -133,12 +141,14 @@ public class ProjectDatabaseDAO implements IProjectDAO {
 
     public Project createProject(ProjectDTO projectDTO) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "INSERT INTO [Project] ([Name], [CustomerId]) VALUES (?, ?);";
+            String sql = "INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId]) VALUES (?, ?, ?, ?);";
 
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setString(1, projectDTO.getAddress());
-            stmt.setInt(2, projectDTO.getCustomer().getId());
+            stmt.setString(1, projectDTO.getName());
+            stmt.setString(2, projectDTO.getAddress());
+            stmt.setString(3, projectDTO.getPostalCode());
+            stmt.setInt(4, projectDTO.getCustomer().getId());
 
             var rs = stmt.executeQuery();
 

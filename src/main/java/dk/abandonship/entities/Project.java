@@ -12,6 +12,8 @@ public class Project {
 
     private int id;
     private String name;
+    private String address;
+    private String postalCode;
     private Timestamp createdAt;
     private Customer customer;
 
@@ -19,9 +21,11 @@ public class Project {
 
     private Set<Documentation> documentations;
 
-    public Project(int id, String name, Timestamp createdAt, Customer customer) {
+    public Project(int id, String name, String address, String postalCode, Timestamp createdAt, Customer customer) {
         this.id = id;
         this.name = name;
+        this.address = address;
+        this.postalCode = postalCode;
         this.createdAt = createdAt;
         this.customer = customer;
         documentations = new HashSet<>();
@@ -92,6 +96,22 @@ public class Project {
 
     public void removeTechnician(User user) {
         assignedTechnicians.remove(user);
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     @Override

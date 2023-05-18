@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
     @FXML private TextField fieldSearch;
-    @FXML private TableColumn<Project, String> projectName, customerName,  docCount, createdAt;
+    @FXML private TableColumn<Project, String> projectName, projectAddress, projectPostalCode, customerName,  docCount, createdAt;
     @FXML
     private HBox buttonsHBox;
     @FXML
@@ -98,6 +98,9 @@ public class ProjectViewController implements Initializable {
      */
     private void setProjects() {
         projectName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        projectAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        projectPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+
         customerName.setCellValueFactory(new PropertyValueFactory<>("customer"));
         docCount.setCellValueFactory(new PropertyValueFactory<>("documentations"));
         createdAt.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
