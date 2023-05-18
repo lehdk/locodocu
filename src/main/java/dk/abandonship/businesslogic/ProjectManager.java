@@ -52,8 +52,8 @@ public class ProjectManager {
         return projects;
     }
 
-    public void createProject(ProjectDTO projectDTO) throws Exception {
-        projectDAO.createProject(projectDTO);
+    public Project createProject(ProjectDTO projectDTO) throws Exception {
+        return projectDAO.createProject(projectDTO);
     }
 
     /**

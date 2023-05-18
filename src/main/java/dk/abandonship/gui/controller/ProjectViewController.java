@@ -3,6 +3,7 @@ package dk.abandonship.gui.controller;
 import dk.abandonship.Main;
 import dk.abandonship.entities.Project;
 import dk.abandonship.gui.controller.PopUpController.AssignTechController;
+import dk.abandonship.gui.controller.PopUpController.CreateProjectView;
 import dk.abandonship.gui.controller.PopUpController.OldProjectController;
 import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
@@ -63,8 +64,6 @@ public class ProjectViewController implements Initializable {
 
         buttonsHBox.setSpacing(15);
         setProjects();
-
-
     }
 
     private void updateSelectedDisabledButtons() {
@@ -131,6 +130,7 @@ public class ProjectViewController implements Initializable {
 
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("gui/view/PopUps/CreateProjectView.fxml"));
             Parent root = loader.load();
+            var controller = (CreateProjectView) loader.getController();
             Scene popupScene = new Scene(root);
 
             popupStage.setScene(popupScene);
@@ -138,8 +138,13 @@ public class ProjectViewController implements Initializable {
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.showAndWait();
 
-            setProjects();
+            var result = controller.getResult();
 
+            if(result == null) return;
+
+            projectModel.createProject(result);
+
+            projectTableView.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }

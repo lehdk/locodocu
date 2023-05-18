@@ -52,8 +52,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnConfirm1" mnemonicParsing="false" onAction="#handleConfirm" text="Confirm" GridPane.columnIndex="1" />
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleClose" text="Cancel" />
+            <Button fx:id="btnConfirm1" mnemonicParsing="false" onAction="#handleConfirm" text="Save" GridPane.columnIndex="1" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
          </children>
          <BorderPane.margin>
             <Insets bottom="25.0" top="25.0" />

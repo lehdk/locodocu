@@ -34,10 +34,21 @@ public class ProjectDatabaseDAOProxy implements IProjectDAO {
     }
 
     @Override
-    public void createProject(ProjectDTO projectDTO) throws SQLException {
-        projectDAO.createProject(projectDTO);
+    public Project getProjectById(int id) throws  SQLException {
+        var result = projectDAO.getProjectById(id);
 
-        databaseLogDAO.insertToLog("createProject", null, null);
+        databaseLogDAO.insertToLog("getProjectById", new Gson().toJson(id), new Gson().toJson(result));
+
+        return result;
+    }
+
+    @Override
+    public Project createProject(ProjectDTO projectDTO) throws SQLException {
+        var result = projectDAO.createProject(projectDTO);
+
+        databaseLogDAO.insertToLog("createProject", "CustomerId: " + projectDTO.getCustomer().getId() + ", Project Address" + projectDTO.getAddress(), null);
+
+        return result;
     }
 
     @Override
