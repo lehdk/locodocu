@@ -214,6 +214,7 @@ public class DocViewController implements Initializable {
 
     /**
      * Opens a canvas, and sets a canvas if it pulls it from DB
+     *
      * @param givenCanvasNode node of data for canvas, should be null if it does not contain data
      */
     private void handleCanvas(CanvasDocumentationNode givenCanvasNode) {
@@ -226,10 +227,16 @@ public class DocViewController implements Initializable {
         if (imageCanvas == null) {
             imageCanvas = new ImageView();
 
-            if (givenCanvasNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
+            if (givenCanvasNode != null && givenCanvasNode.getId() != DocumentationNode.UNUSED_NODE_ID) {
                 canvasNode = givenCanvasNode;
                 var image = new Image(new ByteArrayInputStream(canvasNode.getImageData()));
                 imageCanvas.setImage(image);
+                container = new VBox();
+                container.getChildren().add(new Label("TechnicalDrawing"));
+                container.getChildren().add(imageCanvas);
+                vboxIOButtons.getChildren().add(container);
+                vboxIOButtons.getChildren().add(new Label("\n\n"));
+                return;
             }
 
             container = new VBox();
@@ -238,7 +245,7 @@ public class DocViewController implements Initializable {
             vboxIOButtons.getChildren().add(container);
             vboxIOButtons.getChildren().add(new Label("\n\n"));
 
-            return;
+
         }
 
         handleOpenCanvas();
