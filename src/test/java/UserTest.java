@@ -29,11 +29,11 @@ public class UserTest {
         Role role1 = new Role(1, "role1");
         Role role2 = new Role(1, "role2");
 
-        assertEquals(user.getRoles().size(), 0);
+        assertEquals(0, user.getRoles().size());
         user.addRole(role1);
-        assertEquals(user.getRoles().size(), 1);
+        assertEquals(1, user.getRoles().size());
         user.addRole(role2);
-        assertEquals(user.getRoles().size(), 2);
+        assertEquals(2, user.getRoles().size());
     }
 
     @Test
@@ -42,10 +42,10 @@ public class UserTest {
 
         Role role = new Role(1, "role1");
 
-        assertEquals(user1.getRoles().size(), 0);
+        assertEquals(0, user1.getRoles().size());
         user1.addRole(role);
-        assertEquals(user1.getRoles().size(), 1);
+        assertEquals(1, user1.getRoles().size());
         user1.addRole(role);
-        assertEquals(user1.getRoles().size(), 1);
+        assertEquals(1, user1.getRoles().size());
     }
 }

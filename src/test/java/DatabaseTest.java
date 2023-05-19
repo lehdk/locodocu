@@ -13,5 +13,4 @@ public class DatabaseTest {
             assertFalse(connection.isClosed());
         }
     }
-
 }
