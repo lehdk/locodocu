@@ -96,6 +96,10 @@ public class ProjectViewController implements Initializable {
         });
 
         onlyShowAssigned.selectedProperty().addListener(((observable, oldValue, newValue) -> filterProjects()));
+
+        if (!LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER) || !LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.SALESPERSON)){
+            onlyShowAssigned.setDisable(true);
+        }
     }
 
     private void setNewProjectBtn() {
