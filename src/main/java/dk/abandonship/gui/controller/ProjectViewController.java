@@ -9,6 +9,9 @@ import dk.abandonship.gui.model.ProjectModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.ControllerAssistant;
 import dk.abandonship.utils.DefaultRoles;
+import javafx.animation.PauseTransition;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +25,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -30,10 +34,16 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProjectViewController implements Initializable {
+
+    @FXML
+    private CheckBox onlyShowAssigned;
     @FXML private TextField fieldSearch;
     @FXML private TableColumn<Project, String> projectName, projectAddress, projectPostalCode, customerName,  docCount, createdAt;
     @FXML
     private HBox buttonsHBox;
+
+    private Button openProjectButton, assignedTechniciansButton;
+
     @FXML
     private TableView<Project> projectTableView;
 
@@ -52,29 +62,40 @@ public class ProjectViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        projectTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        projectTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateSelectedDisabledButtons());
+        openProjectButton = new Button("Open Project");
+        openProjectButton.setDisable(true);
+        openProjectButton.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        openProjectButton.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        openProjectButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(projectTableView.getSelectionModel().getSelectedItem()));
+        buttonsHBox.getChildren().add(openProjectButton);
 
-        setOpenProjectBtn();
+        assignedTechniciansButton = new Button("Assign Technicians");
+        assignedTechniciansButton.setDisable(true);
+        assignedTechniciansButton.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        assignedTechniciansButton.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        assignedTechniciansButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(projectTableView.getSelectionModel().getSelectedItem()));
+
+        projectTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        projectTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            openProjectButton.setDisable(newSelection == null);
+            assignedTechniciansButton.setDisable(newSelection == null);
+        });
 
         if (LoggedInUserState.getInstance().getLoggedInUser().hasRole(DefaultRoles.PROJECTMANAGER)) {
             setNewProjectBtn();
-            setAssignBtn();
+            buttonsHBox.getChildren().add(assignedTechniciansButton);
         }
 
         buttonsHBox.setSpacing(15);
         setProjects();
-    }
 
-    private void updateSelectedDisabledButtons() {
-    }
+        var pauseTransition = new PauseTransition(Duration.millis(150));
+        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            pauseTransition.setOnFinished(e -> filterProjects());
+            pauseTransition.playFromStart();
+        });
 
-    private void setOpenProjectBtn(){
-        Button btn = new Button("Open Project");
-        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> openProject(projectTableView.getSelectionModel().getSelectedItem()));
-        buttonsHBox.getChildren().add(btn);
+        onlyShowAssigned.selectedProperty().addListener(((observable, oldValue, newValue) -> filterProjects()));
     }
 
     private void setNewProjectBtn() {
@@ -83,13 +104,6 @@ public class ProjectViewController implements Initializable {
         btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
         btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
         btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> addProject());
-        buttonsHBox.getChildren().add(btn);
-    }
-    private void setAssignBtn() {
-        Button btn = new Button("Assign Technicians");
-        btn.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        btn.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> assignTechnicians(projectTableView.getSelectionModel().getSelectedItem()));
         buttonsHBox.getChildren().add(btn);
     }
 
@@ -105,11 +119,10 @@ public class ProjectViewController implements Initializable {
         docCount.setCellValueFactory(new PropertyValueFactory<>("documentations"));
         createdAt.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
 
-        projectTableView.setItems(projectModel.getProjectObservableList());
-
+        filterProjects();
     }
 
-    public void isOld(){
+    public void isOld() {
         List<Project> oldProjects = new ArrayList<>();
 
         LocalDate now = LocalDate.now();
@@ -164,7 +177,6 @@ public class ProjectViewController implements Initializable {
         } catch (Exception e) {
             controllerAssistant.displayError(e);
         }
-
     }
 
     /**
@@ -213,20 +225,45 @@ public class ProjectViewController implements Initializable {
 
     /**
      * Set doubleClick to open a doc on the project Tableview
-     * @param mouseEvent click from mouse on a item in table
+     * @param mouseEvent click from mouse on an item in table
      */
     public void openItem(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) //Checking double click
-        {
+        if (mouseEvent.getClickCount() == 2 && projectTableView.getSelectionModel().getSelectedItem() != null) { //Checking double click
             openProject(projectTableView.getSelectionModel().getSelectedItem());
         }
     }
 
-
     /**
-     * serchesin model for the prompt in the fieldSearch
+     * Refreshes the projects with the selected filters
      */
-    public void search() {
-        projectTableView.setItems(projectModel.getSearchResult(fieldSearch.getText().toLowerCase()));
+    public void filterProjects() {
+        String filterString = fieldSearch.getText().toLowerCase();
+        var filteredList = new FilteredList<>(projectModel.getProjectObservableList());
+        filteredList.setPredicate(project -> {
+            // This must be first
+            boolean isAssignedToUser = project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser());
+            if(onlyShowAssigned.isSelected() && !isAssignedToUser) return false;
+
+            boolean containsProjectName = project.getName().toLowerCase().contains(filterString);
+            if(containsProjectName) return true;
+
+            boolean containsCustomerName = project.getCustomer().getName().toLowerCase().contains(filterString);
+            if(containsCustomerName) return true;
+
+            boolean containsPostalCode = project.getPostalCode().contains(filterString);
+            if(containsPostalCode) return true;
+
+            boolean containsProjectAddress = project.getAddress().toLowerCase().contains(filterString);
+            if(containsProjectAddress) return true;
+
+            boolean containsDocumentationName = project.getDocumentations().stream().anyMatch(d -> d.getName().toLowerCase().contains(filterString));
+            if(containsDocumentationName) return true;
+
+            return false;
+        });
+
+        var sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(projectTableView.comparatorProperty());
+        projectTableView.setItems(sortedList);
     }
 }
