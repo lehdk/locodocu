@@ -16,7 +16,7 @@
             <TableColumn fx:id="postalCodeColumn" prefWidth="75.0" text="Postal Code" />
         </columns>
       <VBox.margin>
-         <Insets />
+         <Insets left="15.0" right="15.0" />
       </VBox.margin>
     </TableView>
     <HBox fx:id="buttonsHBox">
