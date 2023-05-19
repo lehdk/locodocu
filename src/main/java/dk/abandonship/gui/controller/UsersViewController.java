@@ -89,7 +89,7 @@ public class UsersViewController implements Initializable {
             buttonsHBox.getChildren().add(deleteUserButton);
 
             assignRolesButton = new Button("Assign Roles");
-            //assignRolesButton.setOnAction(event -> );
+            assignRolesButton.setOnAction(event -> openAssignRoleWindow(userTableView.getSelectionModel().getSelectedItem()));
             buttonsHBox.getChildren().add(assignRolesButton);
         }
 
@@ -135,7 +135,7 @@ public class UsersViewController implements Initializable {
             if (user == null) {
                 userModel.addUser(result);
             } else {
-                boolean wasEdited = userModel.editUser(user);
+                boolean wasEdited = userModel.editUser(user, result);
                 if (wasEdited) userTableView.refresh();
                 userTableView.getSelectionModel().clearSelection();
             }
@@ -157,7 +157,7 @@ public class UsersViewController implements Initializable {
         }
     }
 
-    public void handleAssignRole(Role role) {
+    public void openAssignRoleWindow(User user) {
         try {
             Stage popupStage = new Stage();
 
@@ -166,7 +166,7 @@ public class UsersViewController implements Initializable {
             Scene popupScene = new Scene(root);
 
             AssignRolesController rolesController = loader.getController();
-            rolesController.handleCancel();
+            rolesController.setUser(user);
 
             popupStage.setScene(popupScene);
             popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -176,5 +176,4 @@ public class UsersViewController implements Initializable {
             e.printStackTrace();
         }
     }
-
 }

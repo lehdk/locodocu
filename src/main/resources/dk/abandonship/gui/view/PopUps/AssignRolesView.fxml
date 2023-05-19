@@ -41,7 +41,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="bntCancel" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
                 <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#handleConfirm" text="Confirm" GridPane.columnIndex="1" />
             </children>
             <BorderPane.margin>

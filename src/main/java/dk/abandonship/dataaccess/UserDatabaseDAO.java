@@ -46,7 +46,6 @@ public class UserDatabaseDAO implements IUserDAO {
                 );
             }
         }
-
         if (resultUser == null) return null;
 
         var roles = roleDAO.getAllRolesForUser(resultUser);
@@ -79,7 +78,6 @@ public class UserDatabaseDAO implements IUserDAO {
                 );
             }
         }
-
         if (resultUser == null) return null;
 
         var roles = roleDAO.getAllRolesForUser(resultUser);
@@ -120,7 +118,6 @@ public class UserDatabaseDAO implements IUserDAO {
                 }
             }
         }
-
         return users;
     }
 
@@ -155,7 +152,7 @@ public class UserDatabaseDAO implements IUserDAO {
         return technicians;
     }
 
-    public void createUser(User user) throws SQLException {
+    public User createUser(User user) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
             String sql = "INSERT INTO [Users] ([Name], [Email], [Phone], [Password], [DisabledAt]) VALUES (?,?,?,?,?)";
 
@@ -166,11 +163,14 @@ public class UserDatabaseDAO implements IUserDAO {
             statement.setString(4, user.getPassword());
             statement.setTimestamp(5, new Timestamp(1));
 
-            statement.executeUpdate();
+            var rs = statement.executeQuery();
+            if (rs.next()) {
+                int userId = rs.getInt(1);
+                user.setId(userId);
+                return user;
+            }
         }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return null;
     }
 
     public boolean deleteUser(User user) throws SQLException {
@@ -187,16 +187,16 @@ public class UserDatabaseDAO implements IUserDAO {
         }
     }
 
-    public boolean edituser(User user) throws SQLException {
+    public boolean editUser(User user, User newData) throws SQLException {
 
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql = "UPDATE [Users] SET [Name]=?,[Email]=?,[Phone]=?,[Password]=?,[DisabledAt]=? WHERE [Id]=?";
+            String sql = "UPDATE [Users] SET [Name]=?,[Email]=?,[Phone]=?,[Password]=?,[DisabledAt]=? WHERE [Id]=?;";
 
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getPhone());
-            statement.setString(3, user.getEmail());
-            statement.setString(4, user.getPassword());
+            statement.setString(1, newData.getName());
+            statement.setString(2, newData.getEmail());
+            statement.setString(3, newData.getPhone());
+            statement.setString(4, newData.getPassword());
             statement.setTimestamp(5, null);
             statement.setInt(6, user.getId());
 
@@ -208,14 +208,21 @@ public class UserDatabaseDAO implements IUserDAO {
 
     public void addRole(User user, Role role) throws SQLException {
         try(var connection = DBConnector.getInstance().getConnection()) {
-            String sql1 = "DELETE FROM [UserRoleRelation] Where [UserId]=?;";
-            var firstStatement = connection.prepareStatement(sql1);
 
-            firstStatement.setInt(1, user.getId());
+            String sql = "INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES (?, ?)";
 
-            firstStatement.executeUpdate();
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, user.getId());
+            statement.setInt(2, role.getId());
 
-            String sql = "INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES (?, ?);";
+            statement.executeUpdate();
+        }
+    }
+
+    public void removeRole(User user, Role role) throws SQLException {
+        try(var connection = DBConnector.getInstance().getConnection()) {
+
+            String sql = "DELETE FROM [UserRoleRelation] ([UserId], [RoleId]) VALUES (?, ?)";
 
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, user.getId());

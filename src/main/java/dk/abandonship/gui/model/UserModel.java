@@ -1,6 +1,5 @@
 package dk.abandonship.gui.model;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.abandonship.businesslogic.UserManager;
 import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
@@ -13,7 +12,6 @@ import java.util.Set;
 
 public class UserModel {
     private final UserManager userManager;
-
     private final ObservableList<User> userObservableList;
 
     public UserModel() {
@@ -43,8 +41,18 @@ public class UserModel {
         }
     }
 
-    public boolean editUser(User user) throws SQLException {
-        return userManager.editUser(user);
+    public boolean editUser(User user, User newData) throws SQLException {
+        var result = userManager.editUser(user, newData);
+
+        if (!result) {
+            return false;
+        }
+        user.setName(newData.getName());
+        user.setEmail(newData.getEmail());
+        user.setPhone(newData.getPhone());
+        user.setPassword(newData.getPassword());
+
+        return true;
     }
 
     public void addUser(User user) throws SQLException {
@@ -59,7 +67,11 @@ public class UserModel {
         userManager.addRole(user, role);
     }
 
-    public List<Role> getAllRoles() throws SQLException {
+    public void removeRole(User user, Role role) throws SQLException {
+        userManager.removeRole(user, role);
+    }
+
+        public List<Role> getAllRoles() throws SQLException {
         return userManager.getAllRoles();
     }
 

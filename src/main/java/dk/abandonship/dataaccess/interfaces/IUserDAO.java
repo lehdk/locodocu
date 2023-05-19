@@ -26,8 +26,9 @@ public interface IUserDAO {
 
     List<User> getAllUsers() throws SQLException;
     List<User> getAllTechnicians() throws Exception;
-    public void createUser(User user) throws SQLException;
+    public User createUser(User user) throws SQLException;
     public boolean deleteUser(User user) throws SQLException;
-    public boolean edituser(User user) throws SQLException;
+    public boolean editUser(User user, User newData) throws SQLException;
     public void addRole(User user, Role role) throws SQLException;
+    public void removeRole(User user, Role role) throws SQLException;
 }
