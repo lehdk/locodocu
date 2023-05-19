@@ -11,13 +11,12 @@ public class LoggedInTest {
         var state = LoggedInUserState.getInstance();
 
         User loggedInUser = state.getLoggedInUser();
-        assertEquals(loggedInUser, null);
+        assertNull(loggedInUser);
 
         User user = new User(0, "name", null, null, null, null);
 
         state.setLoggedInUser(user);
 
-        assertEquals(state.getLoggedInUser(), user);
+        assertEquals(user, state.getLoggedInUser());
     }
-
 }

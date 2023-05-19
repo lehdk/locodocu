@@ -17,15 +17,19 @@ public class ProjectTest {
     void canCreateProjectWithCorrectFields() {
         int id = 42;
         String name = "Det store blå skib";
+        String address = "Gadenavn 1";
+        String postalCode = "1242";
         Timestamp createdAt = Timestamp.from(Instant.now());
         Customer customer = new Customer(1, null, null, null, null, null);
 
-        Project p = new Project(id, name, createdAt, customer);
+        Project p = new Project(id, name, address, postalCode, createdAt, customer);
 
-        assertEquals(p.getId(), id);
-        assertEquals(p.getName(), name);
-        assertEquals(p.getCreatedAt(), createdAt);
-        assertEquals(p.getCustomer(), customer);
+        assertEquals(id, p.getId());
+        assertEquals(name, p.getName());
+        assertEquals(address, p.getAddress());
+        assertEquals(postalCode, p.getPostalCode());
+        assertEquals(createdAt, p.getCreatedAt());
+        assertEquals(customer, p.getCustomer());
     }
 
     @Test

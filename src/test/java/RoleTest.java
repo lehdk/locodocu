@@ -48,8 +48,8 @@ public class RoleTest {
         assertNotEquals(role, null);
         assert role != null;
 
-        assertEquals(role.getId(), 1);
-        assertEquals(role.getName(), "admin");
+        assertEquals(1, role.getId());
+        assertEquals("admin", role.getName());
     }
 
     @Test
@@ -59,8 +59,8 @@ public class RoleTest {
         assertNotEquals(role, null);
         assert role != null;
 
-        assertEquals(role.getId(), 2);
-        assertEquals(role.getName(), "project-manager");
+        assertEquals(2, role.getId());
+        assertEquals("project-manager", role.getName());
     }
 
     @Test
@@ -70,8 +70,8 @@ public class RoleTest {
         assertNotEquals(role, null);
         assert role != null;
 
-        assertEquals(role.getId(), 3);
-        assertEquals(role.getName(), "technician");
+        assertEquals(3, role.getId());
+        assertEquals("technician", role.getName());
     }
 
     @Test
@@ -81,8 +81,8 @@ public class RoleTest {
         assertNotEquals(role, null);
         assert role != null;
 
-        assertEquals(role.getId(), 4);
-        assertEquals(role.getName(), "salesperson");
+        assertEquals(4, role.getId());
+        assertEquals("salesperson", role.getName());
     }
 
     @Test
