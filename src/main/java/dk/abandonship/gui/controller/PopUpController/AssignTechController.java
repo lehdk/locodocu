@@ -9,8 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
@@ -64,7 +62,7 @@ public class AssignTechController implements Initializable {
     }
 
     /**
-     * Closses pop-up
+     * Closes pop-up
      */
     private void close(){
         Stage stage  = (Stage) bntCancel.getScene().getWindow();
@@ -72,7 +70,7 @@ public class AssignTechController implements Initializable {
     }
 
     /**
-     * Saves the technistans in a list and sends them to DAo to be saved
+     * Saves the technistans in a list and sends them to DAO to be saved
      * @param actionEvent
      */
     public void handleConfirm(ActionEvent actionEvent) {
@@ -88,7 +86,6 @@ public class AssignTechController implements Initializable {
             controllerAssistant.displayAlert("Select a technician");
             return;
         }
-
 
         try {
             projectModel.saveTechOnProject(selected, project);

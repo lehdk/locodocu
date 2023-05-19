@@ -43,6 +43,16 @@ public class NavBarController implements Initializable {
         });
         navBar.getChildren().add(customerButton);
 
+        Button userButton = new Button("Users");
+        userButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                controllerAssistant.setCenterFX("UsersView");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        navBar.getChildren().add(userButton);
+
         Button logoutButton = new Button("Log out");
         logoutButton.setOnAction(event -> {
             try {
@@ -53,6 +63,7 @@ public class NavBarController implements Initializable {
             }
         });
         navBar.getChildren().add(logoutButton);
+
     }
 
     private void projects() {
@@ -62,4 +73,14 @@ public class NavBarController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
+    private void users() {
+        try {
+            controllerAssistant.setCenterFX("UsersView");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

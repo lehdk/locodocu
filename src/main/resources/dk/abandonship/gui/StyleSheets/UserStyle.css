@@ -1,0 +1,10 @@
+.context-menu {
+    -fx-background-color: #3D445C;
+}
+.context-menu > .check-menu-item {
+    -fx-background-color: #3D445C;
+    -fx-text-fill: BLACK;
+}
+.check-menu-item {
+    -fx-text-fill: BLACK;
+}

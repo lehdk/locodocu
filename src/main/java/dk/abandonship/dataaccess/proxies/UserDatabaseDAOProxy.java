@@ -5,6 +5,7 @@ import dk.abandonship.dataaccess.DatabaseLogDAO;
 import dk.abandonship.dataaccess.UserDatabaseDAO;
 import dk.abandonship.dataaccess.interfaces.IDatabaseLogDAO;
 import dk.abandonship.dataaccess.interfaces.IUserDAO;
+import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 
 import java.sql.SQLException;
@@ -41,7 +42,7 @@ public class UserDatabaseDAOProxy implements IUserDAO {
     }
 
     @Override
-    public List<User> getAllUsers() throws Exception {
+    public List<User> getAllUsers() throws SQLException {
         var result = userDAO.getAllUsers();
 
         databaseLogDAO.insertToLog("getAllUsers", null, new Gson().toJson(result));
@@ -56,5 +57,42 @@ public class UserDatabaseDAOProxy implements IUserDAO {
         databaseLogDAO.insertToLog("getAllTechnicians", null, new Gson().toJson(result));
 
         return result;
+    }
+
+    @Override
+    public User createUser(User user) throws SQLException {
+        var result = userDAO.createUser(user);
+
+        databaseLogDAO.insertToLog("createUser", null, new Gson().toJson(result));
+
+        return result;
+    }
+
+    @Override
+    public boolean deleteUser(User user) throws SQLException {
+        var result = userDAO.deleteUser(user);
+
+        databaseLogDAO.insertToLog("deleteUser", null, new Gson().toJson(result));
+
+        return result;
+    }
+
+    @Override
+    public boolean editUser(User user, User newData) throws SQLException {
+        var result = userDAO.editUser(user, newData);
+
+        databaseLogDAO.insertToLog("editUser", null, new Gson().toJson(result));
+
+        return result;
+    }
+
+    @Override
+    public void addRole(User user, Role role) throws SQLException {
+
+    }
+
+    @Override
+    public void removeRole(User user, Role role) throws SQLException {
+
     }
 }
