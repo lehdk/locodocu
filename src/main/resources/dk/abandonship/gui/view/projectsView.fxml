@@ -25,12 +25,12 @@
       </HBox>
       <TableView fx:id="projectTableView" onMouseClicked="#openItem" styleClass="customerTable">
          <columns>
-            <TableColumn fx:id="projectName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Name" />
-            <TableColumn fx:id="projectAddress" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Address" />
-            <TableColumn fx:id="projectPostalCode" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Postal Code" />
-            <TableColumn fx:id="customerName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="123.20001220703125" text="Customer" />
-            <TableColumn fx:id="docCount" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Documentations" />
-            <TableColumn fx:id="createdAt" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Created At (UTC)" />
+            <TableColumn fx:id="projectName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Project Name" />
+            <TableColumn fx:id="projectAddress" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Project Address" />
+            <TableColumn fx:id="projectPostalCode" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Project Postal Code" />
+            <TableColumn fx:id="customerName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Customer" />
+            <TableColumn fx:id="docCount" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Documentations" />
+            <TableColumn fx:id="createdAt" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="250.0" text="Created At (UTC)" />
          </columns>
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
