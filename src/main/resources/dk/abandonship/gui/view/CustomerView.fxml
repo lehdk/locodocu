@@ -9,14 +9,14 @@
 <VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" stylesheets="@../StyleSheets/CustomerStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.CustomerController">
     <TableView fx:id="customerTableView" styleClass="customerTable">
         <columns>
-            <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
-            <TableColumn fx:id="emailColumn" prefWidth="75.0" text="Email" />
-            <TableColumn fx:id="phoneColumn" prefWidth="75.0" text="Phone" />
-            <TableColumn fx:id="addressColumn" prefWidth="75.0" text="Address" />
-            <TableColumn fx:id="postalCodeColumn" prefWidth="75.0" text="Postal Code" />
+            <TableColumn fx:id="nameColumn" prefWidth="250.0" text="Name" />
+            <TableColumn fx:id="emailColumn" prefWidth="250.0" text="Email" />
+            <TableColumn fx:id="phoneColumn" prefWidth="250.0" text="Phone" />
+            <TableColumn fx:id="addressColumn" prefWidth="250.0" text="Address" />
+            <TableColumn fx:id="postalCodeColumn" prefWidth="250.0" text="Postal Code" />
         </columns>
       <VBox.margin>
-         <Insets />
+         <Insets left="15.0" right="15.0" />
       </VBox.margin>
     </TableView>
     <HBox fx:id="buttonsHBox">

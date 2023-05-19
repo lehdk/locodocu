@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" stylesheets="@../StyleSheets/CustomerStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" stylesheets="@../StyleSheets/CustomerStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.ProjectViewController">
    <children>
       <HBox alignment="CENTER_RIGHT">
          <children>
             <CheckBox fx:id="onlyShowAssigned" mnemonicParsing="false" selected="true" text="Only show assigned" />
             <TextField fx:id="fieldSearch" promptText="Search Field">
                <HBox.margin>
-                  <Insets left="15.0" right="5.0" />
+                  <Insets left="15.0" />
                </HBox.margin>
             </TextField>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
          </VBox.margin>
       </HBox>
       <TableView fx:id="projectTableView" onMouseClicked="#openItem" styleClass="customerTable">
          <columns>
-            <TableColumn fx:id="projectName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Name" />
-            <TableColumn fx:id="projectAddress" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Address" />
-            <TableColumn fx:id="projectPostalCode" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.4000244140625" text="Project Postal Code" />
-            <TableColumn fx:id="customerName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="123.20001220703125" text="Customer" />
-            <TableColumn fx:id="docCount" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Documentations" />
-            <TableColumn fx:id="createdAt" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Created At (UTC)" />
+            <TableColumn fx:id="projectName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Project Name" />
+            <TableColumn fx:id="projectAddress" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Project Address" />
+            <TableColumn fx:id="projectPostalCode" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Project Postal Code" />
+            <TableColumn fx:id="customerName" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Customer" />
+            <TableColumn fx:id="docCount" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="225.0" text="Documentations" />
+            <TableColumn fx:id="createdAt" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="250.0" text="Created At (UTC)" />
          </columns>
          <VBox.margin>
-            <Insets />
+            <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </TableView>
       <HBox fx:id="buttonsHBox">

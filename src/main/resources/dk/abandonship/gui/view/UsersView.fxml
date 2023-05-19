@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" stylesheets="@../StyleSheets/UserStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.UsersViewController">
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" stylesheets="@../StyleSheets/UserStyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.abandonship.gui.controller.UsersViewController">
    <TableView fx:id="userTableView" styleClass="userTable">
       <columns>
-         <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
-         <TableColumn fx:id="emailColumn" prefWidth="75.0" text="Email" />
-         <TableColumn fx:id="phoneColumn" prefWidth="75.0" text="Phone" />
+         <TableColumn fx:id="nameColumn" prefWidth="400.0" text="Name" />
+         <TableColumn fx:id="emailColumn" prefWidth="400.0" text="Email" />
+         <TableColumn fx:id="phoneColumn" prefWidth="400.0" text="Phone" />
       </columns>
+      <VBox.margin>
+         <Insets left="15.0" right="15.0" />
+      </VBox.margin>
    </TableView>
-   <HBox fx:id="buttonsHBox" />
+   <HBox fx:id="buttonsHBox">
+      <VBox.margin>
+         <Insets bottom="20.0" left="15.0" right="15.0" top="10.0" />
+      </VBox.margin></HBox>
 </VBox>
