@@ -2,11 +2,9 @@ package dk.abandonship.gui.controller;
 
 import dk.abandonship.Main;
 
-import dk.abandonship.entities.Role;
 import dk.abandonship.entities.User;
 import dk.abandonship.gui.controller.PopUpController.AddEditUserController;
 import dk.abandonship.gui.controller.PopUpController.AssignRolesController;
-import dk.abandonship.gui.controller.PopUpController.AssignTechController;
 import dk.abandonship.gui.model.UserModel;
 import dk.abandonship.state.LoggedInUserState;
 import dk.abandonship.utils.DefaultRoles;
@@ -28,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 public class UsersViewController implements Initializable {
 
@@ -103,9 +100,8 @@ public class UsersViewController implements Initializable {
             deleteUserButton.setDisable(selectedItem == null);
         }
 
-        if (editUserButton != null) {
-            editUserButton.setDisable(selectedItem == null);
-        }
+        boolean isOwnUser = LoggedInUserState.getInstance().getLoggedInUser().equals(selectedItem);
+        editUserButton.setDisable(!isOwnUser);
     }
 
     public void handleAddEditUser(User user) throws IOException {
