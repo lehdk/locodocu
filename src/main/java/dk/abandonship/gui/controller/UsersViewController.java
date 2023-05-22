@@ -66,21 +66,6 @@ public class UsersViewController implements Initializable {
             });
             buttonsHBox.getChildren().add(addUserButton);
 
-            editUserButton = new Button("Edit User");
-            editUserButton.setOnAction(event -> {
-                var selectedItem = userTableView.getSelectionModel().getSelectedItem();
-                if (selectedItem == null) return;
-
-                try {
-                    handleAddEditUser(selectedItem);
-                } catch (IOException e) {
-                    System.err.println("Could not open window!");
-                    throw new RuntimeException(e);
-                }
-
-            });
-            buttonsHBox.getChildren().add(editUserButton);
-
             deleteUserButton = new Button("Delete User");
             deleteUserButton.setOnAction(event -> handleDeleteUser());
             buttonsHBox.getChildren().add(deleteUserButton);
@@ -89,6 +74,21 @@ public class UsersViewController implements Initializable {
             assignRolesButton.setOnAction(event -> openAssignRoleWindow(userTableView.getSelectionModel().getSelectedItem()));
             buttonsHBox.getChildren().add(assignRolesButton);
         }
+
+        editUserButton = new Button("Edit User");
+        editUserButton.setOnAction(event -> {
+            var selectedItem = userTableView.getSelectionModel().getSelectedItem();
+            if (selectedItem == null) return;
+
+            try {
+                handleAddEditUser(selectedItem);
+            } catch (IOException e) {
+                System.err.println("Could not open window!");
+                throw new RuntimeException(e);
+            }
+
+        });
+        buttonsHBox.getChildren().add(editUserButton);
 
         updateSelectedDisabledButtons();
     }
