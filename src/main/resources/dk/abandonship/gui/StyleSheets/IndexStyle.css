@@ -160,12 +160,12 @@
 }
 
 .table-row-cell{
-    -fx-background-color: -fx-table-cell-border-color, #872400;
+    -fx-background-color: -fx-table-cell-border-color, #d1420f;
     -fx-cursor: hand;
 }
 
 .table-row-cell:odd{
-    -fx-background-color: -fx-table-cell-border-color, #943613;
+    -fx-background-color: -fx-table-cell-border-color, #fc6026;
     -fx-cursor: hand;
 }
 
