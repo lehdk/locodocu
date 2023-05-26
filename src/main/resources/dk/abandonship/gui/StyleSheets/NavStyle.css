@@ -23,3 +23,6 @@
     -fx-scale-y: 1.02;
     -fx-scale-z: 1.02;
 }
+.clicked {
+    -fx-background-color: BLACK;
+}
