@@ -232,6 +232,7 @@ public class DocViewController implements Initializable {
                 imageCanvas.setImage(image);
 
                 createCanvasContainer(container);
+                nodeMap.put(container, canvasNode);
                 return;
             }
             createCanvasContainer(container);
