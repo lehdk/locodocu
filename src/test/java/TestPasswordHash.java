@@ -13,6 +13,7 @@ public class TestPasswordHash {
 
         var passwordHash = PasswordHasher.getPasswordHash(password);
 
+        assertNotNull(passwordHash);
         assertNotEquals(password, passwordHash);
     }
 
