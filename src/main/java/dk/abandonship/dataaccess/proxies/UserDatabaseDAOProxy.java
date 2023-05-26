@@ -63,7 +63,10 @@ public class UserDatabaseDAOProxy implements IUserDAO {
     public User createUser(User user) throws SQLException {
         var result = userDAO.createUser(user);
 
-        databaseLogDAO.insertToLog("createUser", null, new Gson().toJson(result));
+        databaseLogDAO.insertToLog("createUser",
+                new Gson().toJson(user),
+                new Gson().toJson(result)
+        );
 
         return result;
     }
