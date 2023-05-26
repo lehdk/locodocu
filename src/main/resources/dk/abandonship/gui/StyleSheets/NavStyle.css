@@ -25,4 +25,5 @@
 }
 .clicked {
     -fx-background-color: BLACK;
+    -fx-border-color: #E84910;
 }
