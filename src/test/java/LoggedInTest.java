@@ -19,4 +19,18 @@ public class LoggedInTest {
 
         assertEquals(user, state.getLoggedInUser());
     }
+
+    @Test
+    void canLogOut() {
+        var state = LoggedInUserState.getInstance();
+
+        User user = new User(0, "name", null, null, null, null);
+        state.setLoggedInUser(user);
+
+        assertNotNull(state.getLoggedInUser());
+
+        state.setLoggedInUser(null);
+
+        assertNull(state.getLoggedInUser());
+    }
 }
