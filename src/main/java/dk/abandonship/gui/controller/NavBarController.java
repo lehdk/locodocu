@@ -3,6 +3,7 @@ package dk.abandonship.gui.controller;
 import dk.abandonship.utils.ControllerAssistant;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -27,7 +28,10 @@ public class NavBarController implements Initializable {
         navBar.setSpacing(20);
 
         Button btn1 = new Button("Project");
-        btn1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> projects());
+        btn1.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                buttonColorChanger(btn1);
+                projects();
+        });
 
         navBar.getChildren().add(btn1);
 
@@ -36,6 +40,7 @@ public class NavBarController implements Initializable {
         Button customerButton = new Button("Customers");
         customerButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
+                buttonColorChanger(customerButton);
                 controllerAssistant.setCenterFX("CustomerView");
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -46,6 +51,7 @@ public class NavBarController implements Initializable {
         Button userButton = new Button("Users");
         userButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
+                buttonColorChanger(userButton);
                 controllerAssistant.setCenterFX("UsersView");
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -56,6 +62,7 @@ public class NavBarController implements Initializable {
         Button logoutButton = new Button("Log out");
         logoutButton.setOnAction(event -> {
             try {
+                buttonColorChanger(logoutButton);
                 controllerAssistant.setTopFX(null);
                 controllerAssistant.setCenterFX("LogIn");
             } catch (Exception e) {
@@ -74,13 +81,20 @@ public class NavBarController implements Initializable {
         }
     }
 
-
     private void users() {
         try {
             controllerAssistant.setCenterFX("UsersView");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void buttonColorChanger(Button button) {
+        for (Node b : button.getParent().getChildrenUnmodifiable()) {
+            b.getStyleClass().remove("clicked");
+        }
+
+        button.getStyleClass().add("clicked");
     }
 
 }
