@@ -90,6 +90,11 @@ public class DocViewController implements Initializable {
      * Init all buttons and fields under existing document if there are any fields
      */
     private void openDoc() {
+        vboxModifyButtons.getChildren().remove(1, vboxModifyButtons.getChildren().size());
+        imageCanvas = null;
+        canvasNode = null;
+        nodeMap = new LinkedHashMap<>();
+
         Documentation documentation = docs.getValue();
 
         userIsAssignedTechnician = project.getAssignedTechnicians().contains(LoggedInUserState.getInstance().getLoggedInUser());
@@ -103,8 +108,6 @@ public class DocViewController implements Initializable {
         savAndCancelBox.setSpacing(15);
 
         vboxIOButtons = new VBox();
-
-        nodeMap = new LinkedHashMap<>();
 
         if (userIsAssignedTechnician) {
             Button btnAddTextField = new Button("Add Text Field");
@@ -231,11 +234,11 @@ public class DocViewController implements Initializable {
                 var image = new Image(new ByteArrayInputStream(canvasNode.getImageData()));
                 imageCanvas.setImage(image);
 
-                createCanvasContainer(container);
+                createCanvasContainer();
                 nodeMap.put(container, canvasNode);
                 return;
             }
-            createCanvasContainer(container);
+            createCanvasContainer();
         }
 
         handleOpenCanvas();
@@ -247,10 +250,9 @@ public class DocViewController implements Initializable {
 
     /**
      * Creates a new container for technical drawing to store data
-     * @param container be null, otherwise container will be overwritten
      */
-    private void createCanvasContainer(VBox container){
-        container = new VBox();
+    private void createCanvasContainer(){
+        VBox container = new VBox();
         container.getChildren().add(new Label("TechnicalDrawing"));
         container.getChildren().add(imageCanvas);
         vboxIOButtons.getChildren().add(container);

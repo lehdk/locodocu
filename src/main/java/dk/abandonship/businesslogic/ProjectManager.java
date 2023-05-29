@@ -164,6 +164,7 @@ public class ProjectManager {
         List<DocumentationPictureNode> picNode = documentationDAO.getPictureNode(documentation);
         List<CanvasDocumentationNode> canvasNode = documentationDAO.getCanvasNodes(documentation);
 
+        documentation.getDocumentationNodes().clear();
 
         for (DocumentationNode dn : docTextFields) {
             documentation.addDocumentationNode(dn);
