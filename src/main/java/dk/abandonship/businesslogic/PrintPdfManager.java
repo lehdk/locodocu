@@ -36,7 +36,7 @@ public class PrintPdfManager {
 
         try {
             //Makes pdf file document
-            PdfWriter.getInstance(document, new FileOutputStream(path + File.separator + "nameDOCtestForPrinting.PDF"));
+            PdfWriter.getInstance(document, new FileOutputStream(path + File.separator + documentation.getName() + ".PDF"));
             document.open();
 
             var fontTitle = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
