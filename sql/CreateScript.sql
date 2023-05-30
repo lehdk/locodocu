@@ -122,17 +122,14 @@ INSERT INTO [Users] ([Name], [Email], [Phone], [Password]) VALUES ('sale', 'sale
 
 INSERT INTO [UserRoleRelation] ([UserId], [RoleId]) VALUES 
     (1, 1),
-    (1, 2),
-    (1, 3),
-    (1, 4),
     (2, 2),
     (3, 3),
     (4, 4);
 
 -- Create fake project and documentation
-INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES ('Mærsk', '42424242', 'noreply@maersk.dk', 'Mærsk vej, 42, Fantasiby', '4242'); -- Id 1
+INSERT INTO [Customer] ([Name], [Phone], [Email], [Address], [PostalCode]) VALUES ('Mærsk', '42424242', 'noreply@maersk.dk', 'Mærsk Vej, 42, Fantasiby', '4242'); -- Id 1
 
-INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId]) VALUES ('Det store blå skib', 'Duveddet vej 1', '6800', 1); -- Id 1
+INSERT INTO [Project] ([Name], [Address], [PostalCode], [CustomerId]) VALUES ('Det store blå skib', 'Vej 1', '6800', 1); -- Id 1
 
 INSERT INTO [ProjectUserRelation] ([ProjectId], [UserId]) VALUES (1, 3);
 
